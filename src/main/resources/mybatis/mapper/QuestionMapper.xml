@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.leafii.testonline.mapper.QuestionMapper">
+  <resultMap id="BaseResultMap" type="top.leafii.testonline.common.domain.Question">
+    <id column="ques_id" jdbcType="INTEGER" property="quesId" />
+    <result column="type_id" jdbcType="INTEGER" property="typeId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="quespic" jdbcType="VARCHAR" property="quespic" />
+    <result column="score" jdbcType="DOUBLE" property="score" />
+    <result column="ansA" jdbcType="VARCHAR" property="ansa" />
+    <result column="ansB" jdbcType="VARCHAR" property="ansb" />
+    <result column="ansC" jdbcType="VARCHAR" property="ansc" />
+    <result column="ansD" jdbcType="VARCHAR" property="ansd" />
+    <result column="ansE" jdbcType="VARCHAR" property="anse" />
+    <result column="choanswer" jdbcType="INTEGER" property="choanswer" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.leafii.testonline.common.domain.Question">
+    <result column="answer" jdbcType="VARBINARY" property="answer" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ques_id, type_id, title, quespic, score, ansA, ansB, ansC, ansD, ansE, choanswer
+  </sql>
+  <sql id="Blob_Column_List">
+    answer
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="top.leafii.testonline.common.domain.QuestionExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="top.leafii.testonline.common.domain.QuestionExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from question
+    where ques_id = #{quesId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from question
+    where ques_id = #{quesId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.leafii.testonline.common.domain.QuestionExample">
+    delete from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.leafii.testonline.common.domain.Question">
+    insert into question (ques_id, type_id, title, 
+      quespic, score, ansA, 
+      ansB, ansC, ansD, ansE, 
+      choanswer, answer)
+    values (#{quesId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{quespic,jdbcType=VARCHAR}, #{score,jdbcType=DOUBLE}, #{ansa,jdbcType=VARCHAR}, 
+      #{ansb,jdbcType=VARCHAR}, #{ansc,jdbcType=VARCHAR}, #{ansd,jdbcType=VARCHAR}, #{anse,jdbcType=VARCHAR}, 
+      #{choanswer,jdbcType=INTEGER}, #{answer,jdbcType=VARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="top.leafii.testonline.common.domain.Question">
+    insert into question
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="quesId != null">
+        ques_id,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="quespic != null">
+        quespic,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="ansa != null">
+        ansA,
+      </if>
+      <if test="ansb != null">
+        ansB,
+      </if>
+      <if test="ansc != null">
+        ansC,
+      </if>
+      <if test="ansd != null">
+        ansD,
+      </if>
+      <if test="anse != null">
+        ansE,
+      </if>
+      <if test="choanswer != null">
+        choanswer,
+      </if>
+      <if test="answer != null">
+        answer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="quesId != null">
+        #{quesId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="quespic != null">
+        #{quespic,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="ansa != null">
+        #{ansa,jdbcType=VARCHAR},
+      </if>
+      <if test="ansb != null">
+        #{ansb,jdbcType=VARCHAR},
+      </if>
+      <if test="ansc != null">
+        #{ansc,jdbcType=VARCHAR},
+      </if>
+      <if test="ansd != null">
+        #{ansd,jdbcType=VARCHAR},
+      </if>
+      <if test="anse != null">
+        #{anse,jdbcType=VARCHAR},
+      </if>
+      <if test="choanswer != null">
+        #{choanswer,jdbcType=INTEGER},
+      </if>
+      <if test="answer != null">
+        #{answer,jdbcType=VARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.leafii.testonline.common.domain.QuestionExample" resultType="java.lang.Long">
+    select count(*) from question
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update question
+    <set>
+      <if test="record.quesId != null">
+        ques_id = #{record.quesId,jdbcType=INTEGER},
+      </if>
+      <if test="record.typeId != null">
+        type_id = #{record.typeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.quespic != null">
+        quespic = #{record.quespic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.score != null">
+        score = #{record.score,jdbcType=DOUBLE},
+      </if>
+      <if test="record.ansa != null">
+        ansA = #{record.ansa,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ansb != null">
+        ansB = #{record.ansb,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ansc != null">
+        ansC = #{record.ansc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ansd != null">
+        ansD = #{record.ansd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.anse != null">
+        ansE = #{record.anse,jdbcType=VARCHAR},
+      </if>
+      <if test="record.choanswer != null">
+        choanswer = #{record.choanswer,jdbcType=INTEGER},
+      </if>
+      <if test="record.answer != null">
+        answer = #{record.answer,jdbcType=VARBINARY},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update question
+    set ques_id = #{record.quesId,jdbcType=INTEGER},
+      type_id = #{record.typeId,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
+      quespic = #{record.quespic,jdbcType=VARCHAR},
+      score = #{record.score,jdbcType=DOUBLE},
+      ansA = #{record.ansa,jdbcType=VARCHAR},
+      ansB = #{record.ansb,jdbcType=VARCHAR},
+      ansC = #{record.ansc,jdbcType=VARCHAR},
+      ansD = #{record.ansd,jdbcType=VARCHAR},
+      ansE = #{record.anse,jdbcType=VARCHAR},
+      choanswer = #{record.choanswer,jdbcType=INTEGER},
+      answer = #{record.answer,jdbcType=VARBINARY}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update question
+    set ques_id = #{record.quesId,jdbcType=INTEGER},
+      type_id = #{record.typeId,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
+      quespic = #{record.quespic,jdbcType=VARCHAR},
+      score = #{record.score,jdbcType=DOUBLE},
+      ansA = #{record.ansa,jdbcType=VARCHAR},
+      ansB = #{record.ansb,jdbcType=VARCHAR},
+      ansC = #{record.ansc,jdbcType=VARCHAR},
+      ansD = #{record.ansd,jdbcType=VARCHAR},
+      ansE = #{record.anse,jdbcType=VARCHAR},
+      choanswer = #{record.choanswer,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.leafii.testonline.common.domain.Question">
+    update question
+    <set>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="quespic != null">
+        quespic = #{quespic,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="ansa != null">
+        ansA = #{ansa,jdbcType=VARCHAR},
+      </if>
+      <if test="ansb != null">
+        ansB = #{ansb,jdbcType=VARCHAR},
+      </if>
+      <if test="ansc != null">
+        ansC = #{ansc,jdbcType=VARCHAR},
+      </if>
+      <if test="ansd != null">
+        ansD = #{ansd,jdbcType=VARCHAR},
+      </if>
+      <if test="anse != null">
+        ansE = #{anse,jdbcType=VARCHAR},
+      </if>
+      <if test="choanswer != null">
+        choanswer = #{choanswer,jdbcType=INTEGER},
+      </if>
+      <if test="answer != null">
+        answer = #{answer,jdbcType=VARBINARY},
+      </if>
+    </set>
+    where ques_id = #{quesId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="top.leafii.testonline.common.domain.Question">
+    update question
+    set type_id = #{typeId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      quespic = #{quespic,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
+      ansA = #{ansa,jdbcType=VARCHAR},
+      ansB = #{ansb,jdbcType=VARCHAR},
+      ansC = #{ansc,jdbcType=VARCHAR},
+      ansD = #{ansd,jdbcType=VARCHAR},
+      ansE = #{anse,jdbcType=VARCHAR},
+      choanswer = #{choanswer,jdbcType=INTEGER},
+      answer = #{answer,jdbcType=VARBINARY}
+    where ques_id = #{quesId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.leafii.testonline.common.domain.Question">
+    update question
+    set type_id = #{typeId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      quespic = #{quespic,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
+      ansA = #{ansa,jdbcType=VARCHAR},
+      ansB = #{ansb,jdbcType=VARCHAR},
+      ansC = #{ansc,jdbcType=VARCHAR},
+      ansD = #{ansd,jdbcType=VARCHAR},
+      ansE = #{anse,jdbcType=VARCHAR},
+      choanswer = #{choanswer,jdbcType=INTEGER}
+    where ques_id = #{quesId,jdbcType=INTEGER}
+  </update>
+</mapper>

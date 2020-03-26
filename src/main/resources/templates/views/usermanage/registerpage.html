@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>在线考试系统 | 注册页面</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" th:href="@{/bower_components/Ionicons/css/ionicons.min.css}">
+  <!-- Theme style -->
+  <link rel="stylesheet" th:href="@{/dist/css/AdminLTE.min.css}">
+  <!-- iCheck -->
+  <link rel="stylesheet" th:href="@{/plugins/iCheck/square/green.css}">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="register-logo">
+    <a href="../../index2.html"><b>在线考试</b>系统</a>
+  </div>
+
+  <div class="register-box-body">
+    <p class="login-box-msg">注册一个只属于你的账户</p>
+
+    <form name="userForm" id="userForm">
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        <input type="text" class="form-control" name="uname" id="uname" placeholder="用户名">
+      </div>
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <input type="password" class="form-control" name="password" id="password" placeholder="密码">
+      </div>
+      <div class="form-group has-feedback">
+        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+        <input type="password" class="form-control" name="repassword" id="repassword" placeholder="确认密码">
+      </div>
+      <div class="row">
+        <div class="col-xs-7">
+          <span class="glyphicon  form-control-feedback"></span>
+          <input type="text" id="verifyCode" name="verifyCode" class="form-control" placeholder="验证码">
+        </div>
+        <div class="col-xs-5">
+                    <span>
+                        <img src="/imageCode" id="imageCode">
+                    </span>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-xs-8">
+          <a href="/" class="text-center">已经有账户了？</a>
+        </div>
+        <!-- /.col -->
+        <div class="col-xs-4">
+          <button type="submit" id="registerBtn" class="btn btn-primary btn-block btn-flat">注册</button>
+        </div>
+        <!-- /.col -->
+      </div>
+    </form>
+
+  </div>
+  <!-- /.form-box -->
+</div>
+<!-- /.register-box -->
+
+<!-- jQuery 3 -->
+<script th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- iCheck -->
+<script th:src="@{/plugins/iCheck/icheck.min.js}"></script>
+<script th:src="@{/layer/layer.js}"></script>
+<!--注意引用顺序-->
+<script th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+<script th:src="@{/jquery-validation/additional-methods.min.js}"></script>
+<script th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+<script>
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' /* optional */
+    });
+  });
+</script>
+<script th:inline="javascript">
+  var basePath = [[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]];
+  $(function () {
+    $("#userForm").validate({
+      rules: {
+        uname:{
+          required: true,//用户名是必填字段
+          minlength: 4,//4位
+          maxlength: 20,//最多输入20
+          remote: {
+            url: "/user/check-username",
+            type: "get",
+            data:{
+              uname: function () {
+                return $("#uname").val();
+              }
+            }
+          }
+        },
+        password: {
+          required: true,
+        },
+        repassword: {
+          required: true,
+          equalTo: '#password',
+        },
+        verifyCode: {
+          required: true,
+          remote: {
+            url: "/user/check-verifyCode",
+            type: "get",
+            data:{
+              verifyCode: function () {
+                return $("#verifyCode").val();
+              }
+            }
+          }
+        }
+      },
+      messages: {
+        //定义消息
+        uname: {
+          required: "请输入用户名!",
+          remote: "用户名已存在，请修改用户名！"
+        },
+        password: {
+          required: "请输入密码!"
+        },
+        repassword: {
+          required: "请确认密码！",
+          equalTo: "两次密码输入不一致"
+        },
+        verifyCode: {
+          required: "请输入验证码！",
+          remote: "验证码错误！"
+        }
+      },
+      submitHandler: function(form) {
+        var uname =  $(":text:eq(0)").val();
+        var password =  $(":password:eq(0)").val();
+        //验证完成后提交表单
+        //进行ajax传值
+        $.ajax({
+          type:"POST",
+          contentType:"application/json",
+          url: basePath+"/user/register",
+          data:JSON.stringify({"uname":uname,"password":password}),
+          dataType:"json",
+          success:function (msg) {
+            var json = msg["data"];
+            if(json["success"]){
+              $("#userForm")[0].reset();
+              layer.msg(json["msg"],{icon: 6,shade:0.4},function () {
+                location.href="/";
+              })
+            }
+            else{
+              layer.msg(json["msg"],{icon: 5});
+              //window.location.href=basePath+"/page/toregister"
+              $("#imageCode").attr("src","/imageCode?r="+Math.random());
+            }
+          }
+        });
+
+      }
+    });
+
+  })
+</script>
+</body>
+</html>

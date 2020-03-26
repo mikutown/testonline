@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.leafii.testonline.mapper.SubjectMapper">
+  <resultMap id="BaseResultMap" type="top.leafii.testonline.common.domain.Subject">
+    <id column="sub_id" jdbcType="INTEGER" property="subId" />
+    <result column="subname" jdbcType="VARCHAR" property="subname" />
+    <result column="subtime" jdbcType="DATE" property="subtime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    sub_id, subname, subtime
+  </sql>
+  <select id="selectByExample" parameterType="top.leafii.testonline.common.domain.SubjectExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from subject
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from subject
+    where sub_id = #{subId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from subject
+    where sub_id = #{subId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="top.leafii.testonline.common.domain.SubjectExample">
+    delete from subject
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="top.leafii.testonline.common.domain.Subject">
+    insert into subject (sub_id, subname, subtime
+      )
+    values (#{subId,jdbcType=INTEGER}, #{subname,jdbcType=VARCHAR}, #{subtime,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="top.leafii.testonline.common.domain.Subject">
+    insert into subject
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="subId != null">
+        sub_id,
+      </if>
+      <if test="subname != null">
+        subname,
+      </if>
+      <if test="subtime != null">
+        subtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="subId != null">
+        #{subId,jdbcType=INTEGER},
+      </if>
+      <if test="subname != null">
+        #{subname,jdbcType=VARCHAR},
+      </if>
+      <if test="subtime != null">
+        #{subtime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="top.leafii.testonline.common.domain.SubjectExample" resultType="java.lang.Long">
+    select count(*) from subject
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update subject
+    <set>
+      <if test="record.subId != null">
+        sub_id = #{record.subId,jdbcType=INTEGER},
+      </if>
+      <if test="record.subname != null">
+        subname = #{record.subname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subtime != null">
+        subtime = #{record.subtime,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update subject
+    set sub_id = #{record.subId,jdbcType=INTEGER},
+      subname = #{record.subname,jdbcType=VARCHAR},
+      subtime = #{record.subtime,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="top.leafii.testonline.common.domain.Subject">
+    update subject
+    <set>
+      <if test="subname != null">
+        subname = #{subname,jdbcType=VARCHAR},
+      </if>
+      <if test="subtime != null">
+        subtime = #{subtime,jdbcType=DATE},
+      </if>
+    </set>
+    where sub_id = #{subId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="top.leafii.testonline.common.domain.Subject">
+    update subject
+    set subname = #{subname,jdbcType=VARCHAR},
+      subtime = #{subtime,jdbcType=DATE}
+    where sub_id = #{subId,jdbcType=INTEGER}
+  </update>
+</mapper>

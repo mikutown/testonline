@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <header class="main-header" th:fragment="headerAA">
+
+        <!-- Logo -->
+        <a class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>Te</b>st</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Test</b>OnLine</span>
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    <!-- /.messages-menu -->
+
+                    <!-- Notifications Menu -->
+                    <li class="dropdown notifications-menu">
+                        <!-- Menu toggle button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning">10</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">You have 10 notifications</li>
+                            <li>
+                                <!-- Inner Menu: contains the notifications -->
+                                <ul class="menu">
+                                    <li><!-- start notification -->
+                                        <a href="#">
+                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                        </a>
+                                    </li>
+                                    <!-- end notification -->
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="#">View all</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- User Account Menu -->
+                    <li class="dropdown user user-menu">
+                        <!-- Menu Toggle Button -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <!-- The user image in the navbar-->
+                            <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image" th:src="@{/dist/img/user2-160x160.jpg}">
+                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <span class="hidden-xs" th:text="${session.user.uname}">USER</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- The user image in the menu -->
+                            <li class="user-header">
+                                <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image" th:src="@{/dist/img/user2-160x160.jpg}">
+
+                                <p th:text="${session.user.uname}">
+                                    USER
+                                </p>
+                                <span style="color: white" th:text="${session.user.getRoleId()==1}?'管理员':'普通用户'"></span>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+
+                                <!-- /.row -->
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">修改密码</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a id="logoutBtn" class="btn btn-default btn-flat">注销</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button -->
+                    <li>
+                        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!-- jquery  -->
+        <script src="bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+        <!-- Layer -->
+        <script th:src="@{/layer/layer.js}"></script>
+        <script th:inline="javascript">
+            var basePath = [[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]];
+            $(function () {
+                $("#logoutBtn").click(function () {
+                    $.ajax({
+                        type:"GET",
+                        //contentType:"application/json",
+                        url:basePath+'/user/logout',
+                        //data:{"uname":uname,"password":password,"imagecode":imagecode},
+                        //dataType:"json",
+                        success:function (msg) {
+                            var json = msg["data"];
+                            if(json["success"]){
+                                // console.log(json["data"]["roleId"]);
+                                layer.msg(json["msg"],{icon: 6,shade:0.4},function () {
+                                    location.href="/";
+                                })
+                            }
+                            else{
+                                layer.msg(json["msg"],{icon: 5});
+                            }
+                            return false;
+                        }
+                    });
+                })
+            })
+        </script>
+    </header>
+
+</html>
