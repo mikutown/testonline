@@ -44,4 +44,16 @@ public class UserServiceImpl implements UserService {
         //System.out.println(new PageInfo<>(users).getTotal());//打印总数
         return new PagableResponse(new PageInfo<>(users).getTotal(),users);
     }
+
+    @Override
+    public Boolean removeUser(User user) {
+        int i = userMapper.deleteByPrimaryKey(user.getuId());
+        return i>0?true:false;
+    }
+
+    @Override
+    public User findUserByUid(int id) {
+        User u = userMapper.selectByPrimaryKey(id);
+        return u;
+    }
 }

@@ -20,6 +20,19 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    //删除单个用户
+    @GetMapping("/remove")
+    @ResponseBody//ajax
+    public Object removeUser(@RequestParam("uId") int uId){
+        User userInDB = userService.findUserByUid(uId);
+        Boolean removeSuccess = userService.removeUser(userInDB);
+        if(removeSuccess){
+            return new JSONMap(true,200, "删除用户："+userInDB.getUname()+"成功！");
+        }else{
+            return new JSONMap(false,200, "删除用户："+userInDB.getUname()+"失败！");
+        }
+    }
+    //管理页面添加用户
     @RequestMapping("/save")
     @ResponseBody//ajax
     public Object addUser(@RequestBody User user){
@@ -35,6 +48,7 @@ public class UserController {
             return new JSONMap(false,200, UserManageMessage.USER_ADD_ERROR);
         }
     }
+    //展示用户列表
     @RequestMapping("/list")
     @ResponseBody
     public PagableResponse<List<User>> userList(PageRequest request){
@@ -46,6 +60,7 @@ public class UserController {
         request.getSession().removeAttribute("user");
         return new JSONMap(true,200, UserManageMessage.LOGOUT_SUCCESS);
     }
+    //注册
     @PostMapping("/register")
     @ResponseBody
     public Object register(@RequestBody User user){
@@ -59,6 +74,7 @@ public class UserController {
             return new JSONMap(false,200, UserManageMessage.REGISTER_ERROR);
         }
     }
+    //登录
     @PostMapping("/login")
     @ResponseBody
     public Object login(@RequestBody User user, HttpServletRequest request) {
@@ -80,11 +96,13 @@ public class UserController {
         }
         return new JSONMap(false, 200, UserManageMessage.UNKNOWN_ERROR);
     }
+    //检查用户名是否已存在
     @GetMapping("/check-username")
     @ResponseBody
     public Boolean checkUname(@RequestParam("uname") String uname){
         return userService.checkUname(uname);
     }
+    //前台验证验证码
     @GetMapping("/check-verifyCode")
     @ResponseBody
     public Boolean checkVerifyCode(@RequestParam("verifyCode") String verifyCode,HttpServletRequest request){

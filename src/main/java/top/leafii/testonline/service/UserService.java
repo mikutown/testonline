@@ -13,4 +13,8 @@ public interface UserService {
 
     Boolean insertUser(User user);
     public PagableResponse list(PageRequest request);
+
+    Boolean removeUser(User user);
+
+    User findUserByUid(int id);
 }

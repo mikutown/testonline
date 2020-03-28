@@ -77,13 +77,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#UserManageModal">
+                                    <i class="fa fa-file">添加新的用户</i>
+                                </button>
+                                <button type="button" class="btn btn-danger" id="removeBtn">
+                                    <i class="fa fa-file">删除选中用户</i>
+                                </button>
+                                <div class="pull-right">
+                                    <input   type="text" id="keyword" placeholder="按照名称查询">
+                                    <button type="button" class="btn btn-info" id="searchBtn">
+                                        <i class="fa fa-search">搜索</i>
+                                    </button>
+                                </div>
 
-                                    <i class="fa fa-file">添加用户</i>
-                                </button>
-                                <input type="text" id="keyword" placeholder="按照名称查询">
-                                <button type="button" class="btn btn-info" id="searchBtn">
-                                    <i class="fa fa-search">搜索</i>
-                                </button>
                             </div>
                             <table id="userTable">
 
@@ -126,12 +131,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <input type="password" class="form-control" id="repassword"
                                    placeholder="请确认密码" name="repassword">
                         </div>
-                        <button type="submit" class="btn btn-primary">添加</button>
+                        <button type="submit" class="btn btn-primary ">添加</button>
+                        <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">关闭</button>
+                    <span>请在输入用户信息后点击添加按钮</span>
                 </div>
+
             </div>
             <!-- /.modal-content -->
         </div>
@@ -145,12 +152,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- ./wrapper -->
 
 <!-- REQUIRED JS SCRIPTS -->
-<!-- DataTables -->
-<script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"
-        th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
-<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"
-        th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
-<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+<!--bootstrap-table-js-->
+<!--<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table-js.min.js"></script>-->
+<script src="plugins/bootstrap-table/bootstrap-table.js"
+        th:src="@{/bootstrap-table/bootstrap-table.js}"></script>
+<script src="plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"
+        th:src="@{/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
 <script th:src="@{/layer/layer.js}"></script>
 <!--注意引用顺序-->
 <script th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
@@ -165,99 +172,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $("#usermanage").addClass("active");
     })
 </script>
-<!-- page script -->
 <script>
-    $(function () {
-        $('#example1').DataTable()
-        $('#example2').DataTable({
-            'paging': true,
-            'lengthChange': false,
-            'searching': false,
-            'ordering': true,
-            'info': true,
-            'autoWidth': false
-        })
-    })
-</script>
-<script>
-    //用户添加
-    $("#userAdd").validate({
-        rules: {
-            uname:{
-                required: true,//用户名是必填字段
-                minlength: 4,//4位
-                maxlength: 20,//最多输入20
-                remote: {
-                    url: "/user/check-username",
-                    type: "get",
-                    data:{
-                        uname: function () {
-                            return $("#uname").val();
+    //删除单个用户
+    function removeUser(uId) {
+        layer.msg('确定删除吗？', {
+            time: 0,
+            btn: ['确定', '删个屁'],
+            yes: function (index) {
+                layer.close(index);
+                $.ajax({
+                    url: '/user/remove?uId=' + uId,
+                    success: function (msg) {
+                        var json = msg["data"];
+                        if (json["success"]){
+                            layer.msg(json["msg"], {icon: 6});
+                            $("#userTable").bootstrapTable("remove",{field: 'uId',values: [uId]});//注意参数的name
+                        }else{
+                            layer.msg(json["msg"], {icon: 5});
                         }
+                    },
+                    error: function (data) {
+                        layer.msg("未知错误！", {icon: 5});
                     }
-                }
-            },
-            password: {
-                required: true,
-            },
-            repassword: {
-                required: true,
-                equalTo: '#password',
-            },
-        },
-        messages: {
-            //定义消息
-            uname: {
-                required: "请输入用户名!",
-                remote: "用户名已存在，请修改用户名！"
-            },
-            password: {
-                required: "请输入密码!"
-            },
-            repassword: {
-                required: "请确认密码！",
-                equalTo: "两次密码输入不一致"
-            },
-        },
-        submitHandler: function(form) {
-            var uname =  $("#uname").val();
-            var password =  $(":password:eq(0)").val();
-            //验证完成后提交表单
-            //进行ajax传值
-            $.ajax({
-                type:"POST",
-                contentType:"application/json",
-                url: basePath+"/user/save",
-                data:JSON.stringify({"uname":uname,"password":password}),
-                dataType:"json",
-                success:function (msg) {
-                    var json = msg["data"];
-                    if(json["success"]){
-                        $("#userAdd")[0].reset();
-                        layer.msg(json["msg"],{icon: 6,shade:0.4},function () {
 
-                        })
-                        $("#userTable").bootstrapTable("refresh");
-
-                    }
-                    else{
-                        layer.msg(json["msg"],{icon: 5});
-                    }
-                }
-            });
-
-        }
-    });
-    // $("#userAdd").ajaxForm({
-    //     success: function (data) {
-    //         console.log(data);
-    //         $("#UserManageModal").modal('hide');//提交成功 隐藏modal
-    //         //成功后刷新表格！
-    //         $("#userTable").bootstrapTable("refresh");
-    //     }
-    // })
-</script>
-<script>
+                })
+            }
+        })
+    }
     //表格渲染
     $(function () {
         $("#userTable").bootstrapTable({//在id为dataTable的
@@ -287,9 +228,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     }
                 }
 
-            }]
+            },{
+                title: '操作',
+                formatter: function (value,row) {
+                    return ['<button type="button" class="btn btn-danger btn-xs" ',
+                        'onClick=removeUser(' + row.uId + ')>',
+                        '<i class="fa fa-remove" >删除</i></button>']
+                        .join('');
+                }
+            }
+            ]
         })
     });
+
 
     function queryParams(params) {
         return {
@@ -299,6 +250,76 @@ scratch. This page gets rid of all links and provides the needed markup only.
             keyword: $("#keyword").val()
         }
     }
+</script>
+
+<script>
+    //用户添加
+    $("#userAdd").validate({
+        rules: {
+            uname: {
+                required: true,//用户名是必填字段
+                minlength: 4,//4位
+                maxlength: 20,//最多输入20
+                remote: {
+                    url: "/user/check-username",
+                    type: "get",
+                    data: {
+                        uname: function () {
+                            return $("#uname").val();
+                        }
+                    }
+                }
+            },
+            password: {
+                required: true,
+            },
+            repassword: {
+                required: true,
+                equalTo: '#password',
+            },
+        },
+        messages: {
+            //定义消息
+            uname: {
+                required: "请输入用户名!",
+                remote: "用户名已存在，请修改用户名！"
+            },
+            password: {
+                required: "请输入密码!"
+            },
+            repassword: {
+                required: "请确认密码！",
+                equalTo: "两次密码输入不一致"
+            },
+        },
+        submitHandler: function (form) {
+            var uname = $("#uname").val();
+            var password = $(":password:eq(0)").val();
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/user/save",
+                data: JSON.stringify({"uname": uname, "password": password}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#userAdd")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4}, function () {
+
+                        });
+                        $("#userTable").bootstrapTable("refresh");
+
+                    } else {
+                        layer.msg(json["msg"], {icon: 5});
+                    }
+                }
+            });
+
+        }
+    });
 </script>
 
 </body>
