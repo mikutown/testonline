@@ -79,6 +79,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         data-target="#UserManageModal">
                                     <i class="fa fa-file">添加新的用户</i>
                                 </button>
+                                <button type="button" class="btn btn-warning btn-xs btn_edit nm" >
+                                    <li>点击！！！！！</li>
+                                </button>
                                 <button type="button" class="btn btn-danger" id="removeBtn">
                                     <i class="fa fa-file">删除选中用户</i>
                                 </button>
@@ -105,6 +108,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+
+
+    <!-- Main Footer -->
+    <div th:replace="~{/views/layout/foot :: footer}"></div>
+
     <!-- Insert Modal -->
     <div class="modal fade" id="UserManageModal" tabindex="-1" role="dialog"
          aria-hidden="true">
@@ -183,11 +191,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <!-- /.modal-dialog -->
     </div>
-
-    <!-- Main Footer -->
-    <div th:replace="~{/views/layout/foot :: footer}"></div>
-
-
 </div>
 <!-- ./wrapper -->
 
@@ -212,6 +215,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $("#usertree").addClass("active");
         $("#usermanage").addClass("active");
     });
+
+    //用户修改
+    //修改用户模态框启动时自动填充数据
+    $("#UserEditModal").on('show.bs.modal' , function (event) {
+        alert("?");
+    })
     //表格渲染
     $(function () {
         $("#userTable").bootstrapTable({//在id为dataTable的
@@ -245,8 +254,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 title: '操作',
                 formatter: function (value, row) {
                     return [
-                        '<button " type="button" class="btn btn-warning btn-xs btn_edit" ',
-                        'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + '>',
+                        '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
+                        'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId +' '+
+                        'onClick=editUser(' + row.uId + ')>',
                         '<i class="fa fa-edit" >修改</i></button>',
 
                         '<button type="button" class="btn btn-danger btn-xs" ',
@@ -259,6 +269,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         })
     });
 
+
     function queryParams(params) {
         return {
             //把我们的pageNum，pageSize传到命令中去
@@ -269,6 +280,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     }
 
     //修改用户模态框预加载数据
+    $(function () {
+        $('#UserManageModal').on('hide.bs.modal', function () {
+        alert('嘿，我听说您喜欢模态框...');})
+    });
+
+    function editUser(uId) {
+
+    }
     //删除单个用户
     function removeUser(uId) {
         layer.msg('确定删除吗？', {
@@ -295,7 +314,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
         })
     }
-
+    //
     //用户添加
     $("#userAdd").validate({
         rules: {
@@ -363,14 +382,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
-    //用户修改
-        //修改用户模态框启动时自动填充数据
-    $("#UserEditModal").on('show.bs.modal', function (e) {
-        alert("?");
-        console.log($(e.relatedTarget).attr('data-id'));
-    });
+
 
 </script>
+
 
 </body>
 </html>
