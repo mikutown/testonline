@@ -83,7 +83,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     <i class="fa fa-file">删除选中用户</i>
                                 </button>
                                 <div class="pull-right">
-                                    <input   type="text" id="keyword" placeholder="按照名称查询">
+                                    <input type="text" id="keyword" placeholder="按照名称查询">
                                     <button type="button" class="btn btn-info" id="searchBtn">
                                         <i class="fa fa-search">搜索</i>
                                     </button>
@@ -105,8 +105,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <!-- Modal -->
-    <div class="modal fade" id="UserManageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <!-- Insert Modal -->
+    <div class="modal fade" id="UserManageModal" tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -119,7 +119,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <form id="userAdd">
                         <div class="form-group">
                             <label for="uname">用户名</label>
-                            <input type="text" class="form-control" name="uname" id="uname" placeholder="请输入用户名" >
+                            <input type="text" class="form-control" name="uname" id="uname" placeholder="请输入用户名">
                         </div>
                         <div class="form-group">
                             <label for="password">密码</label>
@@ -144,6 +144,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="UserEditModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">用户修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="userEdit">
+                        <div class="form-group">
+                            <label for="newUname">用户名</label>
+                            <input type="text" class="form-control" name="newUname" id="newUname" placeholder="请输入用户名">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">密码</label>
+                            <input type="password" class="form-control" id="newPassword"
+                                   placeholder="请输入密码" name="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="reNewPassword">确认密码</label>
+                            <input type="password" class="form-control" id="reNewPassword"
+                                   placeholder="请确认密码" name="reNewPassword">
+                        </div>
+                        <button type="submit" class="btn btn-primary ">修改</button>
+                        <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请在输入用户信息后点击修改按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
     <!-- Main Footer -->
     <div th:replace="~{/views/layout/foot :: footer}"></div>
 
@@ -163,42 +203,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
 <script th:src="@{/jquery-validation/additional-methods.min.js}"></script>
 <script th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
-<!-- 页面菜单选中的配置 -->
+
 <script>
+    //菜单指示页面
     $(function () {
         //把所有的active都收起来
         $("li.active").removeClass("active");
         $("#usertree").addClass("active");
         $("#usermanage").addClass("active");
-    })
-</script>
-<script>
-    //删除单个用户
-    function removeUser(uId) {
-        layer.msg('确定删除吗？', {
-            time: 0,
-            btn: ['确定', '删个屁'],
-            yes: function (index) {
-                layer.close(index);
-                $.ajax({
-                    url: '/user/remove?uId=' + uId,
-                    success: function (msg) {
-                        var json = msg["data"];
-                        if (json["success"]){
-                            layer.msg(json["msg"], {icon: 6});
-                            $("#userTable").bootstrapTable("remove",{field: 'uId',values: [uId]});//注意参数的name
-                        }else{
-                            layer.msg(json["msg"], {icon: 5});
-                        }
-                    },
-                    error: function (data) {
-                        layer.msg("未知错误！", {icon: 5});
-                    }
-
-                })
-            }
-        })
-    }
+    });
     //表格渲染
     $(function () {
         $("#userTable").bootstrapTable({//在id为dataTable的
@@ -228,10 +241,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     }
                 }
 
-            },{
+            }, {
                 title: '操作',
-                formatter: function (value,row) {
-                    return ['<button type="button" class="btn btn-danger btn-xs" ',
+                formatter: function (value, row) {
+                    return [
+                        '<button " type="button" class="btn btn-warning btn-xs btn_edit" ',
+                        'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + '>',
+                        '<i class="fa fa-edit" >修改</i></button>',
+
+                        '<button type="button" class="btn btn-danger btn-xs" ',
                         'onClick=removeUser(' + row.uId + ')>',
                         '<i class="fa fa-remove" >删除</i></button>']
                         .join('');
@@ -241,7 +259,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         })
     });
 
-
     function queryParams(params) {
         return {
             //把我们的pageNum，pageSize传到命令中去
@@ -250,9 +267,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
             keyword: $("#keyword").val()
         }
     }
-</script>
 
-<script>
+    //修改用户模态框预加载数据
+    //删除单个用户
+    function removeUser(uId) {
+        layer.msg('确定删除吗？', {
+            time: 0,
+            btn: ['确定', '删个屁'],
+            yes: function (index) {
+                layer.close(index);
+                $.ajax({
+                    url: '/user/remove?uId=' + uId,
+                    success: function (msg) {
+                        var json = msg["data"];
+                        if (json["success"]) {
+                            layer.msg(json["msg"], {icon: 6});
+                            $("#userTable").bootstrapTable("remove", {field: 'uId', values: [uId]});//注意参数的name
+                        } else {
+                            layer.msg(json["msg"], {icon: 5});
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg("未知错误！", {icon: 5});
+                    }
+
+                })
+            }
+        })
+    }
+
     //用户添加
     $("#userAdd").validate({
         rules: {
@@ -320,6 +363,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
+    //用户修改
+        //修改用户模态框启动时自动填充数据
+    $("#UserEditModal").on('show.bs.modal', function (e) {
+        alert("?");
+        console.log($(e.relatedTarget).attr('data-id'));
+    });
+
 </script>
 
 </body>
