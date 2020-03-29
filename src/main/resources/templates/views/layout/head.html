@@ -25,8 +25,27 @@
               th:href="@{/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css}">
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <link rel="stylesheet" th:href="@{/bootstrap-table/bootstrap-table.min.css}">
-        <script th:src="@{/bootstrap-table/bootstrap-table.min.js}"></script>
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+        <!-- jQuery 3 -->
+        <script src="bower_components/jquery/dist/jquery.min.js"
+                th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+        <!-- jquery  -->
+        <!--    <script src="bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>-->
+        <!-- Layer -->
+        <script th:src="@{/layer/layer.js}"></script>
+        <!-- Bootstrap 3.3.7 -->
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"
+                th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+        <!-- AdminLTE App -->
+        <script src="dist/js/adminlte.min.js" th:src="@{/dist/js/adminlte.min.js}"></script>
+        <!-- REQUIRED JS SCRIPTS -->
+        <!--bootstrap-table-js-->
+        <script src="plugins/bootstrap-table/bootstrap-table.js"
+                th:src="@{/bootstrap-table/bootstrap-table.js}"></script>
+        <script src="plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"
+                th:src="@{/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+        <!--注意引用顺序-->
+        <script th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+        <script th:src="@{/jquery-validation/additional-methods.min.js}"></script>
+        <script th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
     </head>
-
-
