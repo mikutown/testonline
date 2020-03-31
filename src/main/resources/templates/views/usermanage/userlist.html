@@ -133,15 +133,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                         <div class="form-group">
                             <label for="newPassword">密码</label>
-                            <input type="password" class="form-control" id="newPassword"
+                            <input type="text" class="form-control" id="newPassword"
                                    placeholder="请输入密码" name="newPassword">
                         </div>
-                        <div class="form-group">
-                            <label for="reNewPassword">确认密码</label>
-                            <input type="password" class="form-control" id="reNewPassword"
-                                   placeholder="请确认密码" name="reNewPassword">
-                        </div>
-                        <button type="submit" class="btn btn-primary ">修改</button>
+
+                        <button type="button" id="modifyBtn" class="btn btn-primary ">修改</button>
                         <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
                     </form>
                 </div>
@@ -166,13 +162,57 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $("#usertree").addClass("active");
         $("#usermanage").addClass("active");
     });
+
     //用户修改
+    $("#modifyBtn").click(function () {
+        var uname = $("#newUname").val();
+        var password = $("#newPassword").val();
+        var uid = $.session.get('UID');
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: basePath + "/user/modify",
+            data: JSON.stringify({"uId": uid, "uname": uname, "password": password}),
+            dataType: "json",
+            success: function (msg) {
+                var json = msg["data"];
+                if (json["success"]) {
+                    $("#userEdit")[0].reset();
+                    layer.msg(json["msg"], {icon: 6, shade: 0.4}, function () {
+
+                    });
+                    $("#userTable").bootstrapTable("refresh");
+
+                } else {
+                    layer.msg(json["msg"], {icon: 5});
+                }
+            }
+        });
+
+    })
     //修改用户模态框启动时自动填充数据
     $("#UserEditModal").on('show.bs.modal', function (e) {
-        alert("?");
+        // alert("?");
         //监听事件，当modal被打开时做一些事情
-        console.log($(e.relatedTarget).attr('data-id')); //测试是否能拿到值
+        // console.log($(e.relatedTarget).attr('data-id')); //测试是否能拿到值
+        var id = $(e.relatedTarget).attr('data-id');
+        $.session.remove('UID');
+        $.session.set('UID',id);
+        if(id){
+            $.ajax({
+                url: '/user/getuserbyid?id=' + id,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到user
+                    $('#newUname').val(data.uname);
+
+                }
+            })
+        }
+
     });
+
+
     //表格渲染
     $(function () {
         $("#userTable").bootstrapTable({//在id为dataTable的
@@ -207,8 +247,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 formatter: function (value, row) {
                     return [
                         '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-                        'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' +
-                        'onClick=editUser(' + row.uId + ')>',
+                        'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' +')>',
                         '<i class="fa fa-edit" >修改</i></button>',
 
                         '<button type="button" class="btn btn-danger btn-xs" ',
@@ -231,16 +270,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
     }
 
-    //修改用户模态框预加载数据
-    $(function () {
-        $('#UserManageModal').on('hide.bs.modal', function () {
-            alert('嘿，我听说您喜欢模态框...');
-        })
-    });
-
-    function editUser(uId) {
-
-    }
 
     //删除单个用户
     function removeUser(uId) {
@@ -269,7 +298,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         })
     }
 
-    //
+
     //用户添加
     $("#userAdd").validate({
         rules: {

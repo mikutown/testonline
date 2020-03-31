@@ -8,6 +8,7 @@ import top.leafii.testonline.common.api.PagableResponse;
 import top.leafii.testonline.common.api.PageRequest;
 import top.leafii.testonline.common.domain.User;
 import top.leafii.testonline.common.domain.UserExample;
+import top.leafii.testonline.common.utils.MD5;
 import top.leafii.testonline.mapper.UserMapper;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean checkUname(String uname) {
         UserExample userExample = new UserExample();
-        userExample.or().andUnameEqualTo(uname);
+        UserExample.Criteria criteria = userExample.createCriteria().andUnameEqualTo(uname);
         return userMapper.countByExample(userExample) == 0;
     }
 
@@ -56,4 +57,12 @@ public class UserServiceImpl implements UserService {
         User u = userMapper.selectByPrimaryKey(id);
         return u;
     }
+
+    @Override
+    public Boolean modifyUser(User user) {
+        int i = userMapper.updateByPrimaryKeySelective(user);
+        return i>0?true:false;
+    }
+
+
 }

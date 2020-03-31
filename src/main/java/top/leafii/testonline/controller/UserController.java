@@ -20,6 +20,12 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+    @GetMapping("/getuserbyid")
+    @ResponseBody//ajax
+    public User getUserById(@RequestParam("id") int id){
+        User u = userService.findUserByUid(id);
+        return u;
+    }
     //删除单个用户
     @GetMapping("/remove")
     @ResponseBody//ajax
@@ -72,6 +78,19 @@ public class UserController {
             return new JSONMap(true,200, UserManageMessage.REGISTER_SUCCESS);
         }else{
             return new JSONMap(false,200, UserManageMessage.REGISTER_ERROR);
+        }
+    }
+    @PostMapping("/modify")
+    @ResponseBody
+    public Object modify(@RequestBody User user){
+        user.setRoleId(2);
+        String newpwd = MD5.md5(user.getPassword()+user.getUname());
+        user.setPassword(newpwd);
+        Boolean bool = userService.modifyUser(user);
+        if(bool){
+            return new JSONMap(true,200, UserManageMessage.MODIFY_SUCCESS);
+        }else{
+            return new JSONMap(false,200, UserManageMessage.MODIFY_ERROR);
         }
     }
     //登录

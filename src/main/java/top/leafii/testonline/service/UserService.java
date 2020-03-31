@@ -17,4 +17,6 @@ public interface UserService {
     Boolean removeUser(User user);
 
     User findUserByUid(int id);
+
+    Boolean modifyUser(User user);
 }
