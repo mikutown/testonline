@@ -3,6 +3,11 @@ package top.leafii.testonline.common.domain;
 import java.util.Date;
 
 public class Subject {
+    public Subject(String subname, Date subtime) {
+        this.subname = subname;
+        this.subtime = subtime;
+    }
+
     private Integer subId;
 
     private String subname;

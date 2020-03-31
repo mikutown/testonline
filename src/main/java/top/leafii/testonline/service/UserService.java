@@ -12,6 +12,7 @@ public interface UserService {
     Boolean checkUname(String uname);
 
     Boolean insertUser(User user);
+
     public PagableResponse list(PageRequest request);
 
     Boolean removeUser(User user);
