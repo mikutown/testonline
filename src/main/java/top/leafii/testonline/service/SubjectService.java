@@ -7,5 +7,11 @@ import top.leafii.testonline.common.domain.Subject;
 import java.util.List;
 
 public interface SubjectService {
-    List<Subject> list();
+    PagableResponse list(PageRequest request);
+
+    Boolean checkSubName(String subname);
+
+    Boolean saveSubject(Subject subject);
+
+    Subject findSubjectByid(int id);
 }

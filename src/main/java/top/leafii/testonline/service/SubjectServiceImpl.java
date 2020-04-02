@@ -19,8 +19,31 @@ public class SubjectServiceImpl implements SubjectService {
 
 
     @Override
-    public List<Subject> list() {
+    public PagableResponse list(PageRequest request) {
+        PageHelper.startPage(request.getPageNum(),request.getPageSize());
         List<Subject> subjects = subjectMapper.selectByExample(new SubjectExample());
-        return subjects;
+        return new PagableResponse(new PageInfo<>(subjects).getTotal(),subjects);
+
+    }
+
+    @Override
+    public Boolean checkSubName(String subname) {
+        SubjectExample subjectExample = new SubjectExample();
+        subjectExample.or().andSubnameEqualTo(subname);
+        List<Subject> subjects = subjectMapper.selectByExample(subjectExample);
+        System.out.println(subjects.size());
+        return subjects.size()>0?false:true;
+    }
+
+    @Override
+    public Boolean saveSubject(Subject subject) {
+        int i = subjectMapper.insertSelective(subject);
+        return i>0?true:false;
+    }
+
+    @Override
+    public Subject findSubjectByid(int id) {
+        Subject subject = subjectMapper.selectByPrimaryKey(id);
+        return subject;
     }
 }

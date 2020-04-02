@@ -56,6 +56,23 @@ desired effect
             <div class="box-header">
               <h3 class="box-title">科目列表</h3>
             </div>
+            <div id="toolbar">
+              <div class="pull-left">
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#SubjectInsertModal">
+                  <i class="fa fa-file">添加科目</i>
+                </button>
+                <button type="button" class="btn btn-danger" id="removeBtn">
+                  <i class="fa fa-file">批量删除</i>
+                </button>
+              </div>
+              <div class="pull-right">
+                <input type="text" id="keyword" placeholder="按照名称查询">
+                <button type="button" class="btn btn-info" id="searchBtn">
+                  <i class="fa fa-search">搜索</i>
+                </button>
+              </div>
+            </div>
             <!-- /.box-header -->
             <div class="box-body">
               <table id="subjectTable"></table>
@@ -74,8 +91,64 @@ desired effect
 
   <!-- Main Footer -->
   <div th:replace="~{/views/layout/foot :: footer}"></div>
+  <!-- Insert Modal -->
+  <div class="modal fade" id="SubjectInsertModal" tabindex="-1" role="dialog"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">科目添加</h4>
+        </div>
+        <div class="modal-body">
+          <form id="subjectAdd">
+            <div class="form-group">
+              <label for="subname">科目名称</label>
+              <input type="text" class="form-control" name="subname" id="subname" placeholder="请输入科目名称">
+            </div>
+            <button type="submit" class="btn btn-primary ">添加</button>
+            <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span>请在输入科目信息后点击添加按钮</span>
+        </div>
 
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- Edit Modal -->
+  <div class="modal fade" id="SubjectEditModal" tabindex="-1" role="dialog"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">科目修改</h4>
+        </div>
+        <div class="modal-body">
+          <form id="subjectModify">
+            <div class="form-group">
+              <label for="newsubname">科目名称</label>
+              <input type="text" class="form-control" name="newsubname" id="newsubname" placeholder="请输入科目名称">
+            </div>
+            <button type="submit" class="btn btn-primary ">修改</button>
+            <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span>请在输入新的科目信息后点击添加按钮</span>
+        </div>
 
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
 
 </div>
 <!-- ./wrapper -->
@@ -91,7 +164,7 @@ desired effect
   //表格渲染
   $(function () {
     $("#subjectTable").bootstrapTable({//在id为dataTable的
-      url: '/subject/subjlist',
+      url: '/subject/list',
       pagination: true,//是否分页
       toolbar: "#toolbar",
       toolbarAlign: "right",
@@ -101,32 +174,27 @@ desired effect
       sidePagination: 'server',
       dataField: "data",
       columns: [{//表头
-        field: 'uId',
+        field: 'subId',
         title: 'ID'
       }, {
-        field: 'uname',
-        title: '登录名'
+        field: 'subname',
+        title: '科目名称'
       }, {
-        field: 'roleId',
-        title: '权限',
-        formatter: function (value) {
-          if (value == 1) {
-            return '管理员';
-          } else {
-            return '普通用户';
-          }
+        field: 'subtime',
+        title: '最近编辑时间',
+        formatter: function (value, row, index) {
+          return changeDateFormat(value)
         }
-
       }, {
         title: '操作',
         formatter: function (value, row) {
           return [
             '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-            'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' +')>',
+            'data-toggle="modal" data-target="#SubjectEditModal"', 'data-id=' + row.subId + ' ' +')>',
             '<i class="fa fa-edit" >修改</i></button>',
 
             '<button type="button" class="btn btn-danger btn-xs" ',
-            'onClick=removeUser(' + row.uId + ')>',
+            'onClick=removeUser(' + row.subId + ')>',
             '<i class="fa fa-remove" >删除</i></button>']
                   .join('');
         }
@@ -135,6 +203,101 @@ desired effect
     })
 
   })
+  function queryParams(params) {
+    return {
+      //把我们的pageNum，pageSize传到命令中去
+      pageSize: params.limit,
+      pageNum: params.offset / params.limit + 1,
+      keyword: $("#keyword").val()
+    }
+  }
+  //转换日期格式(时间戳转换为datetime格式)
+  function changeDateFormat(cellval) {
+    var dateVal = cellval + "";
+    if (cellval != null) {
+      var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+      var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+      var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+      var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+      var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+      var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+      return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+    }
+  }
+  //用户添加
+  $("#subjectAdd").validate({
+    rules: {
+      subname: {
+        required: true,//用户名是必填字段
+        minlength: 4,//4位
+        maxlength: 20,//最多输入20
+        remote: {
+          url: "/subject/check-subname",
+          type: "get",
+          data: {
+            subname: function () {
+              return $("#subname").val();
+            }
+          }
+        }
+      }
+    },
+    messages: {
+      //定义消息
+      subname: {
+        required: "请输入科目名!",
+        remote: "科目名已存在，请修改科目名！"
+      }
+    },
+    submitHandler: function (form) {
+      var subname = $("#subname").val();
+      //验证完成后提交表单
+      //进行ajax传值
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: basePath + "/subject/save",
+        data: JSON.stringify({"subname": subname}),
+        dataType: "json",
+        success: function (msg) {
+          var json = msg["data"];
+          if (json["success"]) {
+            $("#subjectAdd")[0].reset();
+            layer.msg(json["msg"], {icon: 6, shade: 0.4,time:2000}, function () {
+              $("#SubjectInsertModal").modal('hide');
+            });
+            $("#subjectTable").bootstrapTable("refresh");
+
+          } else {
+            layer.msg(json["msg"], {icon: 5,time:2000});
+          }
+        }
+      });
+
+    }
+  });
+
+  //修改modal显示时加载数据
+  $("#SubjectEditModal").on('show.bs.modal', function (e) {
+    // alert("?");
+    //监听事件，当modal被打开时做一些事情
+    //console.log($(e.relatedTarget).attr('data-id')); //测试是否能拿到值
+    var id = $(e.relatedTarget).attr('data-id');
+    // $.session.remove('UID');
+    // $.session.set('UID',id);
+    if(id){
+      $.ajax({
+        url: '/subject/getsubjectbyid?id=' + id,
+        method: 'get',
+        success: function (data) {
+          //console.log(data);//测试能否得到user
+          $('#newsubname').val(data.subname);
+        }
+      })
+    }
+
+  });
+
 </script>
 
 </body>
