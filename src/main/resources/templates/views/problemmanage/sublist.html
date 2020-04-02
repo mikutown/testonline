@@ -131,12 +131,12 @@ desired effect
           <h4 class="modal-title">科目修改</h4>
         </div>
         <div class="modal-body">
-          <form id="subjectModify">
+          <form id="subjectEdit">
             <div class="form-group">
               <label for="newsubname">科目名称</label>
               <input type="text" class="form-control" name="newsubname" id="newsubname" placeholder="请输入科目名称">
             </div>
-            <button type="submit" class="btn btn-primary ">修改</button>
+            <button type="button" id="modifyBtn" class="btn btn-primary ">修改</button>
             <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
           </form>
         </div>
@@ -224,7 +224,7 @@ desired effect
       return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
     }
   }
-  //用户添加
+  //科目添加
   $("#subjectAdd").validate({
     rules: {
       subname: {
@@ -276,15 +276,40 @@ desired effect
 
     }
   });
+  //科目修改
+  $("#modifyBtn").click(function () {
+    var subname = $("#newsubname").val();
+    var id = $.session.get('SUBID');
+    //alert("subId "+id+"subname "+ subname)
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: basePath + "/subject/modify",
+      data: JSON.stringify({"subId":id, "subname": subname}),
+      dataType: "json",
+      success: function (msg) {
+        var json = msg["data"];
+        if (json["success"]) {
+          $("#subjectEdit")[0].reset();
+          layer.msg(json["msg"], {icon: 6, time:2000,shade: 0.4}, function () {
+            $("#SubjectEditModal").modal('hide');
+          });
+          $("#subjectTable").bootstrapTable("refresh");
 
+        } else {
+          layer.msg(json["msg"], {icon: 5,time:2000});
+        }
+      }
+    })
+  });
   //修改modal显示时加载数据
   $("#SubjectEditModal").on('show.bs.modal', function (e) {
     // alert("?");
     //监听事件，当modal被打开时做一些事情
     //console.log($(e.relatedTarget).attr('data-id')); //测试是否能拿到值
     var id = $(e.relatedTarget).attr('data-id');
-    // $.session.remove('UID');
-    // $.session.set('UID',id);
+     $.session.remove('SUBID');
+     $.session.set('SUBID',id);
     if(id){
       $.ajax({
         url: '/subject/getsubjectbyid?id=' + id,

@@ -8,6 +8,17 @@ public class Subject {
     public Subject() {
     }
 
+    public Subject(Integer subId, String subname) {
+        this.subId = subId;
+        this.subname = subname;
+    }
+
+    public Subject(Integer subId, String subname, Date subtime) {
+        this.subId = subId;
+        this.subname = subname;
+        this.subtime = subtime;
+    }
+
     public Subject(String subname, Date subtime) {
         this.subname = subname;
         this.subtime = subtime;

@@ -2,10 +2,7 @@ package top.leafii.testonline.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import top.leafii.testonline.common.api.PagableResponse;
 import top.leafii.testonline.common.api.PageRequest;
 import top.leafii.testonline.common.domain.Subject;
@@ -15,6 +12,7 @@ import top.leafii.testonline.common.utils.JSONMap;
 import top.leafii.testonline.common.utils.UserManageMessage;
 import top.leafii.testonline.service.SubjectService;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -22,6 +20,23 @@ import java.util.List;
 public class SubjectController {
     @Autowired
     private SubjectService subjectService;
+
+    @PostMapping("/modify")
+    @ResponseBody
+    public Object modifySubject(@RequestBody Subject subject){
+        subject.setSubtime(new Date());
+        Boolean bool = subjectService.modifySubject(subject);
+        if(bool){
+            return new JSONMap(true,200, ItemBankManageMessage.SUBJECT_MODIFY_SUCCESS);
+        }else{
+            return new JSONMap(false,200, ItemBankManageMessage.SUBJECT_MODIFY_ERROR);
+        }
+    }
+    /**
+     * 通过id获取subject
+     * @param id
+     * @return
+     */
     @RequestMapping("/getsubjectbyid")
     @ResponseBody//ajax
     public Subject getSubjectById(@RequestParam("id") int id){

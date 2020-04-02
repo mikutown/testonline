@@ -46,4 +46,10 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = subjectMapper.selectByPrimaryKey(id);
         return subject;
     }
+
+    @Override
+    public Boolean modifySubject(Subject subject) {
+        int i = subjectMapper.updateByPrimaryKeySelective(subject);
+        return i>0?true:false;
+    }
 }

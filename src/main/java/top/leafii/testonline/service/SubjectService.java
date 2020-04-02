@@ -14,4 +14,6 @@ public interface SubjectService {
     Boolean saveSubject(Subject subject);
 
     Subject findSubjectByid(int id);
+
+    Boolean modifySubject(Subject subject);
 }

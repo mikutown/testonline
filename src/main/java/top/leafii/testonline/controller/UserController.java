@@ -20,6 +20,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
+
+
     @GetMapping("/getuserbyid")
     @ResponseBody//ajax
     public User getUserById(@RequestParam("id") int id){
