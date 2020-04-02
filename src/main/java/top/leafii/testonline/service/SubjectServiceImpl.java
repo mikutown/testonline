@@ -52,4 +52,10 @@ public class SubjectServiceImpl implements SubjectService {
         int i = subjectMapper.updateByPrimaryKeySelective(subject);
         return i>0?true:false;
     }
+
+    @Override
+    public Boolean removeSubject(Subject sbInDB) {
+        int i = subjectMapper.deleteByPrimaryKey(sbInDB.getSubId());
+        return i>0?true:false;
+    }
 }

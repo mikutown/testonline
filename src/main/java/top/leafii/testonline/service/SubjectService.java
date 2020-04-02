@@ -16,4 +16,6 @@ public interface SubjectService {
     Subject findSubjectByid(int id);
 
     Boolean modifySubject(Subject subject);
+
+    Boolean removeSubject(Subject sbInDB);
 }

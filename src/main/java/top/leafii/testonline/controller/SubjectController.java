@@ -21,6 +21,22 @@ public class SubjectController {
     @Autowired
     private SubjectService subjectService;
 
+    @RequestMapping("/remove")
+    @ResponseBody
+    public Object removeSubject(@RequestParam("subId")int subId){
+        Subject sbInDB = subjectService.findSubjectByid(subId);
+        Boolean removeSueecss = subjectService.removeSubject(sbInDB);
+        if(removeSueecss){
+            return new JSONMap(true,200, "删除科目："+sbInDB.getSubname()+"成功！");
+        }else{
+            return new JSONMap(false,200, "删除科目："+sbInDB.getSubname()+"失败！");
+        }
+    }
+    /**
+     * 修改科目
+     * @param subject
+     * @return
+     */
     @PostMapping("/modify")
     @ResponseBody
     public Object modifySubject(@RequestBody Subject subject){
