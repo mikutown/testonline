@@ -16,10 +16,11 @@ import java.util.List;
 public class SubjectController {
     @Autowired
     private SubjectService subjectService;
-    @RequestMapping("/subjlist")
+    @RequestMapping("/list")
     @ResponseBody
-    public PagableResponse<List<Subject>> subList(PageRequest request){
-        return subjectService.list(request);
+    public List<Subject> listSubject(){
+        List<Subject> list = subjectService.list();
+        return list;
     }
 
 }

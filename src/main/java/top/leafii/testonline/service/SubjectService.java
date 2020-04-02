@@ -7,5 +7,5 @@ import top.leafii.testonline.common.domain.Subject;
 import java.util.List;
 
 public interface SubjectService {
-    PagableResponse<List<Subject>> list(PageRequest request);
+    List<Subject> list();
 }

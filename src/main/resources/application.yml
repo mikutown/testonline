@@ -3,7 +3,9 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: root
-    url: jdbc:mysql://localhost:3306/testonline?characterEncoding=utf8&amp;useSSL=false
+    url: jdbc:mysql://localhost:3306/testonline?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull
+  mvc:
+    date-format: yyyy-MM-dd
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
 logging:

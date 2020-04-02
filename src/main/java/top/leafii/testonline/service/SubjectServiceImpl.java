@@ -17,11 +17,10 @@ public class SubjectServiceImpl implements SubjectService {
     @Autowired
     SubjectMapper subjectMapper;
 
+
     @Override
-    public PagableResponse<List<Subject>> list(PageRequest request) {
-        PageHelper.startPage(request.getPageNum(),request.getPageSize());
+    public List<Subject> list() {
         List<Subject> subjects = subjectMapper.selectByExample(new SubjectExample());
-        System.out.println(new PageInfo<>(subjects).getTotal());//打印总数
-        return null;
+        return subjects;
     }
 }

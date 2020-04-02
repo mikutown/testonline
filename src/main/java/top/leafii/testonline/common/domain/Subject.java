@@ -1,8 +1,13 @@
 package top.leafii.testonline.common.domain;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Subject {
+    public Subject() {
+    }
+
     public Subject(String subname, Date subtime) {
         this.subname = subname;
         this.subtime = subtime;
@@ -11,7 +16,6 @@ public class Subject {
     private Integer subId;
 
     private String subname;
-
     private Date subtime;
 
     public Integer getSubId() {

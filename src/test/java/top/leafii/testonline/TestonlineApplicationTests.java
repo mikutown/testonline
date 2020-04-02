@@ -16,11 +16,12 @@ import java.util.List;
 @SpringBootTest
 class TestonlineApplicationTests {
     @Autowired
-
+    SubjectMapper subjectMapper;
 
     @Test
     void contextLoads() {
-
+        List<Subject> subjects = subjectMapper.selectByExample(null);
+        System.out.println(subjects.size());
     }
 
 }
