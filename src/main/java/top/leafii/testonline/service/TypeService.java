@@ -16,4 +16,6 @@ public interface TypeService {
     Type findTypeById(int id);
 
     Boolean modifyType(Type type);
+
+    Boolean removeType(Type typeInDB);
 }

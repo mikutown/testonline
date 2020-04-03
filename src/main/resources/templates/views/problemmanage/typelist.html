@@ -285,7 +285,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
     }
 
   });
+  //删除单个题型
+  function removeUser(id) {
+    layer.msg('确定删除吗？', {
+      time: 0,
+      btn: ['确定', '删个屁'],
+      yes: function (index) {
+        layer.close(index);
+        $.ajax({
+          url: '/type/remove?typeId=' + id,
+          success: function (msg) {
+            var json = msg["data"];
+            if (json["success"]) {
+              layer.msg(json["msg"], {icon: 6,time:2000});
+              $("#subjectTable").bootstrapTable("remove", {field: 'typeId', values: [id]});//注意参数的name
+            } else {
+              layer.msg(json["msg"], {icon: 5,time:2000});
+            }
+          },
+          error: function (data) {
+            layer.msg("未知错误！", {icon: 5,time:2000});
+          }
 
+        })
+      }
+    })
+  }
 </script>
 
 </body>

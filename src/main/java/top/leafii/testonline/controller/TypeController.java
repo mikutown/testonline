@@ -22,6 +22,22 @@ import java.util.List;
 public class TypeController {
     @Autowired
     TypeService typeService;
+    @RequestMapping("/remove")
+    @ResponseBody
+    public Object removeType(@RequestParam("typeId") int typeId){
+        Type typeInDB = typeService.findTypeById(typeId);
+        Boolean removeSuccess = typeService.removeType(typeInDB);
+        if(removeSuccess){
+            return new JSONMap(true,200, "删除题型："+typeInDB.getTypename()+"成功！");
+        }else{
+            return new JSONMap(false,200, "删除题型："+typeInDB.getTypename()+"失败！");
+        }
+    }
+    /**
+     * 题型修改
+     * @param type
+     * @return
+     */
     @RequestMapping("/modify")
     @ResponseBody
     public Object modifyType(@RequestBody Type type){

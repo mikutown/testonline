@@ -49,4 +49,10 @@ public class TypeServiceImpl implements TypeService {
         int i = typeMapper.updateByPrimaryKeySelective(type);
         return i>0?true:false;
     }
+
+    @Override
+    public Boolean removeType(Type typeInDB) {
+        int i = typeMapper.deleteByPrimaryKey(typeInDB.getTypeId());
+        return i>0?true:false;
+    }
 }
