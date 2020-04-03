@@ -51,7 +51,7 @@ public class SubjectController {
     /**
      * 通过id获取subject
      * @param id
-     * @return
+     * @return subject
      */
     @RequestMapping("/getsubjectbyid")
     @ResponseBody//ajax
@@ -81,6 +81,11 @@ public class SubjectController {
         return subjectService.checkSubName(subname);
     }
 
+    /**
+     * 添加科目
+     * @param subject
+     * @return
+     */
     @RequestMapping("/save")
     @ResponseBody
     public Object saveSubject(@RequestBody Subject subject){

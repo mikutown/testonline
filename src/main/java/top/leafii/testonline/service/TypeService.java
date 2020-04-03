@@ -10,4 +10,10 @@ public interface TypeService {
     PagableResponse list(PageRequest request);
 
     Boolean chectTypeName(String typename);
+
+    Boolean saveType(Type type);
+
+    Type findTypeById(int id);
+
+    Boolean modifyType(Type type);
 }

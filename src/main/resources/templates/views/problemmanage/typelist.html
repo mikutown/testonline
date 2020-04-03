@@ -112,10 +112,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <h4 class="modal-title">题型修改</h4>
         </div>
         <div class="modal-body">
-          <form id="subjectEdit">
+          <form id="typeEdit">
             <div class="form-group">
               <label for="newtypename">题型名称</label>
-              <input type="text" class="form-control" name="newtypename" id="newtypename" placeholder="请输入科目名称">
+              <input type="text" class="form-control" name="newtypename" id="newtypename" placeholder="请输入题型名称">
             </div>
             <button type="button" id="modifyBtn" class="btn btn-primary ">修改</button>
             <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
@@ -144,6 +144,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $("#probtree").addClass("active");
     $("#typemanage").addClass("active");
   })
+  //表格渲染
   $(function () {
     $("#typeTable").bootstrapTable({//在id为dataTable的
       url: '/type/list',
@@ -166,11 +167,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         formatter: function (value, row) {
           return [
             '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-            'data-toggle="modal" data-target="#TypeEditModal"', 'data-id=' + row.subId + ' ' +')>',
+            'data-toggle="modal" data-target="#TypeEditModal"', 'data-id=' + row.typeId + ' ' +')>',
             '<i class="fa fa-edit" >修改</i></button>',
 
             '<button type="button" class="btn btn-danger btn-xs" ',
-            'onClick=removeUser(' + row.subId + ')>',
+            'onClick=removeUser(' + row.typeId + ')>',
             '<i class="fa fa-remove" >删除</i></button>']
                   .join('');
         }
@@ -236,7 +237,55 @@ scratch. This page gets rid of all links and provides the needed markup only.
       });
 
     }
+  })
+  //题型修改
+  $("#modifyBtn").click(function () {
+    var typename = $("#newtypename").val();
+    var id = $.session.get('TYPEID');
+    //alert("subId "+id+"subname "+ subname)
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: basePath + "/type/modify",
+      data: JSON.stringify({"typeId":id, "typename": typename}),
+      dataType: "json",
+      success: function (msg) {
+        var json = msg["data"];
+        if (json["success"]) {
+          $("#typeEdit")[0].reset();
+          layer.msg(json["msg"], {icon: 6, time:2000,shade: 0.4}, function () {
+            $("#TypeEditModal").modal('hide');
+          });
+          $("#typeTable").bootstrapTable("refresh");
+
+        } else {
+          layer.msg(json["msg"], {icon: 5,time:2000});
+        }
+      }
+    })
   });
+
+  //显示模态框时加载数据
+  $("#TypeEditModal").on('show.bs.modal', function (e) {
+    // alert("?");
+    //监听事件，当modal被打开时做一些事情
+    //console.log($(e.relatedTarget).attr('data-id')); //测试是否能拿到值
+    var id = $(e.relatedTarget).attr('data-id');
+    $.session.remove('TYPEID');
+    $.session.set('TYPEID',id);
+    if(id){
+      $.ajax({
+        url: '/type/gettypebyid?id=' + id,
+        method: 'get',
+        success: function (data) {
+          //console.log(data);//测试能否得到user
+          $('#newtypename').val(data.typename);
+        }
+      })
+    }
+
+  });
+
 </script>
 
 </body>

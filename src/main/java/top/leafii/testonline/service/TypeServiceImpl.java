@@ -31,4 +31,22 @@ public class TypeServiceImpl implements TypeService {
         List<Type> types = typeMapper.selectByExample(typeExample);
         return types.size()>0?false:true;
     }
+
+    @Override
+    public Boolean saveType(Type type) {
+        int i = typeMapper.insertSelective(type);
+        return i>0?true:false;
+    }
+
+    @Override
+    public Type findTypeById(int id) {
+        Type type = typeMapper.selectByPrimaryKey(id);
+        return type;
+    }
+
+    @Override
+    public Boolean modifyType(Type type) {
+        int i = typeMapper.updateByPrimaryKeySelective(type);
+        return i>0?true:false;
+    }
 }
