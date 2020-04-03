@@ -72,6 +72,64 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Main Footer -->
   <div th:replace="~{/views/layout/foot :: footer}"></div>
+  <!-- Insert Modal -->
+  <div class="modal fade" id="TypeInsertModal" tabindex="-1" role="dialog"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">题型添加</h4>
+        </div>
+        <div class="modal-body">
+          <form id="typeAdd">
+            <div class="form-group">
+              <label for="typename">题型名称</label>
+              <input type="text" class="form-control" name="typename" id="typename" placeholder="请输入科目名称">
+            </div>
+            <button type="submit" class="btn btn-primary ">添加</button>
+            <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span>请在输入题型信息后点击添加按钮</span>
+        </div>
+
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- Edit Modal -->
+  <div class="modal fade" id="TypeEditModal" tabindex="-1" role="dialog"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">题型修改</h4>
+        </div>
+        <div class="modal-body">
+          <form id="subjectEdit">
+            <div class="form-group">
+              <label for="newtypename">题型名称</label>
+              <input type="text" class="form-control" name="newtypename" id="newtypename" placeholder="请输入科目名称">
+            </div>
+            <button type="button" id="modifyBtn" class="btn btn-primary ">修改</button>
+            <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <span>请输入更改后的题型信息 然后点击添加按钮</span>
+        </div>
+
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
 
 
 
@@ -108,7 +166,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         formatter: function (value, row) {
           return [
             '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-            'data-toggle="modal" data-target="#SubjectEditModal"', 'data-id=' + row.subId + ' ' +')>',
+            'data-toggle="modal" data-target="#TypeEditModal"', 'data-id=' + row.subId + ' ' +')>',
             '<i class="fa fa-edit" >修改</i></button>',
 
             '<button type="button" class="btn btn-danger btn-xs" ',
@@ -128,6 +186,57 @@ scratch. This page gets rid of all links and provides the needed markup only.
       keyword: $("#keyword").val()
     }
   }
+  //题型添加
+  $("#typeAdd").validate({
+    rules: {
+      typename: {
+        required: true,//用户名是必填字段
+        maxlength: 20,//最多输入20
+        remote: {
+          url: "/type/check-typename",
+          type: "get",
+          data: {
+            typename: function () {
+              return $("#typename").val();
+            }
+          }
+        }
+      }
+    },
+    messages: {
+      //定义消息
+      typename: {
+        required: "请输入题型名称!",
+        remote: "该题型已存在，请修改题型！"
+      }
+    },
+    submitHandler: function (form) {
+      var typename = $("#typename").val();
+      //验证完成后提交表单
+      //进行ajax传值
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: basePath + "/type/save",
+        data: JSON.stringify({"typename": typename}),
+        dataType: "json",
+        success: function (msg) {
+          var json = msg["data"];
+          if (json["success"]) {
+            $("#typeAdd")[0].reset();
+            layer.msg(json["msg"], {icon: 6, shade: 0.4,time:2000}, function () {
+              $("#TypeInsertModal").modal('hide');
+            });
+            $("#typeTable").bootstrapTable("refresh");
+
+          } else {
+            layer.msg(json["msg"], {icon: 5,time:2000});
+          }
+        }
+      });
+
+    }
+  });
 </script>
 
 </body>

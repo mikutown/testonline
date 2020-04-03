@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TypeService {
     PagableResponse list(PageRequest request);
+
+    Boolean chectTypeName(String typename);
 }

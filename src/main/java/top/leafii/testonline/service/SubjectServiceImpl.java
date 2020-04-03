@@ -31,7 +31,7 @@ public class SubjectServiceImpl implements SubjectService {
         SubjectExample subjectExample = new SubjectExample();
         subjectExample.or().andSubnameEqualTo(subname);
         List<Subject> subjects = subjectMapper.selectByExample(subjectExample);
-        System.out.println(subjects.size());
+       // System.out.println(subjects.size());
         return subjects.size()>0?false:true;
     }
 

@@ -23,4 +23,12 @@ public class TypeServiceImpl implements TypeService {
         List<Type> types = typeMapper.selectByExample(new TypeExample());
         return new PagableResponse(new PageInfo<>(types).getTotal(),types);
     }
+
+    @Override
+    public Boolean chectTypeName(String typename) {
+        TypeExample typeExample = new TypeExample();
+        typeExample.or().andTypenameEqualTo(typename);
+        List<Type> types = typeMapper.selectByExample(typeExample);
+        return types.size()>0?false:true;
+    }
 }
