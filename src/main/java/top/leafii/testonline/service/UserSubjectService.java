@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface UserSubjectService {
     List<Subject> getNoUserSubject(int uid);
+
+    List<Subject> getUserSubject(int uid);
 }

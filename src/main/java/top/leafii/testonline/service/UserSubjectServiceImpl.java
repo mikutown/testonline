@@ -20,4 +20,12 @@ public class UserSubjectServiceImpl implements UserSubjectService {
         List<Subject> subjects = user_subMapper.selectNoUserSubject(uid);
         return subjects;
     }
+
+    @Override
+    public List<Subject> getUserSubject(int uid) {
+        User_subExample user_subExample = new User_subExample();
+        user_subExample.or().andUIdEqualTo(uid);
+        List<Subject> subjects = user_subMapper.selectUserSubject(uid);
+        return subjects;
+    }
 }

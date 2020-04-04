@@ -23,4 +23,6 @@ public interface User_subMapper {
     int updateByExample(@Param("record") User_sub record, @Param("example") User_subExample example);
 
     List<Subject> selectNoUserSubject(int uid);
+
+    List<Subject> selectUserSubject(int uid);
 }

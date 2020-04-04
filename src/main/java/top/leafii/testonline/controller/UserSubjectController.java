@@ -23,4 +23,10 @@ public class UserSubjectController {
         List<Subject> list = userSubjectService.getNoUserSubject(uid);
         return list;
     }
+    @RequestMapping("/getusersubject")
+    @ResponseBody
+    public Object getUserSubject(@RequestParam("uid") int uid){
+        List<Subject> list = userSubjectService.getUserSubject(uid);
+        return list;
+    }
 }

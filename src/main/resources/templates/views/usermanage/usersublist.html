@@ -182,8 +182,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $.ajax({
         url: '/user_sub/getnousersubject?uid=' + id,
         method: 'get',
-        success: function (data) {
-          console.log(data);//测试能否得到user
+        success: function (nousersubjectdata) {
+          console.log(nousersubjectdata);//测试能否得到user
+        }
+      })
+      $.ajax({
+        url: '/user_sub/getusersubject?uid=' + id,
+        method: 'get',
+        success: function (usersubjectdata) {
+          console.log(usersubjectdata);//测试能否得到user
         }
       })
     }
