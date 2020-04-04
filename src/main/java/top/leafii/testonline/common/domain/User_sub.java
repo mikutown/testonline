@@ -7,6 +7,15 @@ public class User_sub {
 
     private Integer status;
 
+    public User_sub() {
+    }
+
+    public User_sub(Integer uId, Integer subId, Integer status) {
+        this.uId = uId;
+        this.subId = subId;
+        this.status = status;
+    }
+
     public Integer getuId() {
         return uId;
     }

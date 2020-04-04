@@ -130,7 +130,7 @@
     )
   </select>
   <select id="selectUserSubject" resultType="top.leafii.testonline.common.domain.Subject">
-    select * from `subject` where `subject`.sub_id in (
+    select sub_id subId,subname,subtime from `subject` where `subject`.sub_id in (
         select sub_id from `user_sub` where u_id = #{uid,jdbcType=INTEGER}
     )
   </select>

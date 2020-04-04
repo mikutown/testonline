@@ -28,4 +28,18 @@ public class UserSubjectServiceImpl implements UserSubjectService {
         List<Subject> subjects = user_subMapper.selectUserSubject(uid);
         return subjects;
     }
+
+    @Override
+    public Boolean addUserSubject(User_sub userSub) {
+        int i = user_subMapper.insertSelective(userSub);
+        return i>0?true:false;
+    }
+
+    @Override
+    public Boolean removeUserSubject(User_sub userSub) {
+        User_subExample userSubExample = new User_subExample();
+        userSubExample.or().andUIdEqualTo(userSub.getuId()).andSubIdEqualTo(userSub.getSubId());
+        int i = user_subMapper.deleteByExample(userSubExample);
+        return i>0?true:false;
+    }
 }

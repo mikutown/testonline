@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/views/layout/head :: content}"></head>
 <body class="hold-transition skin-green-light sidebar-mini">
@@ -69,21 +66,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="form-group">
               <label>未分配科目列表</label><br>
               <select class="form-control" multiple size="10"
-                      style="width:100px;overflow-y:auto;" id="nousersubjectselect">
+                      style="width:100px;overflow-y:auto;" id="noUserSubjectSelect">
               </select>
             </div>
             <div class="form-group">
               <ul>
-                <li class="btn btn-default glyphicon glyphicon-chevron-right" id="addSubjectBtn"></li>
+                <li class="btn btn-primary glyphicon glyphicon-chevron-right" id="addSubjectBtn"></li>
                 <br>
-                <li class="btn btn-default glyphicon glyphicon-chevron-left"
+                <li class="btn btn-warning glyphicon glyphicon-chevron-left"
                     style="margin-top:20px;" id="removeSubjectBtn"></li>
               </ul>
             </div>
             <div class="form-group" style="margin-left:40px;">
               <label>已分配科目列表</label><br>
               <select class="form-control" multiple size="10"
-                      style="width:100px;overflow-y:auto;" id="usersubjectselect">
+                      style="width:100px;overflow-y:auto;" id="userSubjectSelect">
               </select>
             </div>
           </form>
@@ -163,42 +160,105 @@ scratch. This page gets rid of all links and provides the needed markup only.
       keyword: $("#keyword").val()
     }
   }
-
-  //分配模态框启动时
+  //分配模态框启动时 填充数据
   $("#UserSubjectModal").on('show.bs.modal', function (e) {
-    //alert("?");
-    //监听事件，当modal被打开时做一些事情
-    //console.log($(e.relatedTarget).attr('data-id')); //测试是否能拿到值
     var id = $(e.relatedTarget).attr('data-id');
     $.session.remove('UID');
     $.session.set('UID',id);
     //获取未分配科目列表和已分配科目列表
     if(id){
-      $.ajax({
-        url: '/user_sub/getnousersubject?uid=' + id,
-        method: 'get',
-        success: function (nousersubjectjson) {
-          for (var i = 0;i < nousersubjectjson.length;i++){
-            var nosub = nousersubjectjson[i];
-            $("#nousersubjectselect").append('<option value="'+nosub["subId"]+'">'+nosub["subname"]+'</option>')
-          }
-//<option value="pm">管理员</option>
-        }
-      });
-      $.ajax({
-        url: '/user_sub/getusersubject?uid=' + id,
-        method: 'get',
-        success: function (usersubjectjson) {
-          for (var i = 0;i < usersubjectjson.length;i++){
-            var sub = usersubjectjson[i];
-            $("#usersubjectselect").append('<option value="'+sub["subId"]+'">'+sub["subname"]+'</option>')
-          }
-//<option value="pm">管理员</option>
-        }
-      });
+      showUserSubjectList(id);
     }
-
   });
+  //未分配科目和已分配科目的展示函数
+  function showUserSubjectList(id){
+    $("#userSubjectSelect").empty();
+    $("#noUserSubjectSelect").empty();
+    $.ajax({
+      url: '/user_sub/getnousersubject?uid=' + id,
+      method: 'get',
+      success: function (nousersubjectjson) {
+        for (var i = 0;i < nousersubjectjson.length;i++){
+          var nosub = nousersubjectjson[i];
+          $("#noUserSubjectSelect").append('<option value="'+nosub["subId"]+'">'+nosub["subname"]+'</option>')
+        }
+//<option value="pm">管理员</option>
+      }
+    });
+    $.ajax({
+      url: '/user_sub/getusersubject?uid=' + id,
+      method: 'get',
+      success: function (usersubjectjson) {
+        for (var i = 0;i < usersubjectjson.length;i++){
+          var sub = usersubjectjson[i];
+          $("#userSubjectSelect").append('<option value="'+sub["subId"]+'">'+sub["subname"]+'</option>')
+        }
+//<option value="pm">管理员</option>
+      }
+    });
+  }
+  //点击添加科目时的操作
+  $("#addSubjectBtn").click(function () {
+    //获取被选中的option
+    var selectSub = $("#noUserSubjectSelect option:selected");
+    var subid = selectSub.val();
+    var uid = $.session.get('UID');
+    if(subid!=null&&uid!=null){
+      layer.msg("操作正在进行，请稍后...");
+      //进行ajax传值
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: basePath + "/user_sub/add",
+        data: JSON.stringify({"uId": uid, "subId": subid}),
+        dataType: "json",
+        success: function (msg) {
+          var json = msg["data"];
+          if (json["success"]) {
+            showUserSubjectList(uid);
+            layer.msg(json["msg"], {icon: 6, shade: 0.4,time:2000}, function () {
+            });
+          } else {
+            layer.msg(json["msg"], {icon: 5,time:2000});
+          }
+        }
+      });
+    }else{
+      layer.msg("请选中左侧的未分配科目再点击按钮！", {icon: 5,time:2000});
+    }
+  })
+  //点击删除科目时的操作
+  $("#removeSubjectBtn").click(function () {
+    //获取被选中的option
+    var selectUserSub = $("#userSubjectSelect option:selected");
+    var subid = selectUserSub.val();
+    var uid = $.session.get('UID');
+    // console.log(subid+" "+uid);
+    if(subid!=null&&uid!=null){
+      layer.msg("操作正在进行，请稍后...");
+      //进行ajax传值
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: basePath + "/user_sub/remove",
+        data: JSON.stringify({"uId": uid, "subId": subid}),
+        dataType: "json",
+        success: function (msg) {
+          var json = msg["data"];
+          if (json["success"]) {
+            //在分配成功后使用jQuery将被选中的option标签移动到右边一栏中
+            showUserSubjectList(uid);
+            layer.msg(json["msg"], {icon: 6, shade: 0.4,time:2000}, function () {
+            });
+          } else {
+            layer.msg(json["msg"], {icon: 5,time:2000});
+          }
+        }
+      });
+    }else{
+      layer.msg("请选中右侧的已分配科目再点击按钮！", {icon: 5,time:2000});
+    }
+  })
 </script>
 </body>
 </html>

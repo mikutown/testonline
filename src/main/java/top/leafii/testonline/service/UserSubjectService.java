@@ -9,4 +9,8 @@ public interface UserSubjectService {
     List<Subject> getNoUserSubject(int uid);
 
     List<Subject> getUserSubject(int uid);
+
+    Boolean addUserSubject(User_sub userSub);
+
+    Boolean removeUserSubject(User_sub userSub);
 }
