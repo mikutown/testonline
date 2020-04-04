@@ -69,26 +69,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="form-group">
               <label>未分配科目列表</label><br>
               <select class="form-control" multiple size="10"
-                      style="width:100px;overflow-y:auto;">
-                <option value="pm">管理员</option>
-                <option value="sa">项目秘书</option>
-                <option value="se">部门领导</option>
+                      style="width:100px;overflow-y:auto;" id="nousersubjectselect">
               </select>
             </div>
             <div class="form-group">
               <ul>
-                <li class="btn btn-default glyphicon glyphicon-chevron-right"></li>
+                <li class="btn btn-default glyphicon glyphicon-chevron-right" id="addSubjectBtn"></li>
                 <br>
                 <li class="btn btn-default glyphicon glyphicon-chevron-left"
-                    style="margin-top:20px;"></li>
+                    style="margin-top:20px;" id="removeSubjectBtn"></li>
               </ul>
             </div>
             <div class="form-group" style="margin-left:40px;">
               <label>已分配科目列表</label><br>
               <select class="form-control" multiple size="10"
-                      style="width:100px;overflow-y:auto;">
-                <option value="qa">发改局</option>
-                <option value="qc">牵头委领导</option>
+                      style="width:100px;overflow-y:auto;" id="usersubjectselect">
               </select>
             </div>
           </form>
@@ -182,17 +177,25 @@ scratch. This page gets rid of all links and provides the needed markup only.
       $.ajax({
         url: '/user_sub/getnousersubject?uid=' + id,
         method: 'get',
-        success: function (nousersubjectdata) {
-          console.log(nousersubjectdata);//测试能否得到user
+        success: function (nousersubjectjson) {
+          for (var i = 0;i < nousersubjectjson.length;i++){
+            var nosub = nousersubjectjson[i];
+            $("#nousersubjectselect").append('<option value="'+nosub["subId"]+'">'+nosub["subname"]+'</option>')
+          }
+//<option value="pm">管理员</option>
         }
-      })
+      });
       $.ajax({
         url: '/user_sub/getusersubject?uid=' + id,
         method: 'get',
-        success: function (usersubjectdata) {
-          console.log(usersubjectdata);//测试能否得到user
+        success: function (usersubjectjson) {
+          for (var i = 0;i < usersubjectjson.length;i++){
+            var sub = usersubjectjson[i];
+            $("#usersubjectselect").append('<option value="'+sub["subId"]+'">'+sub["subname"]+'</option>')
+          }
+//<option value="pm">管理员</option>
         }
-      })
+      });
     }
 
   });

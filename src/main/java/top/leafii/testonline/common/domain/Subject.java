@@ -7,6 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Subject {
+    private Integer subId;
+
+    private String subname;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date subtime;
     public Subject() {
     }
 
@@ -25,13 +30,6 @@ public class Subject {
         this.subname = subname;
         this.subtime = subtime;
     }
-
-    private Integer subId;
-
-    private String subname;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date subtime;
-
     public Integer getSubId() {
         return subId;
     }

@@ -125,7 +125,7 @@
     </if>
   </select>
   <select id="selectNoUserSubject" resultType="top.leafii.testonline.common.domain.Subject">
-    select * from `subject` where `subject`.sub_id not in (
+    select sub_id subId,subname,subtime from `subject` where `subject`.sub_id not in (
         select sub_id from `user_sub` where u_id = #{uid,jdbcType=INTEGER}
     )
   </select>
