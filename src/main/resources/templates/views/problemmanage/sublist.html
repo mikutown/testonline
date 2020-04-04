@@ -209,7 +209,7 @@ desired effect
         field: 'subtime',
         title: '最近编辑时间',
         formatter: function (value, row, index) {
-          return changeDateFormat(value)
+          return formatDateTime(value)
         }
       }, {
         title: '操作',
@@ -238,19 +238,24 @@ desired effect
     }
   }
   //转换日期格式(时间戳转换为datetime格式)
-  function changeDateFormat(cellval) {
-    var dateVal = cellval + "";
-    if (cellval != null) {
-      var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
-      var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-      var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-      var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-      var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-      var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-      return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
-    }
+  // 数字补0操作
+  function  addZero(num) {
+    return num < 10 ? '0' + num : num;
   }
-  //科目添加
+  function formatDateTime (date) {
+    var time = new Date(Date.parse(date));
+    time.setTime(time.setHours(time.getHours() + 8));
+    var Y = time.getFullYear() + '-';
+    var  M = this.addZero(time.getMonth() + 1) + '-';
+    var D = this.addZero(time.getDate()) + ' ';
+    var h = this.addZero(time.getHours()) + ':';
+    var m = this.addZero(time.getMinutes()) + ':';
+    var  s = this.addZero(time.getSeconds());
+    return Y + M + D;
+    // }
+  }
+
+//科目添加
   $("#subjectAdd").validate({
     rules: {
       subname: {

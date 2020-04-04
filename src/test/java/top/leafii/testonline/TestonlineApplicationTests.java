@@ -8,6 +8,7 @@ import top.leafii.testonline.common.domain.User;
 import top.leafii.testonline.controller.UserController;
 import top.leafii.testonline.mapper.SubjectMapper;
 import top.leafii.testonline.mapper.UserMapper;
+import top.leafii.testonline.mapper.User_subMapper;
 import top.leafii.testonline.service.UserService;
 
 import java.util.Date;
@@ -16,12 +17,20 @@ import java.util.List;
 @SpringBootTest
 class TestonlineApplicationTests {
     @Autowired
-    SubjectMapper subjectMapper;
+    User_subMapper mapper;
 
     @Test
     void contextLoads() {
-        List<Subject> subjects = subjectMapper.selectByExample(null);
-        System.out.println(subjects.size());
+        int i = 1;
+        List<Subject> subjects = mapper.selectNoUserSubject(2);
+        for (Subject subject : subjects) {
+            System.out.print(subject.getSubname()+'\t');
+            i++;
+            while (i%6==0){
+                System.out.println();
+                i++;
+            }
+        }
     }
 
 }

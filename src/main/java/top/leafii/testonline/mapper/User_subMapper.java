@@ -3,6 +3,7 @@ package top.leafii.testonline.mapper;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import top.leafii.testonline.common.domain.Subject;
 import top.leafii.testonline.common.domain.User_sub;
 import top.leafii.testonline.common.domain.User_subExample;
 @Repository
@@ -20,4 +21,6 @@ public interface User_subMapper {
     int updateByExampleSelective(@Param("record") User_sub record, @Param("example") User_subExample example);
 
     int updateByExample(@Param("record") User_sub record, @Param("example") User_subExample example);
+
+    List<Subject> selectNoUserSubject(int uid);
 }

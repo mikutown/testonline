@@ -2,6 +2,8 @@ package top.leafii.testonline.common.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Subject {
@@ -27,6 +29,7 @@ public class Subject {
     private Integer subId;
 
     private String subname;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date subtime;
 
     public Integer getSubId() {

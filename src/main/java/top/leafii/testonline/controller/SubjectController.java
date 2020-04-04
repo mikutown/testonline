@@ -89,6 +89,7 @@ public class SubjectController {
     @RequestMapping("/save")
     @ResponseBody
     public Object saveSubject(@RequestBody Subject subject){
+        subject.setSubtime(new Date());
         Boolean bool = subjectService.saveSubject(subject);
         if(bool){
             return new JSONMap(true,200, ItemBankManageMessage.SUBJECT_ADD_SUCCESS);

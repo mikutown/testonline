@@ -124,6 +124,11 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="selectNoUserSubject" resultType="top.leafii.testonline.common.domain.Subject">
+    select * from `subject` where `subject`.sub_id not in (
+        select sub_id from `user_sub` where u_id = #{uid,jdbcType=INTEGER}
+    )
+  </select>
   <update id="updateByExampleSelective" parameterType="map">
     update user_sub
     <set>
