@@ -6,7 +6,6 @@
     <result column="exam_id" jdbcType="INTEGER" property="examId" />
     <result column="score" jdbcType="DOUBLE" property="score" />
     <result column="restime" jdbcType="DATE" property="restime" />
-    <result column="sub_id" jdbcType="INTEGER" property="subId" />
     <result column="u_id" jdbcType="INTEGER" property="uId" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -68,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    res_id, exam_id, score, restime, sub_id, u_id
+    res_id, exam_id, score, restime, u_id
   </sql>
   <select id="selectByExample" parameterType="top.leafii.testonline.common.domain.ResultExample" resultMap="BaseResultMap">
     select
@@ -102,9 +101,9 @@
   </delete>
   <insert id="insert" parameterType="top.leafii.testonline.common.domain.Result">
     insert into result (res_id, exam_id, score, 
-      restime, sub_id, u_id)
+      restime, u_id)
     values (#{resId,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, 
-      #{restime,jdbcType=DATE}, #{subId,jdbcType=INTEGER}, #{uId,jdbcType=INTEGER})
+      #{restime,jdbcType=DATE}, #{uId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="top.leafii.testonline.common.domain.Result">
     insert into result
@@ -120,9 +119,6 @@
       </if>
       <if test="restime != null">
         restime,
-      </if>
-      <if test="subId != null">
-        sub_id,
       </if>
       <if test="uId != null">
         u_id,
@@ -140,9 +136,6 @@
       </if>
       <if test="restime != null">
         #{restime,jdbcType=DATE},
-      </if>
-      <if test="subId != null">
-        #{subId,jdbcType=INTEGER},
       </if>
       <if test="uId != null">
         #{uId,jdbcType=INTEGER},
@@ -170,9 +163,6 @@
       <if test="record.restime != null">
         restime = #{record.restime,jdbcType=DATE},
       </if>
-      <if test="record.subId != null">
-        sub_id = #{record.subId,jdbcType=INTEGER},
-      </if>
       <if test="record.uId != null">
         u_id = #{record.uId,jdbcType=INTEGER},
       </if>
@@ -187,7 +177,6 @@
       exam_id = #{record.examId,jdbcType=INTEGER},
       score = #{record.score,jdbcType=DOUBLE},
       restime = #{record.restime,jdbcType=DATE},
-      sub_id = #{record.subId,jdbcType=INTEGER},
       u_id = #{record.uId,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -205,9 +194,6 @@
       <if test="restime != null">
         restime = #{restime,jdbcType=DATE},
       </if>
-      <if test="subId != null">
-        sub_id = #{subId,jdbcType=INTEGER},
-      </if>
       <if test="uId != null">
         u_id = #{uId,jdbcType=INTEGER},
       </if>
@@ -219,7 +205,6 @@
     set exam_id = #{examId,jdbcType=INTEGER},
       score = #{score,jdbcType=DOUBLE},
       restime = #{restime,jdbcType=DATE},
-      sub_id = #{subId,jdbcType=INTEGER},
       u_id = #{uId,jdbcType=INTEGER}
     where res_id = #{resId,jdbcType=INTEGER}
   </update>

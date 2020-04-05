@@ -40,7 +40,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PagableResponse list(PageRequest request) {
-        PageHelper.startPage(request.getPageNum(),request.getPageSize());//完成分页
+        //完成分页
+        PageHelper.startPage(request.getPageNum(),request.getPageSize());
         List<User> users = userMapper.selectByExample(new UserExample());
         //System.out.println(new PageInfo<>(users).getTotal());//打印总数
         return new PagableResponse(new PageInfo<>(users).getTotal(),users);

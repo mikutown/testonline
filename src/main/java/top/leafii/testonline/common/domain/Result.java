@@ -11,8 +11,6 @@ public class Result {
 
     private Date restime;
 
-    private Integer subId;
-
     private Integer uId;
 
     public Integer getResId() {
@@ -45,14 +43,6 @@ public class Result {
 
     public void setRestime(Date restime) {
         this.restime = restime;
-    }
-
-    public Integer getSubId() {
-        return subId;
-    }
-
-    public void setSubId(Integer subId) {
-        this.subId = subId;
     }
 
     public Integer getuId() {

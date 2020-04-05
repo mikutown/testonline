@@ -21,9 +21,12 @@ public class Question {
 
     private String anse;
 
+    private String answer;
+
     private Integer choanswer;
 
-    private byte[] answer;
+    public Question() {
+    }
 
     public Integer getQuesId() {
         return quesId;
@@ -105,19 +108,19 @@ public class Question {
         this.anse = anse == null ? null : anse.trim();
     }
 
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer == null ? null : answer.trim();
+    }
+
     public Integer getChoanswer() {
         return choanswer;
     }
 
     public void setChoanswer(Integer choanswer) {
         this.choanswer = choanswer;
-    }
-
-    public byte[] getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(byte[] answer) {
-        this.answer = answer;
     }
 }

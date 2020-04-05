@@ -372,66 +372,6 @@ public class ResultExample {
             return (Criteria) this;
         }
 
-        public Criteria andSubIdIsNull() {
-            addCriterion("sub_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdIsNotNull() {
-            addCriterion("sub_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdEqualTo(Integer value) {
-            addCriterion("sub_id =", value, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdNotEqualTo(Integer value) {
-            addCriterion("sub_id <>", value, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdGreaterThan(Integer value) {
-            addCriterion("sub_id >", value, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("sub_id >=", value, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdLessThan(Integer value) {
-            addCriterion("sub_id <", value, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdLessThanOrEqualTo(Integer value) {
-            addCriterion("sub_id <=", value, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdIn(List<Integer> values) {
-            addCriterion("sub_id in", values, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdNotIn(List<Integer> values) {
-            addCriterion("sub_id not in", values, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdBetween(Integer value1, Integer value2) {
-            addCriterion("sub_id between", value1, value2, "subId");
-            return (Criteria) this;
-        }
-
-        public Criteria andSubIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("sub_id not between", value1, value2, "subId");
-            return (Criteria) this;
-        }
-
         public Criteria andUIdIsNull() {
             addCriterion("u_id is null");
             return (Criteria) this;
