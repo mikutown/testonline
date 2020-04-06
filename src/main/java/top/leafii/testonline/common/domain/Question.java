@@ -120,4 +120,22 @@ public class Question {
     public void setChoanswer(Integer choanswer) {
         this.choanswer = choanswer;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "quesId=" + quesId +
+                ", typeId=" + typeId +
+                ", title='" + title + '\'' +
+                ", quespic='" + quespic + '\'' +
+                ", score=" + score +
+                ", ansa='" + ansa + '\'' +
+                ", ansb='" + ansb + '\'' +
+                ", ansc='" + ansc + '\'' +
+                ", ansd='" + ansd + '\'' +
+                ", anse='" + anse + '\'' +
+                ", answer='" + answer + '\'' +
+                ", choanswer=" + choanswer +
+                '}';
+    }
 }

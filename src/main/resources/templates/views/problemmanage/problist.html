@@ -456,6 +456,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 {
                     field: 'choanswer',
                     title: '选择题答案',
+                    formatter: function (value,row) {
+                        if(row.typeId==1){
+                            //单选题
+                            if(value==1){
+                                return "A";
+                            }else if(value==10){
+                                return "B";
+                            }else if(value==100){
+                                return "C"
+                            }else if(value==1000){
+                                return "D"
+                            }
+                        }else if(row.typeId==2){
+                            //多选题
+                            var answer = "";
+                            if(value%10==1){
+                                answer+="A";
+                            }if((value/10)%10==1){
+                                answer+="B";
+                            }if((value/100)%10==1){
+                                answer+="C";
+                            }if((value/1000)%10==1){
+                                answer+="D";
+                            }if((value/10000)%10==1){
+                                answer+="E";
+                            }
+                            return answer;
+
+                        }
+                    }
                 }, {
                     title: '操作',
                     formatter: function (value, row) {
@@ -563,7 +593,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             var typeId = $.session.get('typeId');
             var title = $("#otherTitle").val();
             var score = $("#otherScore option:selected").val();
-            var answer = $("#otherAnswer").text();
+            var answer = $("#otherAnswer").val();
+            console.log(answer);
             //验证完成后提交表单
             //进行ajax传值
             $.ajax({
