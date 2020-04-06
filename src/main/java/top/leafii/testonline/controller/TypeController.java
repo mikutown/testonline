@@ -22,6 +22,16 @@ import java.util.List;
 public class TypeController {
     @Autowired
     TypeService typeService;
+    @RequestMapping("/listall")
+    @ResponseBody
+    public List<Type> typeListAll(){
+        return typeService.listAll();
+    }
+    /**
+     * 删除单个类型
+     * @param typeId
+     * @return
+     */
     @RequestMapping("/remove")
     @ResponseBody
     public Object removeType(@RequestParam("typeId") int typeId){

@@ -55,4 +55,9 @@ public class TypeServiceImpl implements TypeService {
         int i = typeMapper.deleteByPrimaryKey(typeInDB.getTypeId());
         return i>0?true:false;
     }
+
+    @Override
+    public List<Type> listAll() {
+        return typeMapper.selectByExample(new TypeExample());
+    }
 }

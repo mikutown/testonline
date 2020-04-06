@@ -29,4 +29,10 @@ public class QuestionServiceImpl implements QuestionService{
         //System.out.println(new PageInfo<>(users).getTotal());//打印总数
         return new PagableResponse(new PageInfo<>(questions).getTotal(),questions);
     }
+
+    @Override
+    public Boolean save(Question question) {
+        int i = questionMapper.insertSelective(question);
+        return i>0?true:false;
+    }
 }

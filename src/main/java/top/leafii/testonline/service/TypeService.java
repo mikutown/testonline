@@ -18,4 +18,6 @@ public interface TypeService {
     Boolean modifyType(Type type);
 
     Boolean removeType(Type typeInDB);
+
+    List<Type> listAll();
 }

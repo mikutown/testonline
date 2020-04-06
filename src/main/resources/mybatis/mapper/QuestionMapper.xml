@@ -12,10 +12,8 @@
     <result column="ansC" jdbcType="VARCHAR" property="ansc" />
     <result column="ansD" jdbcType="VARCHAR" property="ansd" />
     <result column="ansE" jdbcType="VARCHAR" property="anse" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
     <result column="choanswer" jdbcType="INTEGER" property="choanswer" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="top.leafii.testonline.common.domain.Question">
-    <result column="answer" jdbcType="VARBINARY" property="answer" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -76,27 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    ques_id, type_id, title, quespic, score, ansA, ansB, ansC, ansD, ansE, choanswer
+    ques_id, type_id, title, quespic, score, ansA, ansB, ansC, ansD, ansE, answer, choanswer
   </sql>
-  <sql id="Blob_Column_List">
-    answer
-  </sql>
-  <select id="selectByExampleWithBLOBs" parameterType="top.leafii.testonline.common.domain.QuestionExample" resultMap="ResultMapWithBLOBs">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from question
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" parameterType="top.leafii.testonline.common.domain.QuestionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -111,11 +90,9 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from question
     where ques_id = #{quesId,jdbcType=INTEGER}
   </select>
@@ -133,11 +110,11 @@
     insert into question (ques_id, type_id, title, 
       quespic, score, ansA, 
       ansB, ansC, ansD, ansE, 
-      choanswer, answer)
+      answer, choanswer)
     values (#{quesId,jdbcType=INTEGER}, #{typeId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
       #{quespic,jdbcType=VARCHAR}, #{score,jdbcType=DOUBLE}, #{ansa,jdbcType=VARCHAR}, 
       #{ansb,jdbcType=VARCHAR}, #{ansc,jdbcType=VARCHAR}, #{ansd,jdbcType=VARCHAR}, #{anse,jdbcType=VARCHAR}, 
-      #{choanswer,jdbcType=INTEGER}, #{answer,jdbcType=VARBINARY})
+      #{answer,jdbcType=VARCHAR}, #{choanswer,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="top.leafii.testonline.common.domain.Question">
     insert into question
@@ -172,11 +149,11 @@
       <if test="anse != null">
         ansE,
       </if>
-      <if test="choanswer != null">
-        choanswer,
-      </if>
       <if test="answer != null">
         answer,
+      </if>
+      <if test="choanswer != null">
+        choanswer,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -210,11 +187,11 @@
       <if test="anse != null">
         #{anse,jdbcType=VARCHAR},
       </if>
+      <if test="answer != null">
+        #{answer,jdbcType=VARCHAR},
+      </if>
       <if test="choanswer != null">
         #{choanswer,jdbcType=INTEGER},
-      </if>
-      <if test="answer != null">
-        #{answer,jdbcType=VARBINARY},
       </if>
     </trim>
   </insert>
@@ -257,31 +234,13 @@
       <if test="record.anse != null">
         ansE = #{record.anse,jdbcType=VARCHAR},
       </if>
+      <if test="record.answer != null">
+        answer = #{record.answer,jdbcType=VARCHAR},
+      </if>
       <if test="record.choanswer != null">
         choanswer = #{record.choanswer,jdbcType=INTEGER},
       </if>
-      <if test="record.answer != null">
-        answer = #{record.answer,jdbcType=VARBINARY},
-      </if>
     </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map">
-    update question
-    set ques_id = #{record.quesId,jdbcType=INTEGER},
-      type_id = #{record.typeId,jdbcType=INTEGER},
-      title = #{record.title,jdbcType=VARCHAR},
-      quespic = #{record.quespic,jdbcType=VARCHAR},
-      score = #{record.score,jdbcType=DOUBLE},
-      ansA = #{record.ansa,jdbcType=VARCHAR},
-      ansB = #{record.ansb,jdbcType=VARCHAR},
-      ansC = #{record.ansc,jdbcType=VARCHAR},
-      ansD = #{record.ansd,jdbcType=VARCHAR},
-      ansE = #{record.anse,jdbcType=VARCHAR},
-      choanswer = #{record.choanswer,jdbcType=INTEGER},
-      answer = #{record.answer,jdbcType=VARBINARY}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -298,6 +257,7 @@
       ansC = #{record.ansc,jdbcType=VARCHAR},
       ansD = #{record.ansd,jdbcType=VARCHAR},
       ansE = #{record.anse,jdbcType=VARCHAR},
+      answer = #{record.answer,jdbcType=VARCHAR},
       choanswer = #{record.choanswer,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -333,28 +293,13 @@
       <if test="anse != null">
         ansE = #{anse,jdbcType=VARCHAR},
       </if>
+      <if test="answer != null">
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
       <if test="choanswer != null">
         choanswer = #{choanswer,jdbcType=INTEGER},
       </if>
-      <if test="answer != null">
-        answer = #{answer,jdbcType=VARBINARY},
-      </if>
     </set>
-    where ques_id = #{quesId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="top.leafii.testonline.common.domain.Question">
-    update question
-    set type_id = #{typeId,jdbcType=INTEGER},
-      title = #{title,jdbcType=VARCHAR},
-      quespic = #{quespic,jdbcType=VARCHAR},
-      score = #{score,jdbcType=DOUBLE},
-      ansA = #{ansa,jdbcType=VARCHAR},
-      ansB = #{ansb,jdbcType=VARCHAR},
-      ansC = #{ansc,jdbcType=VARCHAR},
-      ansD = #{ansd,jdbcType=VARCHAR},
-      ansE = #{anse,jdbcType=VARCHAR},
-      choanswer = #{choanswer,jdbcType=INTEGER},
-      answer = #{answer,jdbcType=VARBINARY}
     where ques_id = #{quesId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="top.leafii.testonline.common.domain.Question">
@@ -368,6 +313,7 @@
       ansC = #{ansc,jdbcType=VARCHAR},
       ansD = #{ansd,jdbcType=VARCHAR},
       ansE = #{anse,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
       choanswer = #{choanswer,jdbcType=INTEGER}
     where ques_id = #{quesId,jdbcType=INTEGER}
   </update>

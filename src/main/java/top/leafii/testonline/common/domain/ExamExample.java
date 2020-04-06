@@ -223,66 +223,6 @@ public class ExamExample {
             addCriterion("sub_id not between", value1, value2, "subId");
             return (Criteria) this;
         }
-
-        public Criteria andQuesIdIsNull() {
-            addCriterion("ques_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdIsNotNull() {
-            addCriterion("ques_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdEqualTo(Integer value) {
-            addCriterion("ques_id =", value, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdNotEqualTo(Integer value) {
-            addCriterion("ques_id <>", value, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdGreaterThan(Integer value) {
-            addCriterion("ques_id >", value, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("ques_id >=", value, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdLessThan(Integer value) {
-            addCriterion("ques_id <", value, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdLessThanOrEqualTo(Integer value) {
-            addCriterion("ques_id <=", value, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdIn(List<Integer> values) {
-            addCriterion("ques_id in", values, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdNotIn(List<Integer> values) {
-            addCriterion("ques_id not in", values, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdBetween(Integer value1, Integer value2) {
-            addCriterion("ques_id between", value1, value2, "quesId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuesIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("ques_id not between", value1, value2, "quesId");
-            return (Criteria) this;
-        }
     }
 
     public static class Criteria extends GeneratedCriteria {

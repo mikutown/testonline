@@ -25,9 +25,6 @@ public class Question {
 
     private Integer choanswer;
 
-    public Question() {
-    }
-
     public Integer getQuesId() {
         return quesId;
     }

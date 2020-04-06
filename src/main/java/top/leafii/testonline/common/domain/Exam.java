@@ -5,8 +5,6 @@ public class Exam {
 
     private Integer subId;
 
-    private Integer quesId;
-
     public Integer getExamId() {
         return examId;
     }
@@ -21,13 +19,5 @@ public class Exam {
 
     public void setSubId(Integer subId) {
         this.subId = subId;
-    }
-
-    public Integer getQuesId() {
-        return quesId;
-    }
-
-    public void setQuesId(Integer quesId) {
-        this.quesId = quesId;
     }
 }

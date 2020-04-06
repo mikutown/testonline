@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface QuestionService {
     PagableResponse<List<Question>> list(PageRequest request);
+
+    Boolean save(Question question);
 }

@@ -8,154 +8,587 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <body class="hold-transition skin-green-light sidebar-mini">
 <div class="wrapper">
 
-  <!-- Main Header -->
-  <div th:replace="~{/views/layout/header :: headerAA}"></div>
-  <!-- Left side column. contains the logo and sidebar -->
-  <div th:replace="~{/views/layout/menuroot :: menuroot}"></div>
+    <!-- Main Header -->
+    <div th:replace="~{/views/layout/header :: headerAA}"></div>
+    <!-- Left side column. contains the logo and sidebar -->
+    <div th:replace="~{/views/layout/menuroot :: menuroot}"></div>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        题目管理
-        <small>管理所有题目</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">题库管理</a></li>
-        <li class="active">题目管理</li>
-      </ol>
-    </section>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                题目管理
+                <small>管理所有题目</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a href="#">题库管理</a></li>
+                <li class="active">题目管理</li>
+            </ol>
+        </section>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">题目列表</h3>
-              <small>如果想查看题目的详细信息，请点击修改按钮</small>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">题目列表</h3>
+                            <small>如果想查看题目的详细信息，请点击修改按钮</small>
+                        </div>
+                        <div id="toolbar">
+                            <div class="pull-left">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#QuestionTypeModal">
+                                    <i class="fa fa-file">添加题目</i>
+                                </button>
+                                <button type="button" class="btn btn-danger" id="removeBtn">
+                                    <i class="fa fa-file">批量删除</i>
+                                </button>
+                            </div>
+                            <div class="pull-right">
+                                <input type="text" id="keyword" placeholder="按照名称查询">
+                                <button type="button" class="btn btn-info" id="searchBtn">
+                                    <i class="fa fa-search">搜索</i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="questionTable"></table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
             </div>
-            <div id="toolbar">
-              <div class="pull-left">
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#UserInsertModal">
-                  <i class="fa fa-file">添加用户</i>
-                </button>
-                <button type="button" class="btn btn-danger" id="removeBtn">
-                  <i class="fa fa-file">批量删除</i>
-                </button>
-              </div>
-              <div class="pull-right">
-                <input type="text" id="keyword" placeholder="按照名称查询">
-                <button type="button" class="btn btn-info" id="searchBtn">
-                  <i class="fa fa-search">搜索</i>
-                </button>
-              </div>
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- Main Footer -->
+    <div th:replace="~{/views/layout/foot :: footer}"></div>
+    <!-- Type Modal -->
+    <div class="modal fade" id="QuestionTypeModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">题目添加</h4>
+                </div>
+                <div class="modal-body" id="quesAddModalBody">
+                    <form id="quesAddModalForm">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请先选择要添加题目的题目类型，然后点击添加按钮</span>
+                </div>
+
             </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="questionTable"></table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
+            <!-- /.modal-content -->
         </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 单选题 Modal -->
+    <div class="modal fade" id="ChoseModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">单选题添加</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="choseAddModalForm">
+                        <div class="form-group">
+                            <label for="choseTitle">题目</label>
+                            <textarea id="choseTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="choseQuesImg">图片</label>
+                            <input type="file" id="choseQuesImg">
+                            <p class="help-block">错误信息</p>
+                        </div>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="choseScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>选项A</label>
+                            <input type="text" id="choseAnsA" class="form-control" placeholder="请输入选项A的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项B</label>
+                            <input type="text" id="choseAnsB" class="form-control" placeholder="请输入选项B的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项C</label>
+                            <input type="text" id="choseAnsC" class="form-control" placeholder="请输入选项C的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项D</label>
+                            <input type="text" id="choseAnsD" class="form-control" placeholder="请输入选项D的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select class="form-control" id="choseAnswer">
+                                <option>请选择...</option>
+                                <option value="1">A</option>
+                                <option value="10">B</option>
+                                <option value="100">C</option>
+                                <option value="1000">D</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="choseQuesAddBtn">添加</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请输入表单内所需数据，然后点击添加按钮</span>
+                </div>
 
-  <!-- Main Footer -->
-  <div th:replace="~{/views/layout/foot :: footer}"></div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 多择题 Modal -->
+    <div class="modal fade" id="MultiChoseModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">多选题添加</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="multiChoseAddModalForm">
+                        <div class="form-group">
+                            <label for="multiTitle">题目</label>
+                            <textarea id="multiTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiQuesImg">图片</label>
+                            <input type="file" id="multiQuesImg">
+                            <p class="help-block">错误信息</p>
+                        </div>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="multiScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>选项A</label>
+                            <input type="text" id="multiAnsA" class="form-control" placeholder="请输入选项A的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项B</label>
+                            <input type="text" id="multiAnsB" class="form-control" placeholder="请输入选项B的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项C</label>
+                            <input type="text" id="multiAnsC" class="form-control" placeholder="请输入选项C的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项D</label>
+                            <input type="text" id="multiAnsD" class="form-control" placeholder="请输入选项D的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项E</label>
+                            <input type="text" id="multiAnsE" class="form-control" placeholder="请输入选项E的内容">
+                        </div>
+                        <div class="form-group">
+                            <label for="">答案</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="1">
+                                    A
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="10">
+                                    B
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="100">
+                                    C
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="1000">
+                                    D
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="10000">
+                                    E
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="multiQuesAddBtn">添加</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请输入表单内所需数据，然后点击添加按钮</span>
+                </div>
 
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 判断题 Modal -->
+    <div class="modal fade" id="JudgeModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">判断题添加</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="judgeAddModalForm">
+                        <div class="form-group">
+                            <label for="judgeTitle">题目</label>
+                            <textarea id="judgeTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="judgeQuesImg">图片</label>
+                            <input type="file" id="judgeQuesImg">
+                            <p class="help-block">错误信息</p>
+                        </div>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="judgeScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select class="form-control" id="choseAnswer">
+                                <option value="250">请选择...</option>
+                                <option value="1">正确✅</option>
+                                <option value="0">错误❌</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="judgeQuesAddBtn">添加</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请输入表单内所需数据，然后点击添加按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 其他题 Modal -->
+    <div class="modal fade" id="OtherModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">其他类型题目添加</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="otherAddForm">
+                        <div class="form-group">
+                            <label for="otherTitle">题目</label>
+                            <textarea id="otherTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="otherQuesImg">图片</label>
+                            <input type="file" id="otherQuesImg">
+                            <p class="help-block">错误信息</p>
+                        </div>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="otherScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="otherAnswer">答案</label>
+                            <textarea id="otherAnswer" class="form-control" rows="3" placeholder="请输入答案"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="otherQuesAddBtn">添加</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请输入表单内所需数据，然后点击添加按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="QuestionEditModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">用户修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="userEdit">
+                        <div class="form-group">
+                            <label for="newUname">用户名</label>
+                            <input type="text" class="form-control" name="newUname" id="newUname" placeholder="请输入用户名">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">密码</label>
+                            <input type="text" class="form-control" id="newPassword"
+                                   placeholder="请输入密码" name="newPassword">
+                        </div>
+
+                        <button type="button" id="modifyBtn" class="btn btn-primary ">修改</button>
+                        <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请在输入用户信息后点击修改按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 
 
 </div>
 <!-- ./wrapper -->
-<script>
-  //菜单对应的被选中
-  $(function () {
-    $(".active").removeClass("active");
-    $("#probtree").addClass("active");
-    $("#quesmanage").addClass("active");
-  });
-  //表格渲染
-  $(function () {
-    $("#questionTable").bootstrapTable({
-      url: '/question/list',
-      pagination: true,//是否分页
-      toolbar: "#toolbar",
-      toolbarAlign: "right",
-      //search: true,//是否允许搜索
-      queryParamsType: 'limit',
-      queryParams: queryParams,
-      sidePagination: 'server',
-      dataField: "data",
-      columns: [{//表头
-        field: 'quesId',
-        title: 'ID'
-      }, {
-        field: 'typeId',
-        title: '题型'
-      }, {
-        field: 'title',
-        title: '题目'
-      }, {
-        field: 'score',
-        title: '题目分值',
+<script type="text/javascript">
+    //菜单对应的被选中
+    $(function () {
+        $(".active").removeClass("active");
+        $("#probtree").addClass("active");
+        $("#quesmanage").addClass("active");
+    });
+    //表格渲染
+    $(function () {
+        $("#questionTable").bootstrapTable({
+            url: '/question/list',
+            pagination: true,//是否分页
+            toolbar: "#toolbar",
+            toolbarAlign: "right",
+            //search: true,//是否允许搜索
+            queryParamsType: 'limit',
+            queryParams: queryParams,
+            sidePagination: 'server',
+            dataField: "data",
+            columns: [{//表头
+                field: 'quesId',
+                title: 'ID'
+            }, {
+                field: 'typeId',
+                title: '题型',
+                formatter: function (value) {
+                    var typeNameEnd;
+                    $.ajax({
+                        url: '/type/gettypebyid?id=' + value,
+                        method: 'get',
+                        async: false,//异步回显
+                        success: function (data) {
+                            typeNameEnd = data.typename;
+                        }
+                    });
+                    return typeNameEnd;
+                }
+            }, {
+                field: 'title',
+                title: '题干'
+            }, {
+                field: 'score',
+                title: '题目分值',
 
-      }, {
-        field: 'ansa',
-        title: '选项A',
-      }, {
-        field: 'ansb',
-        title: '选项B',
-      }, {
-        field: 'ansc',
-        title: '选项C',
-      }, {
-        field: 'ansd',
-        title: '选项D',
-      },{
-        field: 'anse',
-        title: '选项E',
-      }, {
-        field: 'answer',
-        title: '非选择题答案',
-      },
-        {
-          field: 'choanswer',
-          title: '选择题答案',
-        },{
-        title: '操作',
-        formatter: function (value, row) {
-          return [
-            '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-            'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' +')>',
-            '<i class="fa fa-edit" >修改</i></button>',
+            }, {
+                field: 'ansa',
+                title: '选项A',
+            }, {
+                field: 'ansb',
+                title: '选项B',
+            }, {
+                field: 'ansc',
+                title: '选项C',
+            }, {
+                field: 'ansd',
+                title: '选项D',
+            }, {
+                field: 'anse',
+                title: '选项E',
+            }, {
+                field: 'answer',
+                title: '非选择题答案',
+            },
+                {
+                    field: 'choanswer',
+                    title: '选择题答案',
+                }, {
+                    title: '操作',
+                    formatter: function (value, row) {
+                        return [
+                            '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
+                            'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' + ')>',
+                            '<i class="fa fa-edit" >修改</i></button>',
 
-            '<button type="button" class="btn btn-danger btn-xs" ',
-            'onClick=removeUser(' + row.uId + ')>',
-            '<i class="fa fa-remove" >删除</i></button>']
-                  .join('');
+                            '<button type="button" class="btn btn-danger btn-xs" ',
+                            'onClick=removeUser(' + row.uId + ')>',
+                            '<i class="fa fa-remove" >删除</i></button>']
+                            .join('');
+                    }
+                }]
+
+        })
+
+        function queryParams(params) {
+            return {
+                //把我们的pageNum，pageSize传到命令中去
+                pageSize: params.limit,
+                pageNum: params.offset / params.limit + 1,
+                keyword: $("#keyword").val()
+            }
         }
-      }]
+    });
+    //添加题目模态框初始化
+    $("#QuestionTypeModal").on('show.bs.modal', function (e) {
+        showTypeForm();
+    });
 
-    })
-    function queryParams(params) {
-      return {
-        //把我们的pageNum，pageSize传到命令中去
-        pageSize: params.limit,
-        pageNum: params.offset / params.limit + 1,
-        keyword: $("#keyword").val()
-      }
+    function showTypeForm() {
+        $("#quesAddModalForm").empty();
+        $("#quesAddModalForm").append('<div class="form-group" id="quesTypeFmGrop">\n' +
+            '                  <label>请选择添加问题的题目类型</label>\n' +
+            '                  <select id="quesTypeSelect" class="form-control">\n' +
+            '                  <option value="0">请选择...</option></select>\n' +
+            '                </div>' +
+            '                <button type="button" class="btn btn-primary" id="quesTypeBtn">确定</button>');
+        //查询所有type
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: basePath + "/type/listall",
+            success: function (typeObj) {
+                for (let i = 0; i < typeObj.length; i++) {
+                    $("#quesTypeSelect").append('<option value=' + typeObj[i].typeId + '>' + typeObj[i].typename + '</option>')
+                }
+            }
+        });
+        $("#quesTypeBtn").click(function () {
+            $.session.remove('typeId');
+            var typeId = $("#quesTypeSelect option:selected").val();
+            showAddModal(typeId);
+
+        })
     }
-  });
+
+    function showAddModal(typeId) {
+        $.session.set('typeId', typeId);
+        if (typeId == 0) {//未选择 报错一下
+            layer.msg("请选择一个题型！", {icon: 5, time: 2000});
+        } else if (typeId == 1) {//单选题
+            $("#QuestionTypeModal").modal('hide');
+            $("#ChoseModal").modal('show');
+        } else if (typeId == 2) {//多选题
+            $("#QuestionTypeModal").modal('hide');
+            $("#MultiChoseModal").modal('show');
+        } else if (typeId == 3) {//判断题
+            $("#QuestionTypeModal").modal('hide');
+            $("#JudgeModal").modal('show');
+        } else {//解答题填空题其他题型
+            $("#QuestionTypeModal").modal('hide');
+            $("#OtherModal").modal('show');
+        }
+    }
+
+    $("#otherAddForm").validate({
+        rules: {
+            otherTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            otherScore: {
+                required: true,
+            },
+            otherAnswer: {
+                required: true,
+            },
+        },
+        messages: {
+            //定义消息
+            otherTitle: {
+                required: "请输入题目!",
+            },
+            otherScore: {
+                required: "请选择分值!"
+            },
+            otherAnswer: {
+                required: "请输入题目答案!",
+            },
+        },
+        submitHandler: function (form) {
+            var typeId = $.session.get('typeId');
+            var title = $("#otherTitle").val();
+            var score = $("#otherScore option:selected").val();
+            var answer = $("#otherAnswer").text();
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/save",
+                data: JSON.stringify({"typeId": typeId,"title": title, "score": score, "answer": answer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#otherAddForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#OtherModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
 </script>
 
 </body>
