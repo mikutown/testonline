@@ -72,7 +72,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Main Footer -->
     <div th:replace="~{/views/layout/foot :: footer}"></div>
-    <!-- Type Modal -->
+    <!-- 题型 Modal -->
     <div class="modal fade" id="QuestionTypeModal" tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -285,7 +285,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                         <div class="form-group">
                             <label>答案</label>
-                            <select class="form-control" id="choseAnswer">
+                            <select class="form-control" id="judgeAnswer">
                                 <option value="250">请选择...</option>
                                 <option value="1">正确✅</option>
                                 <option value="0">错误❌</option>
@@ -452,6 +452,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }, {
                 field: 'answer',
                 title: '非选择题答案',
+                formatter: function (value,row) {
+                    if(row.typeId==3){//如果是判断题
+                        if(value==1){
+                            return "正确";
+                        }else{
+                            return "错误"
+                        }
+                    }else{
+                        return value;
+                    }
+                }
             },
                 {
                     field: 'choanswer',
@@ -470,17 +481,21 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             }
                         }else if(row.typeId==2){
                             //多选题
-                            var answer = "";
-                            if(value%10==1){
-                                answer+="A";
-                            }if((value/10)%10==1){
-                                answer+="B";
-                            }if((value/100)%10==1){
-                                answer+="C";
-                            }if((value/1000)%10==1){
-                                answer+="D";
-                            }if((value/10000)%10==1){
+                            let answer = "";
+                            if(value>=10000){
                                 answer+="E";
+                                value-=10000;
+                            }if(value>=1000){
+                                answer+="D";
+                                value-=1000;
+                            }if(value>=100){
+                                answer+="C";
+                                value-=100;
+                            }if(value>=10){
+                                answer+="B";
+                                value-=10;
+                            }if(value==1){
+                                answer+="A";
                             }
                             return answer;
 
@@ -620,6 +635,121 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
+
+    $("#judgeAddModalForm").validate({
+        rules: {
+            judgeTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            judgeScore: {
+                required: true,
+            },
+            judgeAnswer: {
+                required: true,
+            },
+        },
+        messages: {
+            //定义消息
+            judgeTitle: {
+                required: "请输入题目!",
+            },
+            judgeScore: {
+                required: "请选择分值!"
+            },
+            judgeAnswer: {
+                required: "请选择答案!",
+            },
+        },
+        submitHandler: function (form) {
+            var typeId = $.session.get('typeId');
+            var title = $("#judgeTitle").val();
+            var score = $("#judgeScore option:selected").val();
+            var answer = $("#judgeAnswer").val();
+            console.log(answer);
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/save",
+                data: JSON.stringify({"typeId": typeId,"title": title, "score": score, "answer": answer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#judgeAddModalForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#JudgeModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+
+    $("#choseAddModalForm").validate({
+        rules: {
+            judgeTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            judgeScore: {
+                required: true,
+            },
+            judgeAnswer: {
+                required: true,
+            },
+        },
+        messages: {
+            //定义消息
+            judgeTitle: {
+                required: "请输入题目!",
+            },
+            judgeScore: {
+                required: "请选择分值!"
+            },
+            judgeAnswer: {
+                required: "请选择答案!",
+            },
+        },
+        submitHandler: function (form) {
+            var typeId = $.session.get('typeId');
+            var title = $("#judgeTitle").val();
+            var score = $("#judgeScore option:selected").val();
+            var answer = $("#judgeAnswer").val();
+            console.log(answer);
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/save",
+                data: JSON.stringify({"typeId": typeId,"title": title, "score": score, "answer": answer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#judgeAddModalForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#JudgeModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+
 </script>
 
 </body>
