@@ -18,4 +18,5 @@ public interface QuestionService {
 
     Question getQuestionByQuesid(int quesId);
 
+    Boolean modifyQuestion(Question question);
 }

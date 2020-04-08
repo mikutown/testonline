@@ -362,11 +362,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="modal-body">
                     <form id="choseModifyForm">
                         <div class="form-group">
-                            <label for="choseTitle">题目</label>
+                            <label for="choseModifyTitle">题目</label>
                             <textarea id="choseModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="choseQuesImg">图片</label>
+                            <label for="choseModifyImg">图片</label>
                             <input type="file" id="choseModifyImg">
                             <p class="help-block">错误信息</p>
                         </div>
@@ -431,11 +431,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="modal-body">
                     <form id="multiChoseModifyForm">
                         <div class="form-group">
-                            <label for="multiTitle">题目</label>
+                            <label for="multiModifyTitle">题目</label>
                             <textarea id="multiModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="multiQuesImg">图片</label>
+                            <label for="multiModifyQuesImg">图片</label>
                             <input type="file" id="multiModifyQuesImg">
                             <p class="help-block">错误信息</p>
                         </div>
@@ -517,7 +517,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="modal-body">
                     <form id="judgeModifyForm">
                         <div class="form-group">
-                            <label for="judgeTitle">题目</label>
+                            <label for="judgeModifyTitle">题目</label>
                             <textarea id="judgeModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
                         <div class="form-group">
@@ -568,7 +568,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <div class="modal-body">
                     <form id="otherModifyForm">
                         <div class="form-group">
-                            <label for="otherTitle">题目</label>
+                            <label for="otherModifyTitle">题目</label>
                             <textarea id="otherModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
                         <div class="form-group">
@@ -587,7 +587,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="otherAnswer">答案</label>
+                            <label for="otherModifyAnswer">答案</label>
                             <textarea id="otherModifyAnswer" class="form-control" rows="3" placeholder="请输入答案"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary" id="otherModifyBtn">添加</button>
@@ -777,35 +777,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         })
     }
-    //修改题目模态框初始化
-    //根据题目类型加载不同的modal框
-    function modifyQuestion(typeId,quesId){
-        $.session.remove('typeId');
-        $.session.remove('quesId');
-        $.session.set('typeId',typeId);
-        $.session.set('quesId',quesId);
-        if(typeId==1){
-            $("#ChoseModifyModal").modal('show');
-        }
-    }
-    $("#ChoseModifyModal").on('show.bs.modal', function (e) {
-        var typeId = $session.get('typeId');
-        var quesId = $session.get('quesId');
-        if(quesId){
-            $.ajax({
-                url: '/question/getquestionbyid?id=' + quesId,
-                method: 'get',
-                success: function (data) {
-                    console.log(data);//测试能否得到question
-                    //$('#newUname').val(data.uname);
-
-                }
-            })
-        }
-
-    });
-
-
+    //根据不同的题型加载不同的问题框
     function showAddModal(typeId) {
         $.session.set('typeId', typeId);
         if (typeId == 0) {//未选择 报错一下
@@ -824,7 +796,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             $("#OtherModal").modal('show');
         }
     }
-
+    //添加不同的问题
     $("#otherAddForm").validate({
         rules: {
             otherTitle: {
@@ -882,7 +854,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
-
     $("#judgeAddModalForm").validate({
         rules: {
             judgeTitle: {
@@ -939,7 +910,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
-
     $("#choseAddModalForm").validate({
         rules: {
             choseTitle: {
@@ -1024,7 +994,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
-
     $("#choseAddModalForm").validate({
         rules: {
             choseTitle: {
@@ -1109,7 +1078,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
-
     $("#multiChoseAddModalForm").validate({
         rules: {
             multiTitle: {
@@ -1199,6 +1167,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
     });
 
+    //删除单个问题
     function removeQuestion(quesId) {
         layer.msg('确定删除吗？此题目将从此列表和与科目绑定的列表中删除', {
             time: 0,
@@ -1224,6 +1193,411 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
         })
     }
+
+    //修改题目模态框初始化
+    //根据题目类型加载不同的modal框
+    function modifyQuestion(typeId,quesId){
+        $.session.remove('typeId');
+        $.session.remove('quesId');
+        $.session.set('typeId',typeId);
+        $.session.set('quesId',quesId);
+        if(typeId==1){
+            $("#ChoseModifyModal").modal('show');
+        }else if(typeId==2){
+            $("#MultiChoseModifyModal").modal('show');
+        }else if(typeId==3){
+            $("#JudgeModifyModal").modal('show');
+        }else{
+            $("#OtherModifyModal").modal('show');
+        }
+    }
+    //修改modal预加载数据
+    $("#ChoseModifyModal").on('show.bs.modal', function (e) {
+        var typeId = $.session.get('typeId');
+        var quesId = $.session.get('quesId');
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyid?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
+                    $('#choseModifyTitle').val(data.title);
+                    //$('#choseModifyImg').val(data['quespic']);
+                    $('#choseModifyScore').val(data.score);
+                    $('#choseModifyAnsA').val(data.ansa);
+                    $('#choseModifyAnsB').val(data.ansb);
+                    $('#choseModifyAnsC').val(data.ansc);
+                    $('#choseModifyAnsD').val(data.ansd);
+                    $('#choseModifyAnswer').val(data.choanswer);
+                }
+            })
+        }
+    });
+    $("#MultiChoseModifyModal").on('show.bs.modal', function (e) {
+        var typeId = $.session.get('typeId');
+        var quesId = $.session.get('quesId');
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyid?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
+                    $('#multiModifyTitle').val(data.title);
+                    //$('#multiQuesImg').val(data['quespic']);
+                    $('#multiModifyScore').val(parseInt(data.score));
+                    $('#multiModifyAnsA').val(data.ansa);
+                    $('#multiModifyAnsB').val(data.ansb);
+                    $('#multiModifyAnsC').val(data.ansc);
+                    $('#multiModifyAnsD').val(data.ansd);
+                    $('#multiModifyAnsE').val(data.anse);
+                    //11111
+                    $("#RealModifyansA").val((Math.round(data.choanswer/10000)%10) * 10000);
+                    $("#RealModifyansB").val((Math.round(data.choanswer/1000)%10) * 1000);
+                    $("#RealModifyansC").val((Math.round(data.choanswer/100)%10) * 100);
+                    $("#RealModifyansD").val((Math.round(data.choanswer/10)%10) * 10);
+                    $("#RealModifyansE").val(data.choanswer%10);
+                }
+
+            })
+        }
+    });
+    $("#JudgeModifyModal").on('show.bs.modal', function (e) {
+        var typeId = $.session.get('typeId');
+        var quesId = $.session.get('quesId');
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyid?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
+                    $('#judgeModifyTitle').val(data.title);
+                    //$('#choseModifyImg').val(data['quespic']);
+                    $('#judgeModifyScore').val(data.score);
+                    //$('#choseModifyAnsA').val(data.ansa);
+                    //$('#choseModifyAnsB').val(data.ansb);
+                    //$('#choseModifyAnsC').val(data.ansc);
+                    //$('#choseModifyAnsD').val(data.ansd);
+                    $('#judgeModifyAnswer').val(parseInt(data.answer));
+
+
+                }
+            })
+        }
+    });
+    $("#OtherModifyModal").on('show.bs.modal', function (e) {
+        var typeId = $.session.get('typeId');
+        var quesId = $.session.get('quesId');
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyid?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
+                    $('#otherModifyTitle').val(data.title);
+                    //$('#otherQuesImg').val(data['quespic']);
+                    $('#otherModifyScore').val(data.score);
+                    //$('#choseModifyAnsA').val(data.ansa);
+                    //$('#choseModifyAnsB').val(data.ansb);
+                    //$('#choseModifyAnsC').val(data.ansc);
+                    //$('#choseModifyAnsD').val(data.ansd);
+                    $('#otherModifyAnswer').val(data.answer);
+
+                }
+            })
+        }
+    });
+    //进行问题修改操作
+    //修改不同的问题
+    $("#choseModifyForm").validate({
+        rules: {
+            choseModifyTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            choseModifyScore: {
+                required: true,
+            },
+            choseModifyAnsA: {
+                required:true,
+            },
+            choseModifyAnsB: {
+                required:true,
+            },
+            choseModifyAnsC: {
+                required:true,
+            },
+            choseModifyAnsD: {
+                required:true,
+            },
+            choseModifyAnswer: {
+                required: true,
+            },
+        },
+        messages: {
+            //定义消息
+            choseModifyTitle: {
+                required: "请输入题目!",
+            },
+            choseModifyScore: {
+                required: "请选择分值!"
+            },
+            choseModifyAnsA: {
+                required: "请输入A选项内容！"
+            },
+            choseModifyAnsB: {
+                required: "请输入A选项内容！"
+            },
+            choseModifyAnsC: {
+                required: "请输入A选项内容！"
+            },
+            choseModifyAnsD: {
+                required: "请输入A选项内容！"
+            },
+            choseModifyAnswer: {
+                required: "请选择答案!",
+            },
+        },
+        submitHandler: function (form) {
+            var typeId = $.session.get('typeId');
+            var quesId = $.session.get('quesId');
+            var title = $("#choseModifyTitle").val();
+            var score = $("#choseModifyScore").val();
+            var ansa = $("#choseModifyAnsA").val();
+            var ansb = $("#choseModifyAnsB").val();
+            var ansc = $("#choseModifyAnsC").val();
+            var ansd = $("#choseModifyAnsD").val();
+            var choanswer = $("#choseModifyAnswer").val();
+            //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/modify",
+                data: JSON.stringify({"quesId":quesId, "typeId": typeId, "title": title, "score": score, "ansa": ansa,"ansb": ansb,"ansc":ansc,"ansd":ansd,"choanswer": choanswer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#choseModifyForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#ChoseModifyModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+    $("#multiChoseModifyForm").validate({
+        rules: {
+            multiModifyTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            multiModifyScore: {
+                required: true,
+            },
+            multiModifyAnsA: {
+                required:true,
+            },
+            multiModifyAnsB: {
+                required:true,
+            },
+            multiModifyAnsC: {
+                required:true,
+            },
+            multiModifyAnsD: {
+                required:true,
+            },
+            multiModifyAnsE: {
+                required:true,
+            },
+
+
+        },
+        messages: {
+            //定义消息
+            multiModifyTitle: {
+                required: "请输入题目!",
+            },
+            multiModifyScore: {
+                required: "请选择分值!"
+            },
+            multiModifyAnsA: {
+                required: "请输入A选项内容！"
+            },
+            multiModifyAnsB: {
+                required: "请输入B选项内容！"
+            },
+            multiModifyAnsC: {
+                required: "请输入C选项内容！"
+            },
+            multiModifyAnsD: {
+                required: "请输入D选项内容！"
+            },
+            multiModifyAnsE: {
+                required: "请输入E选项内容！"
+            },
+
+        },
+        submitHandler: function (form) {
+            var quesId = $.session.get('quesId');
+            var typeId = $.session.get('typeId');
+            var title = $("#multiModifyTitle").val();
+            var score = $("#multiModifyScore option:selected").val();
+            var ansa = $("#multiModifyAnsA").val();
+            var ansb = $("#multiModifyAnsB").val();
+            var ansc = $("#multiModifyAnsC").val();
+            var ansd = $("#multiModifyAnsD").val();
+            var anse = $("#multiModifyAnsE").val();
+            var choanswer = parseInt($("#RealModifyansA").val())+ parseInt($("#RealModifyansB").val())+ parseInt($("#RealModifyansC").val())+ parseInt($("#RealModifyansD").val())+ parseInt($("#RealModifyansE").val());
+            // console.log("typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"anse"+anse+"choanswer"+ choanswer)
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/modify",
+                data: JSON.stringify({"quesId":quesId, "typeId": typeId, "title": title, "score": score, "ansa": ansa,"ansb": ansb,"ansc":ansc,"ansd":ansd,"anse":anse,"choanswer": choanswer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#multiChoseModifyForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#MultiChoseModifyModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+    $("#judgeModifyForm").validate({
+        rules: {
+            judgeModifyTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            judgeModifyScore: {
+                required: true,
+            },
+            judgeModifyAnswer: {
+                required: true,
+            },
+        },
+        messages: {
+            //定义消息
+            judgeModifyTitle: {
+                required: "请输入题目!",
+            },
+            judgeModifyScore: {
+                required: "请选择分值!"
+            },
+            judgeModifyAnswer: {
+                required: "请选择答案!",
+            },
+        },
+        submitHandler: function (form) {
+            var typeId = $.session.get('typeId');
+            var quesId = $.session.get('quesId');
+            var title = $("#judgeModifyTitle").val();
+            var score = $("#judgeModifyScore option:selected").val();
+            var answer = $("#judgeModifyAnswer").val();
+            //console.log(answer);
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/modify",
+                data: JSON.stringify({"quesId":quesId, "typeId": typeId, "title": title, "score": score, "answer": answer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#judgeModifyForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#JudgeModifyModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+    $("#otherModifyForm").validate({
+        rules: {
+            otherModifyTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            otherModifyScore: {
+                required: true,
+            },
+            otherModifyAnswer: {
+                required: true,
+            },
+        },
+        messages: {
+            //定义消息
+            otherModifyTitle: {
+                required: "请输入题目!",
+            },
+            otherModifyScore: {
+                required: "请选择分值!"
+            },
+            otherModifyAnswer: {
+                required: "请输入题目答案!",
+            },
+        },
+        submitHandler: function (form) {
+            var quesId = $.session.get('quesId');
+            var typeId = $.session.get('typeId');
+            var title = $("#otherModifyTitle").val();
+            var score = $("#otherModifyScore option:selected").val();
+            var answer = $("#otherModifyAnswer").val();
+            //console.log(answer);
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/modify",
+                data: JSON.stringify({"quesId":quesId, "typeId": typeId, "title": title, "score": score, "answer": answer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#otherModifyForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#OtherModifyModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+
 
 
 </script>

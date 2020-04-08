@@ -29,7 +29,22 @@ public class QuestionController {
     public QuestionController(QuestionService questionService) {
         this.questionService = questionService;
     }
-
+    @RequestMapping("/modify")
+    @ResponseBody
+    public Object modifyQuestion(@RequestBody Question question){
+        Boolean bool = questionService.modifyQuestion(question);
+        if(bool){
+            return new JSONMap(true,200, ItemBankManageMessage.QUESTION_MODIFY_SUCCESS);
+        }
+        else{
+            return new JSONMap(false,200, ItemBankManageMessage.QUESTION_MODIFY_ERROR);
+        }
+    }
+    /**
+     * 获取指定id的question
+     * @param quesId
+     * @return
+     */
     @RequestMapping("/getquestionbyid")
     @ResponseBody
     public Question getQuestionByQuesid(@RequestParam("id")int quesId){

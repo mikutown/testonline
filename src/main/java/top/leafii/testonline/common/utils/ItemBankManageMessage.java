@@ -18,4 +18,6 @@ public class ItemBankManageMessage {
     public static final String QUESTION_ADD_ERROR = "题目添加失败！";
     public static final String QUESTION_REMOVE_SUCCESS = "题目删除成功！";
     public static final String QUESTION_REMOVE_ERROR = "题目删除失败！";
+    public static final String QUESTION_MODIFY_SUCCESS = "题目修改成功！";
+    public static final String QUESTION_MODIFY_ERROR = "题目修改失败！";
 }

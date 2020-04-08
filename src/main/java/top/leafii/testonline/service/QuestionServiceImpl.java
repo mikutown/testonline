@@ -50,4 +50,10 @@ public class QuestionServiceImpl implements QuestionService{
         Question question = questionMapper.selectByPrimaryKey(quesId);
         return question;
     }
+
+    @Override
+    public Boolean modifyQuestion(Question question) {
+        int i = questionMapper.updateByPrimaryKeySelective(question);
+        return i>0?true:false;
+    }
 }
