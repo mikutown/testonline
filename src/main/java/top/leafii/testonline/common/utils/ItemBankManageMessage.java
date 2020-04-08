@@ -16,4 +16,6 @@ public class ItemBankManageMessage {
     public static final String TYPE_MODIFY_ERROR = "题型修改失败！";
     public static final String QUESTION_ADD_SUCCESS = "题目添加成功！";
     public static final String QUESTION_ADD_ERROR = "题目添加失败！";
+    public static final String QUESTION_REMOVE_SUCCESS = "题目删除成功！";
+    public static final String QUESTION_REMOVE_ERROR = "题目删除失败！";
 }

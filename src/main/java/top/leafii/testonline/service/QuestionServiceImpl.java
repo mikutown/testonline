@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.leafii.testonline.common.api.PagableResponse;
 import top.leafii.testonline.common.api.PageRequest;
-import top.leafii.testonline.common.domain.Question;
-import top.leafii.testonline.common.domain.QuestionExample;
-import top.leafii.testonline.common.domain.User;
-import top.leafii.testonline.common.domain.UserExample;
+import top.leafii.testonline.common.domain.*;
+import top.leafii.testonline.mapper.Ques_subMapper;
 import top.leafii.testonline.mapper.QuestionMapper;
 
 import java.util.List;
@@ -21,6 +19,8 @@ import java.util.List;
 public class QuestionServiceImpl implements QuestionService{
     @Autowired
     QuestionMapper questionMapper;
+    @Autowired
+    Ques_subMapper ques_subMapper;
     @Override
     public PagableResponse<List<Question>> list(PageRequest request) {
         //完成分页
@@ -34,5 +34,20 @@ public class QuestionServiceImpl implements QuestionService{
     public Boolean save(Question question) {
         int i = questionMapper.insertSelective(question);
         return i>0?true:false;
+    }
+
+    @Override
+    public Boolean removeQuestion(int quesId) {
+        int i = questionMapper.deleteByPrimaryKey(quesId);
+        Ques_subExample ques_subExample = new Ques_subExample();
+        ques_subExample.or().andQuesIdEqualTo(quesId);
+        int j = ques_subMapper.deleteByExample(ques_subExample);
+        return i==j&&i>0?true:false;
+    }
+
+    @Override
+    public Question getQuestionByQuesid(int quesId) {
+        Question question = questionMapper.selectByPrimaryKey(quesId);
+        return question;
     }
 }

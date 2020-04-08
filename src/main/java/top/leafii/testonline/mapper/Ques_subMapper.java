@@ -2,9 +2,10 @@ package top.leafii.testonline.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import top.leafii.testonline.common.domain.Ques_sub;
 import top.leafii.testonline.common.domain.Ques_subExample;
-
+@Repository
 public interface Ques_subMapper {
     long countByExample(Ques_subExample example);
 

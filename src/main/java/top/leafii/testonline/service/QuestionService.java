@@ -13,4 +13,9 @@ public interface QuestionService {
     PagableResponse<List<Question>> list(PageRequest request);
 
     Boolean save(Question question);
+
+    Boolean removeQuestion(int quesId);
+
+    Question getQuestionByQuesid(int quesId);
+
 }

@@ -146,10 +146,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label>答案</label>
                             <select class="form-control" id="choseAnswer">
                                 <option>请选择...</option>
-                                <option value="1">A</option>
-                                <option value="10">B</option>
-                                <option value="100">C</option>
-                                <option value="1000">D</option>
+                                <option value="1000">A</option>
+                                <option value="100">B</option>
+                                <option value="10">C</option>
+                                <option value="1">D</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary" id="choseQuesAddBtn">添加</button>
@@ -164,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <!-- /.modal-dialog -->
     </div>
-    <!-- 多择题 Modal -->
+    <!-- 多选题 Modal -->
     <div class="modal fade" id="MultiChoseModal" tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -216,29 +216,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <input type="text" id="multiAnsE" class="form-control" placeholder="请输入选项E的内容">
                         </div>
                         <div class="form-group">
-                            <label for="">答案</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" value="1">
-                                    A
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="10">
-                                    B
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="100">
-                                    C
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="1000">
-                                    D
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="10000">
-                                    E
-                                </label>
-                            </div>
+                            <label>答案</label>
+                            <select id="RealansA">
+                                <option value="0">-</option>
+                                <option value="10000">A</option>
+                            </select>
+                            <select id="RealansB">
+                                <option value="0">-</option>
+                                <option value="1000">B</option>
+                            </select>
+                            <select id="RealansC">
+                                <option value="0">-</option>
+                                <option value="100">C</option>
+                            </select>
+                            <select id="RealansD">
+                                <option value="0">-</option>
+                                <option value="10">D</option>
+                            </select>
+                            <select id="RealansE">
+                                <option value="0">-</option>
+                                <option value="1">E</option>
+                            </select>
                         </div>
                         <button type="submit" class="btn btn-primary" id="multiQuesAddBtn">添加</button>
                     </form>
@@ -286,7 +284,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="form-group">
                             <label>答案</label>
                             <select class="form-control" id="judgeAnswer">
-                                <option value="250">请选择...</option>
+                                <option>请选择...</option>
                                 <option value="1">正确✅</option>
                                 <option value="0">错误❌</option>
                             </select>
@@ -351,34 +349,252 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- /.modal-dialog -->
     </div>
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="QuestionEditModal" tabindex="-1" role="dialog"
+    <!-- 单选题修改 Modal -->
+    <div class="modal fade" id="ChoseModifyModal" tabindex="-1" role="dialog"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">用户修改</h4>
+                    <h4 class="modal-title">单选题修改</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="userEdit">
+                    <form id="choseModifyForm">
                         <div class="form-group">
-                            <label for="newUname">用户名</label>
-                            <input type="text" class="form-control" name="newUname" id="newUname" placeholder="请输入用户名">
+                            <label for="choseTitle">题目</label>
+                            <textarea id="choseModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="newPassword">密码</label>
-                            <input type="text" class="form-control" id="newPassword"
-                                   placeholder="请输入密码" name="newPassword">
+                            <label for="choseQuesImg">图片</label>
+                            <input type="file" id="choseModifyImg">
+                            <p class="help-block">错误信息</p>
                         </div>
-
-                        <button type="button" id="modifyBtn" class="btn btn-primary ">修改</button>
-                        <button type="button" class="btn btn-default " data-dismiss="modal">关闭</button>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="choseModifyScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>选项A</label>
+                            <input type="text" id="choseModifyAnsA" class="form-control" placeholder="请输入选项A的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项B</label>
+                            <input type="text" id="choseModifyAnsB" class="form-control" placeholder="请输入选项B的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项C</label>
+                            <input type="text" id="choseModifyAnsC" class="form-control" placeholder="请输入选项C的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项D</label>
+                            <input type="text" id="choseModifyAnsD" class="form-control" placeholder="请输入选项D的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select class="form-control" id="choseModifyAnswer">
+                                <option>请选择...</option>
+                                <option value="1000">A</option>
+                                <option value="100">B</option>
+                                <option value="10">C</option>
+                                <option value="1">D</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="choseModifyQuesAddBtn">修改</button>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <span>请在输入用户信息后点击修改按钮</span>
+                    <span>请输入表单内所需数据，然后点击修改按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 多选题 Modal -->
+    <div class="modal fade" id="MultiChoseModifyModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">多选题修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="multiChoseModifyForm">
+                        <div class="form-group">
+                            <label for="multiTitle">题目</label>
+                            <textarea id="multiModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiQuesImg">图片</label>
+                            <input type="file" id="multiModifyQuesImg">
+                            <p class="help-block">错误信息</p>
+                        </div>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="multiModifyScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>选项A</label>
+                            <input type="text" id="multiModifyAnsA" class="form-control" placeholder="请输入选项A的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项B</label>
+                            <input type="text" id="multiModifyAnsB" class="form-control" placeholder="请输入选项B的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项C</label>
+                            <input type="text" id="multiModifyAnsC" class="form-control" placeholder="请输入选项C的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项D</label>
+                            <input type="text" id="multiModifyAnsD" class="form-control" placeholder="请输入选项D的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>选项E</label>
+                            <input type="text" id="multiModifyAnsE" class="form-control" placeholder="请输入选项E的内容">
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select id="RealModifyansA">
+                                <option value="0">-</option>
+                                <option value="10000">A</option>
+                            </select>
+                            <select id="RealModifyansB">
+                                <option value="0">-</option>
+                                <option value="1000">B</option>
+                            </select>
+                            <select id="RealModifyansC">
+                                <option value="0">-</option>
+                                <option value="100">C</option>
+                            </select>
+                            <select id="RealModifyansD">
+                                <option value="0">-</option>
+                                <option value="10">D</option>
+                            </select>
+                            <select id="RealModifyansE">
+                                <option value="0">-</option>
+                                <option value="1">E</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="multiQuesModifyBtn">添加</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请输入表单内所需数据，然后点击修改按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 判断题 Modal -->
+    <div class="modal fade" id="JudgeModifyModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">判断题修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="judgeModifyForm">
+                        <div class="form-group">
+                            <label for="judgeTitle">题目</label>
+                            <textarea id="judgeModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="judgeQuesImg">图片</label>
+                            <input type="file" id="judgeModifyQuesImg">
+                            <p class="help-block">错误信息</p>
+                        </div>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="judgeModifyScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select class="form-control" id="judgeModifyAnswer">
+                                <option>请选择...</option>
+                                <option value="1">正确✅</option>
+                                <option value="0">错误❌</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="judgeModifyBtn">修改</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请输入表单内所需数据，然后点击修改按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 其他题 Modal -->
+    <div class="modal fade" id="OtherModifyModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">其他类型题目修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="otherModifyForm">
+                        <div class="form-group">
+                            <label for="otherTitle">题目</label>
+                            <textarea id="otherModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="otherQuesImg">图片</label>
+                            <input type="file" id="otherModifyQuesImg">
+                            <p class="help-block">错误信息</p>
+                        </div>
+                        <div class="form-group">
+                            <label>分值</label>
+                            <select class="form-control" id="otherModifyScore">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="otherAnswer">答案</label>
+                            <textarea id="otherModifyAnswer" class="form-control" rows="3" placeholder="请输入答案"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="otherModifyBtn">添加</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请输入表单内所需数据，然后点击修改按钮</span>
                 </div>
 
             </div>
@@ -452,14 +668,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }, {
                 field: 'answer',
                 title: '非选择题答案',
-                formatter: function (value,row) {
-                    if(row.typeId==3){//如果是判断题
-                        if(value==1){
+                formatter: function (value, row) {
+                    if (row.typeId == 3) {//如果是判断题
+                        if (value == 1) {
                             return "正确";
-                        }else{
+                        } else {
                             return "错误"
                         }
-                    }else{
+                    } else {
                         return value;
                     }
                 }
@@ -467,35 +683,39 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 {
                     field: 'choanswer',
                     title: '选择题答案',
-                    formatter: function (value,row) {
-                        if(row.typeId==1){
+                    formatter: function (value, row) {
+                        if (row.typeId == 1) {
                             //单选题
-                            if(value==1){
+                            if (value == 1000) {
                                 return "A";
-                            }else if(value==10){
+                            } else if (value == 100) {
                                 return "B";
-                            }else if(value==100){
+                            } else if (value == 10) {
                                 return "C"
-                            }else if(value==1000){
+                            } else if (value == 1) {
                                 return "D"
                             }
-                        }else if(row.typeId==2){
+                        } else if (row.typeId == 2) {
                             //多选题
                             let answer = "";
-                            if(value>=10000){
-                                answer+="E";
-                                value-=10000;
-                            }if(value>=1000){
-                                answer+="D";
-                                value-=1000;
-                            }if(value>=100){
-                                answer+="C";
-                                value-=100;
-                            }if(value>=10){
-                                answer+="B";
-                                value-=10;
-                            }if(value==1){
-                                answer+="A";
+                            if (value >= 10000) {
+                                answer += "A";
+                                value -= 10000;
+                            }
+                            if (value >= 1000) {
+                                answer += "B";
+                                value -= 1000;
+                            }
+                            if (value >= 100) {
+                                answer += "C";
+                                value -= 100;
+                            }
+                            if (value >= 10) {
+                                answer += "D";
+                                value -= 10;
+                            }
+                            if (value == 1) {
+                                answer += "E";
                             }
                             return answer;
 
@@ -506,17 +726,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     formatter: function (value, row) {
                         return [
                             '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-                            'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' + ')>',
+                            'onClick=modifyQuestion(' + row.typeId +','+ row.quesId+ ')>',
                             '<i class="fa fa-edit" >修改</i></button>',
 
                             '<button type="button" class="btn btn-danger btn-xs" ',
-                            'onClick=removeUser(' + row.uId + ')>',
+                            'onClick=removeQuestion(' + row.quesId + ')>',
                             '<i class="fa fa-remove" >删除</i></button>']
                             .join('');
                     }
                 }]
 
-        })
+        });
 
         function queryParams(params) {
             return {
@@ -531,7 +751,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $("#QuestionTypeModal").on('show.bs.modal', function (e) {
         showTypeForm();
     });
-
     function showTypeForm() {
         $("#quesAddModalForm").empty();
         $("#quesAddModalForm").append('<div class="form-group" id="quesTypeFmGrop">\n' +
@@ -558,6 +777,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         })
     }
+    //修改题目模态框初始化
+    //根据题目类型加载不同的modal框
+    function modifyQuestion(typeId,quesId){
+        $.session.remove('typeId');
+        $.session.remove('quesId');
+        $.session.set('typeId',typeId);
+        $.session.set('quesId',quesId);
+        if(typeId==1){
+            $("#ChoseModifyModal").modal('show');
+        }
+    }
+    $("#ChoseModifyModal").on('show.bs.modal', function (e) {
+        var typeId = $session.get('typeId');
+        var quesId = $session.get('quesId');
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyid?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    console.log(data);//测试能否得到question
+                    //$('#newUname').val(data.uname);
+
+                }
+            })
+        }
+
+    });
+
 
     function showAddModal(typeId) {
         $.session.set('typeId', typeId);
@@ -609,14 +856,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             var title = $("#otherTitle").val();
             var score = $("#otherScore option:selected").val();
             var answer = $("#otherAnswer").val();
-            console.log(answer);
+            //console.log(answer);
             //验证完成后提交表单
             //进行ajax传值
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
                 url: basePath + "/question/save",
-                data: JSON.stringify({"typeId": typeId,"title": title, "score": score, "answer": answer}),
+                data: JSON.stringify({"typeId": typeId, "title": title, "score": score, "answer": answer}),
                 dataType: "json",
                 success: function (msg) {
                     var json = msg["data"];
@@ -667,14 +914,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             var title = $("#judgeTitle").val();
             var score = $("#judgeScore option:selected").val();
             var answer = $("#judgeAnswer").val();
-            console.log(answer);
+            //console.log(answer);
             //验证完成后提交表单
             //进行ajax传值
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
                 url: basePath + "/question/save",
-                data: JSON.stringify({"typeId": typeId,"title": title, "score": score, "answer": answer}),
+                data: JSON.stringify({"typeId": typeId, "title": title, "score": score, "answer": answer}),
                 dataType: "json",
                 success: function (msg) {
                     var json = msg["data"];
@@ -695,50 +942,78 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     $("#choseAddModalForm").validate({
         rules: {
-            judgeTitle: {
+            choseTitle: {
                 required: true,//
                 minlength: 4,//4位
                 maxlength: 500,//最多输入500
             },
-            judgeScore: {
+            choseScore: {
                 required: true,
             },
-            judgeAnswer: {
+            choseAnsA: {
+                required:true,
+            },
+            choseAnsB: {
+                required:true,
+            },
+            choseAnsC: {
+                required:true,
+            },
+            choseAnsD: {
+                required:true,
+            },
+            choseAnswer: {
                 required: true,
             },
         },
         messages: {
             //定义消息
-            judgeTitle: {
+            choseTitle: {
                 required: "请输入题目!",
             },
-            judgeScore: {
+            choseScore: {
                 required: "请选择分值!"
             },
-            judgeAnswer: {
+            choseAnsA: {
+                required: "请输入A选项内容！"
+            },
+            choseAnsB: {
+                required: "请输入A选项内容！"
+            },
+            choseAnsC: {
+                required: "请输入A选项内容！"
+            },
+            choseAnsD: {
+                required: "请输入A选项内容！"
+            },
+            choseAnswer: {
                 required: "请选择答案!",
             },
         },
         submitHandler: function (form) {
             var typeId = $.session.get('typeId');
-            var title = $("#judgeTitle").val();
-            var score = $("#judgeScore option:selected").val();
-            var answer = $("#judgeAnswer").val();
-            console.log(answer);
+            var title = $("#choseTitle").val();
+            var score = $("#choseScore option:selected").val();
+            var ansa = $("#choseAnsA").val();
+            var ansb = $("#choseAnsB").val();
+            var ansc = $("#choseAnsC").val();
+            var ansd = $("#choseAnsD").val();
+            var choanswer = $("#choseAnswer").val();
+            console.log("typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
             //验证完成后提交表单
             //进行ajax传值
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
                 url: basePath + "/question/save",
-                data: JSON.stringify({"typeId": typeId,"title": title, "score": score, "answer": answer}),
+                data: JSON.stringify({"typeId": typeId, "title": title, "score": score, "ansa": ansa,"ansb": ansb,"ansc":ansc,"ansd":ansd,"choanswer": choanswer}),
                 dataType: "json",
                 success: function (msg) {
                     var json = msg["data"];
                     if (json["success"]) {
-                        $("#judgeAddModalForm")[0].reset();
+                        $("#choseAddModalForm")[0].reset();
                         layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
-                            $("#JudgeModal").modal('hide');
+                            $("#ChoseModal").modal('hide');
                         });
                         $("#questionTable").bootstrapTable("refresh");
                     } else {
@@ -749,6 +1024,207 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
+
+    $("#choseAddModalForm").validate({
+        rules: {
+            choseTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            choseScore: {
+                required: true,
+            },
+            choseAnsA: {
+                required:true,
+            },
+            choseAnsB: {
+                required:true,
+            },
+            choseAnsC: {
+                required:true,
+            },
+            choseAnsD: {
+                required:true,
+            },
+            choseAnswer: {
+                required: true,
+            },
+        },
+        messages: {
+            //定义消息
+            choseTitle: {
+                required: "请输入题目!",
+            },
+            choseScore: {
+                required: "请选择分值!"
+            },
+            choseAnsA: {
+                required: "请输入A选项内容！"
+            },
+            choseAnsB: {
+                required: "请输入A选项内容！"
+            },
+            choseAnsC: {
+                required: "请输入A选项内容！"
+            },
+            choseAnsD: {
+                required: "请输入A选项内容！"
+            },
+            choseAnswer: {
+                required: "请选择答案!",
+            },
+        },
+        submitHandler: function (form) {
+            var typeId = $.session.get('typeId');
+            var title = $("#choseTitle").val();
+            var score = $("#choseScore option:selected").val();
+            var ansa = $("#choseAnsA").val();
+            var ansb = $("#choseAnsB").val();
+            var ansc = $("#choseAnsC").val();
+            var ansd = $("#choseAnsD").val();
+            var choanswer = $("#choseAnswer").val();
+            //console.log("typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/save",
+                data: JSON.stringify({"typeId": typeId, "title": title, "score": score, "ansa": ansa,"ansb": ansb,"ansc":ansc,"ansd":ansd,"choanswer": choanswer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#choseAddModalForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#ChoseModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+
+    $("#multiChoseAddModalForm").validate({
+        rules: {
+            multiTitle: {
+                required: true,//
+                minlength: 4,//4位
+                maxlength: 500,//最多输入500
+            },
+            multiScore: {
+                required: true,
+            },
+            multiAnsA: {
+                required:true,
+            },
+            multiAnsB: {
+                required:true,
+            },
+            multiAnsC: {
+                required:true,
+            },
+            multiAnsD: {
+                required:true,
+            },
+            multiAnsE: {
+                required:true,
+            },
+
+        },
+        messages: {
+            //定义消息
+            multiTitle: {
+                required: "请输入题目!",
+            },
+            multiScore: {
+                required: "请选择分值!"
+            },
+            multiAnsA: {
+                required: "请输入A选项内容！"
+            },
+            multiAnsB: {
+                required: "请输入B选项内容！"
+            },
+            multiAnsC: {
+                required: "请输入C选项内容！"
+            },
+            multiAnsD: {
+                required: "请输入D选项内容！"
+            },
+            multiAnsE: {
+                required: "请输入E选项内容！"
+            },
+
+        },
+        submitHandler: function (form) {
+            var typeId = $.session.get('typeId');
+            var title = $("#multiTitle").val();
+            var score = $("#multiScore option:selected").val();
+            var ansa = $("#multiAnsA").val();
+            var ansb = $("#multiAnsB").val();
+            var ansc = $("#multiAnsC").val();
+            var ansd = $("#multiAnsD").val();
+            var anse = $("#multiAnsE").val();
+            var choanswer = parseInt($("#RealansA").val())+ parseInt($("#RealansB").val())+ parseInt($("#RealansC").val())+ parseInt($("#RealansD").val())+ parseInt($("#RealansE").val());
+
+           // console.log("typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"anse"+anse+"choanswer"+ choanswer)
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: basePath + "/question/save",
+                data: JSON.stringify({"typeId": typeId, "title": title, "score": score, "ansa": ansa,"ansb": ansb,"ansc":ansc,"ansd":ansd,"anse":anse,"choanswer": choanswer}),
+                dataType: "json",
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $("#multiChoseAddModalForm")[0].reset();
+                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+                            $("#MultiChoseModal").modal('hide');
+                        });
+                        $("#questionTable").bootstrapTable("refresh");
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            });
+
+        }
+    });
+
+    function removeQuestion(quesId) {
+        layer.msg('确定删除吗？此题目将从此列表和与科目绑定的列表中删除', {
+            time: 0,
+            btn: ['确定', '删个屁'],
+            yes: function (index) {
+                layer.close(index);
+                $.ajax({
+                    url: '/question/remove?quesId=' + quesId,
+                    success: function (msg) {
+                        var json = msg["data"];
+                        if (json["success"]) {
+                            layer.msg(json["msg"], {icon: 6,time:2000});
+                            $("#questionTable").bootstrapTable("remove", {field: 'quesId', values: [quesId]});//注意参数的name
+                        } else {
+                            layer.msg(json["msg"], {icon: 5,time:2000});
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg("未知错误！", {icon: 5,time:2000});
+                    }
+
+                })
+            }
+        })
+    }
+
 
 </script>
 
