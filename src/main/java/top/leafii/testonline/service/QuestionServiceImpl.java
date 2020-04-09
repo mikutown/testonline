@@ -29,6 +29,13 @@ public class QuestionServiceImpl implements QuestionService{
         //System.out.println(new PageInfo<>(users).getTotal());//打印总数
         return new PagableResponse(new PageInfo<>(questions).getTotal(),questions);
     }
+    @Override
+    public PagableResponse<List<Question>> listBySubId(PageRequest request, int subId) {
+        //完成分页
+        PageHelper.startPage(request.getPageNum(),request.getPageSize());
+        List<Question> questions = questionMapper.selectBySubId(subId);
+        return new PagableResponse(new PageInfo<>(questions).getTotal(),questions);
+    }
 
     @Override
     public Boolean save(Question question) {
@@ -56,4 +63,6 @@ public class QuestionServiceImpl implements QuestionService{
         int i = questionMapper.updateByPrimaryKeySelective(question);
         return i>0?true:false;
     }
+
+
 }

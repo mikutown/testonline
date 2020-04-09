@@ -29,6 +29,18 @@ public class QuestionController {
     public QuestionController(QuestionService questionService) {
         this.questionService = questionService;
     }
+
+    @RequestMapping("/listbysubid")
+    @ResponseBody
+    public PagableResponse<List<Question>> questionListBySubId(PageRequest request,@RequestParam("subId") int subId){
+        return questionService.listBySubId(request,subId);
+    }
+
+    /**
+     * 修改
+     * @param question
+     * @return
+     */
     @RequestMapping("/modify")
     @ResponseBody
     public Object modifyQuestion(@RequestBody Question question){

@@ -149,7 +149,28 @@ desired effect
     </div>
     <!-- /.modal-dialog -->
   </div>
+  <!-- Ques Modal -->
+  <div class="modal fade" id="QuesModal" tabindex="-1" role="dialog"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">查看科目中的题目</h4>
+        </div>
+        <div class="modal-body" id="quesModalBody">
 
+        </div>
+        <div class="modal-footer">
+          <span>想要为科目添加题目？点击左侧菜单栏中的“题目科目分配”试试吧！</span>
+        </div>
+
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
 </div>
 <!-- ./wrapper -->
 
@@ -215,14 +236,17 @@ desired effect
         title: '操作',
         formatter: function (value, row) {
           return [
+            '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
+            'data-toggle="modal" data-target="#QuesModal"', 'data-id=' + row.subId + ' ' +')>',
+            '<i class="fa fa-edit" >查看题目</i></button>',
             '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
             'data-toggle="modal" data-target="#SubjectEditModal"', 'data-id=' + row.subId + ' ' +')>',
             '<i class="fa fa-edit" >修改</i></button>',
 
             '<button type="button" class="btn btn-danger btn-xs" ',
             'onClick=removeUser(' + row.subId + ')>',
-            '<i class="fa fa-remove" >删除</i></button>']
-                  .join('');
+            '<i class="fa fa-remove" >删除</i></button>'
+          ].join('');
         }
       }]
 
@@ -353,7 +377,130 @@ desired effect
     }
 
   });
+  //Questable的查看
+  $("#QuesModal").on('show.bs.modal', function (e) {
+    var subId = $(e.relatedTarget).attr('data-id');
+    $("#quesModalBody").append('<table id="ques'+subId+'"></table>');
+    $.session.remove('SUBID');
+    $.session.set('SUBID',subId);
+    if(subId){
+      var qustTable = '#ques'+subId;
+      $(qustTable).bootstrapTable({
+        url: '/question/listbysubid?subId='+subId,
+        pagination: true,//是否分页
+        //toolbar: "#toolbar",
+        //toolbarAlign: "right",
+        //search: true,//是否允许搜索
+        queryParamsType: 'limit',
+        queryParams: queryParams,
+        sidePagination: 'server',
+        dataField: "data",
+        columns: [{//表头
+          field: 'quesId',
+          title: 'ID'
+        }, {
+          field: 'typeId',
+          title: '题型',
+          formatter: function (value) {
+            var typeNameEnd;
+            $.ajax({
+              url: '/type/gettypebyid?id=' + value,
+              method: 'get',
+              async: false,//异步回显
+              success: function (data) {
+                typeNameEnd = data.typename;
+              }
+            });
+            return typeNameEnd;
+          }
+        }, {
+          field: 'title',
+          title: '题干'
+        }, {
+          field: 'score',
+          title: '题目分值',
 
+        }, {
+          field: 'ansa',
+          title: '选项A',
+        }, {
+          field: 'ansb',
+          title: '选项B',
+        }, {
+          field: 'ansc',
+          title: '选项C',
+        }, {
+          field: 'ansd',
+          title: '选项D',
+        }, {
+          field: 'anse',
+          title: '选项E',
+        }, {
+          field: 'answer',
+          title: '非选择题答案',
+          formatter: function (value, row) {
+            if (row.typeId == 3) {//如果是判断题
+              if (value == 1) {
+                return "正确";
+              } else {
+                return "错误"
+              }
+            } else {
+              return value;
+            }
+          }
+        },
+          {
+            field: 'choanswer',
+            title: '选择题答案',
+            formatter: function (value, row) {
+              if (row.typeId == 1) {
+                //单选题
+                if (value == 1000) {
+                  return "A";
+                } else if (value == 100) {
+                  return "B";
+                } else if (value == 10) {
+                  return "C"
+                } else if (value == 1) {
+                  return "D"
+                }
+              } else if (row.typeId == 2) {
+                //多选题
+                let answer = "";
+                if (value >= 10000) {
+                  answer += "A";
+                  value -= 10000;
+                }
+                if (value >= 1000) {
+                  answer += "B";
+                  value -= 1000;
+                }
+                if (value >= 100) {
+                  answer += "C";
+                  value -= 100;
+                }
+                if (value >= 10) {
+                  answer += "D";
+                  value -= 10;
+                }
+                if (value == 1) {
+                  answer += "E";
+                }
+                return answer;
+
+              }
+            }
+          }]
+      });
+    }
+
+  });
+  $('#QuesModal').on('hide.bs.modal', function () {
+    var subId = $.session.get('SUBID');
+    var qustTable = '#ques'+subId;
+    $(qustTable).remove();
+  })
 </script>
 
 </body>

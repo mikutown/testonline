@@ -96,6 +96,12 @@
     from question
     where ques_id = #{quesId,jdbcType=INTEGER}
   </select>
+  <select id="selectBySubId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from question
+    where ques_id in (select ques_id from ques_sub where sub_id = #{subId,jdbcType=INTEGER})
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from question
     where ques_id = #{quesId,jdbcType=INTEGER}

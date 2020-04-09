@@ -19,4 +19,6 @@ public interface QuestionService {
     Question getQuestionByQuesid(int quesId);
 
     Boolean modifyQuestion(Question question);
+
+    PagableResponse<List<Question>> listBySubId(PageRequest request, int subId);
 }

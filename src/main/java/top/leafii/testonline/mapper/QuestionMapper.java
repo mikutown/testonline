@@ -29,4 +29,6 @@ public interface QuestionMapper {
     int updateByPrimaryKeySelective(Question record);
 
     int updateByPrimaryKey(Question record);
+
+    List<Question> selectBySubId(int subId);
 }
