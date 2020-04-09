@@ -18,4 +18,6 @@ public interface SubjectService {
     Boolean modifySubject(Subject subject);
 
     Boolean removeSubject(Subject sbInDB);
+
+    PagableResponse<List<Subject>> listByUid(PageRequest request, int uId);
 }

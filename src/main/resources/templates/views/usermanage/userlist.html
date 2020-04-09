@@ -150,7 +150,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <!-- Subject Modal -->
+    <div class="modal fade" id="SubjectModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">查看分配给用户的科目</h4>
+                </div>
+                <div class="modal-body" id="subjectModalBody">
 
+                </div>
+                <div class="modal-footer">
+                    <span>想要为用户分配科目？点击左侧菜单栏中的“用户科目分配”试试吧！</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 </div>
 <!-- ./wrapper -->
 
@@ -213,7 +234,63 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
 
     });
+    //Questable的查看
+    $("#SubjectModal").on('show.bs.modal', function (e) {
+        var uId = $(e.relatedTarget).attr('data-id');
+        $("#subjectModalBody").append('<table id="subject'+uId+'"></table>');
+        $.session.remove('UID');
+        $.session.set('UID',uId);
+        if(uId){
+            var subjectTable = '#subject'+uId;
+            $(subjectTable).bootstrapTable({
+                url: '/subject/listbyuid?uId='+uId,
+                pagination: true,//是否分页
+                //toolbar: "#toolbar",
+                //toolbarAlign: "right",
+                //search: true,//是否允许搜索
+                queryParamsType: 'limit',
+                queryParams: queryParams,
+                sidePagination: 'server',
+                dataField: "data",
+                columns: [{//表头
+                    field: 'subId',
+                    title: 'ID'
+                }, {
+                    field: 'subname',
+                    title: '科目名称'
+                }, {
+                    field: 'subtime',
+                    title: '最近编辑时间',
+                    formatter: function (value, row, index) {
+                        return formatDateTime(value)
+                    }
+                }]
 
+            })
+        }
+
+    });
+    $('#SubjectModal').on('hide.bs.modal', function () {
+        var uId = $.session.get('UID');
+        var subjectTable = '#subject'+uId;
+        $(subjectTable).remove();
+    });
+    // 数字补0操作
+    function  addZero(num) {
+        return num < 10 ? '0' + num : num;
+    }
+    function formatDateTime (date) {
+        var time = new Date(Date.parse(date));
+        time.setTime(time.setHours(time.getHours() + 8));
+        var Y = time.getFullYear() + '-';
+        var  M = this.addZero(time.getMonth() + 1) + '-';
+        var D = this.addZero(time.getDate()) + ' ';
+        var h = this.addZero(time.getHours()) + ':';
+        var m = this.addZero(time.getMinutes()) + ':';
+        var  s = this.addZero(time.getSeconds());
+        return Y + M + D;
+        // }
+    }
     //表格渲染
     $(function () {
         $("#userTable").bootstrapTable({//在id为dataTable的
@@ -246,15 +323,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }, {
                 title: '操作',
                 formatter: function (value, row) {
-                    return [
-                        '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-                        'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' +')>',
-                        '<i class="fa fa-edit" >修改</i></button>',
+                    if(row.uId==1) {
+                        return '无法对管理员进行操作';
+                    }else{
+                        return [
+                            '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
+                            'data-toggle="modal" data-target="#SubjectModal"', 'data-id=' + row.uId + ' ' +')>',
+                            '<i class="fa fa-edit" >查看待考科目</i></button>',
+                            '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
+                            'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' +')>',
+                            '<i class="fa fa-edit" >修改</i></button>',
 
-                        '<button type="button" class="btn btn-danger btn-xs" ',
-                        'onClick=removeUser(' + row.uId + ')>',
-                        '<i class="fa fa-remove" >删除</i></button>']
-                        .join('');
+                            '<button type="button" class="btn btn-danger btn-xs" ',
+                            'onClick=removeUser(' + row.uId + ')>',
+                            '<i class="fa fa-remove" >删除</i></button>']
+                            .join('');
+                    }
+
                 }
             }]
 

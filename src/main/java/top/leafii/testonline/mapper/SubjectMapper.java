@@ -28,4 +28,6 @@ public interface SubjectMapper {
     int updateByPrimaryKeySelective(Subject record);
 
     int updateByPrimaryKey(Subject record);
+
+    List<Subject> selectByUId(int uId);
 }

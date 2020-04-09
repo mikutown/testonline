@@ -159,8 +159,8 @@ desired effect
             <span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">查看科目中的题目</h4>
         </div>
-        <div class="modal-body" id="quesModalBody">
-
+        <div id="quesModalBodyFather">
+          <div class="modal-body" id="quesModalBody"></div>
         </div>
         <div class="modal-footer">
           <span>想要为科目添加题目？点击左侧菜单栏中的“题目科目分配”试试吧！</span>
@@ -379,6 +379,8 @@ desired effect
   });
   //Questable的查看
   $("#QuesModal").on('show.bs.modal', function (e) {
+    $("#quesModalBodyFather").empty();
+    $("#quesModalBodyFather").append('<div class="modal-body" id="quesModalBody"></div>');
     var subId = $(e.relatedTarget).attr('data-id');
     $("#quesModalBody").append('<table id="ques'+subId+'"></table>');
     $.session.remove('SUBID');
@@ -500,7 +502,7 @@ desired effect
     var subId = $.session.get('SUBID');
     var qustTable = '#ques'+subId;
     $(qustTable).remove();
-  })
+  });
 </script>
 
 </body>

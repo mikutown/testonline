@@ -21,6 +21,17 @@ public class SubjectController {
     @Autowired
     private SubjectService subjectService;
 
+    @RequestMapping("/listbyuid")
+    @ResponseBody
+    public PagableResponse<List<Subject>> subjectListByUid(PageRequest request,@RequestParam("uId")int uId){
+        return subjectService.listByUid(request,uId);
+    }
+
+    /**
+     * 删除subject
+     * @param subId
+     * @return
+     */
     @RequestMapping("/remove")
     @ResponseBody
     public Object removeSubject(@RequestParam("subId")int subId){

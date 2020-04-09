@@ -33,6 +33,12 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public PagableResponse<List<Subject>> listByUid(PageRequest request, int uId) {
+        PageHelper.startPage(request.getPageNum(),request.getPageSize());
+        List<Subject> subjects = subjectMapper.selectByUId(uId);
+        return new PagableResponse(new PageInfo<>(subjects).getTotal(),subjects);
+    }
+    @Override
     public Boolean checkSubName(String subname) {
         SubjectExample subjectExample = new SubjectExample();
         subjectExample.or().andSubnameEqualTo(subname);
@@ -70,4 +76,6 @@ public class SubjectServiceImpl implements SubjectService {
         user_subMapper.deleteByExample(userSubExample);
         return i>0?true:false;
     }
+
+
 }
