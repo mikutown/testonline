@@ -22,7 +22,8 @@ public class RootLayoutController {
     public String toTypeList(){
         return "/views/problemmanage/typelist";
     }
-
+    @GetMapping("/page/prosublist")
+    public String toQuestionSubjectList(){ return "/views/problemmanage/questionsublist"; }
     @GetMapping("/page/paperlist")
     public String toPaperList(){
         return "/views/resultmanage/paperlist";

@@ -20,4 +20,5 @@ public class ClientLayoutController {
     public String toScoreScan(){
         return "/views/client/scorescan";
     }
+
 }
