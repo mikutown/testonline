@@ -6,9 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.leafii.testonline.common.api.PagableResponse;
 import top.leafii.testonline.common.api.PageRequest;
+import top.leafii.testonline.common.domain.Ques_subExample;
 import top.leafii.testonline.common.domain.Subject;
 import top.leafii.testonline.common.domain.SubjectExample;
+import top.leafii.testonline.common.domain.User_subExample;
+import top.leafii.testonline.mapper.Ques_subMapper;
 import top.leafii.testonline.mapper.SubjectMapper;
+import top.leafii.testonline.mapper.User_subMapper;
 
 import java.util.List;
 @Service
@@ -16,8 +20,10 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Autowired
     SubjectMapper subjectMapper;
-
-
+    @Autowired
+    Ques_subMapper ques_subMapper;
+    @Autowired
+    User_subMapper user_subMapper;
     @Override
     public PagableResponse list(PageRequest request) {
         PageHelper.startPage(request.getPageNum(),request.getPageSize());
@@ -56,6 +62,12 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Boolean removeSubject(Subject sbInDB) {
         int i = subjectMapper.deleteByPrimaryKey(sbInDB.getSubId());
+        Ques_subExample quesSubExample = new Ques_subExample();
+        quesSubExample.or().andSubIdEqualTo(sbInDB.getSubId());
+        ques_subMapper.deleteByExample(quesSubExample);
+        User_subExample userSubExample = new User_subExample();
+        userSubExample.or().andSubIdEqualTo(sbInDB.getSubId());
+        user_subMapper.deleteByExample(userSubExample);
         return i>0?true:false;
     }
 }

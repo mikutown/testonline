@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import top.leafii.testonline.common.domain.Ques_sub;
 import top.leafii.testonline.common.domain.Ques_subExample;
+import top.leafii.testonline.common.domain.Subject;
+
 @Repository
 public interface Ques_subMapper {
     long countByExample(Ques_subExample example);
@@ -20,4 +22,8 @@ public interface Ques_subMapper {
     int updateByExampleSelective(@Param("record") Ques_sub record, @Param("example") Ques_subExample example);
 
     int updateByExample(@Param("record") Ques_sub record, @Param("example") Ques_subExample example);
+
+    List<Subject> selectNoQuestionSubject(int quesId);
+
+    List<Subject> selectQuestionSubject(int quesId);
 }

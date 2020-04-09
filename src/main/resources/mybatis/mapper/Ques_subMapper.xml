@@ -80,6 +80,16 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectNoQuestionSubject" resultType="top.leafii.testonline.common.domain.Subject">
+    select sub_id subId,subname,subtime from `subject` where `subject`.sub_id not in (
+        select sub_id from `ques_sub` where ques_id = #{quesId,jdbcType=INTEGER}
+    )
+  </select>
+  <select id="selectQuestionSubject" resultType="top.leafii.testonline.common.domain.Subject">
+    select sub_id subId,subname,subtime from `subject` where `subject`.sub_id in (
+        select sub_id from `ques_sub` where ques_id = #{quesId,jdbcType=INTEGER}
+    )
+  </select>
   <delete id="deleteByExample" parameterType="top.leafii.testonline.common.domain.Ques_subExample">
     delete from ques_sub
     <if test="_parameter != null">

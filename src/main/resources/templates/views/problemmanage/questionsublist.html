@@ -35,7 +35,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="quessubTable"></table>
+              <table id="quesSubTable"></table>
             </div>
             <!-- /.box-body -->
           </div>
@@ -109,8 +109,8 @@
   });
   //表格渲染
   $(function () {
-    $("#usersubTable").bootstrapTable({//在id为dataTable的
-      url: '/user/list',
+    $("#quesSubTable").bootstrapTable({
+      url: '/question/list',
       pagination: true,//是否分页
       toolbar: "#toolbar",
       toolbarAlign: "right",
@@ -120,37 +120,96 @@
       sidePagination: 'server',
       dataField: "data",
       columns: [{//表头
-        field: 'uId',
+        field: 'quesId',
         title: 'ID'
       }, {
-        field: 'uname',
-        title: '登录名'
-      }, {
-        field: 'roleId',
-        title: '权限',
+        field: 'typeId',
+        title: '题型',
         formatter: function (value) {
-          if (value == 1) {
-            return '管理员';
-          } else {
-            return '普通用户';
-          }
+          var typeNameEnd;
+          $.ajax({
+            url: '/type/gettypebyid?id=' + value,
+            method: 'get',
+            async: false,//异步回显
+            success: function (data) {
+              typeNameEnd = data.typename;
+            }
+          });
+          return typeNameEnd;
         }
+      }, {
+        field: 'title',
+        title: '题干'
+      }, {
+        field: 'score',
+        title: '题目分值',
 
       }, {
-        title: '操作',
+        field: 'answer',
+        title: '非选择题答案',
         formatter: function (value, row) {
-          if (row.roleId == 1) {
-            return '管理员无需分配科目';
+          if (row.typeId == 3) {//如果是判断题
+            if (value == 1) {
+              return "正确";
+            } else {
+              return "错误"
+            }
           } else {
+            return value;
+          }
+        }
+      },
+        {
+          field: 'choanswer',
+          title: '选择题答案',
+          formatter: function (value, row) {
+            if (row.typeId == 1) {
+              //单选题
+              if (value == 1000) {
+                return "A";
+              } else if (value == 100) {
+                return "B";
+              } else if (value == 10) {
+                return "C"
+              } else if (value == 1) {
+                return "D"
+              }
+            } else if (row.typeId == 2) {
+              //多选题
+              let answer = "";
+              if (value >= 10000) {
+                answer += "A";
+                value -= 10000;
+              }
+              if (value >= 1000) {
+                answer += "B";
+                value -= 1000;
+              }
+              if (value >= 100) {
+                answer += "C";
+                value -= 100;
+              }
+              if (value >= 10) {
+                answer += "D";
+                value -= 10;
+              }
+              if (value == 1) {
+                answer += "E";
+              }
+              return answer;
+            }
+          }
+        }, {
+          title: '操作',
+          formatter: function (value, row) {
             return [
               '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
-              'data-toggle="modal" data-target="#UserSubjectModal"', 'data-id=' + row.uId + ' ' +')>',
+              'data-toggle="modal" data-target="#QuestionSubjectModal"', 'data-id=' + row.quesId + ' ' +')>',
               '<i class="fa fa-edit" >查看/分配科目</i></button>'].join('');
           }
-        }
-      }]
+        }]
 
-    })
+    });
   });
   function queryParams(params) {
     return {
@@ -161,61 +220,62 @@
     }
   }
   //分配模态框启动时 填充数据
-  $("#UserSubjectModal").on('show.bs.modal', function (e) {
+  $("#QuestionSubjectModal").on('show.bs.modal', function (e) {
     var id = $(e.relatedTarget).attr('data-id');
-    $.session.remove('UID');
-    $.session.set('UID',id);
+    // alert(id);
+    $.session.remove('quesId');
+    $.session.set('quesId',id);
     //获取未分配科目列表和已分配科目列表
     if(id){
-      showUserSubjectList(id);
+      showQuestSubjectList(id);
     }
   });
   //未分配科目和已分配科目的展示函数
-  function showUserSubjectList(id){
-    $("#userSubjectSelect").empty();
-    $("#noUserSubjectSelect").empty();
+  function showQuestSubjectList(id){
+    $("#QuestionSubjectSelect").empty();
+    $("#noQuestionSubjectSelect").empty();
     $.ajax({
-      url: '/user_sub/getnousersubject?uid=' + id,
+      url: '/ques_sub/getnoquestionsubject?quesId=' + id,
       method: 'get',
-      success: function (nousersubjectjson) {
-        for (var i = 0;i < nousersubjectjson.length;i++){
-          var nosub = nousersubjectjson[i];
-          $("#noUserSubjectSelect").append('<option value="'+nosub["subId"]+'">'+nosub["subname"]+'</option>')
+      success: function (noquestsubjectjson) {
+        for (var i = 0;i < noquestsubjectjson.length;i++){
+          var nosub = noquestsubjectjson[i];
+          $("#noQuestionSubjectSelect").append('<option value="'+nosub["subId"]+'">'+nosub["subname"]+'</option>')
         }
 //<option value="pm">管理员</option>
       }
     });
     $.ajax({
-      url: '/user_sub/getusersubject?uid=' + id,
+      url: '/ques_sub/getusersubject?quesId=' + id,
       method: 'get',
-      success: function (usersubjectjson) {
-        for (var i = 0;i < usersubjectjson.length;i++){
-          var sub = usersubjectjson[i];
-          $("#userSubjectSelect").append('<option value="'+sub["subId"]+'">'+sub["subname"]+'</option>')
+      success: function (questsubjectjson) {
+        for (var i = 0;i < questsubjectjson.length;i++){
+          var sub = questsubjectjson[i];
+          $("#QuestionSubjectSelect").append('<option value="'+sub["subId"]+'">'+sub["subname"]+'</option>')
         }
 //<option value="pm">管理员</option>
       }
     });
   }
   //点击添加科目时的操作
-  $("#addSubjectBtn").click(function () {
+  $("#addQuestionSubjectBtn").click(function () {
     //获取被选中的option
-    var selectSub = $("#noUserSubjectSelect option:selected");
+    var selectSub = $("#noQuestionSubjectSelect option:selected");
     var subid = selectSub.val();
-    var uid = $.session.get('UID');
-    if(subid!=null&&uid!=null){
+    var quesId = $.session.get('quesId');
+    if(subid!=null&&quesId!=null){
       layer.msg("操作正在进行，请稍后...");
       //进行ajax传值
       $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: basePath + "/user_sub/add",
-        data: JSON.stringify({"uId": uid, "subId": subid}),
+        url: basePath + "/ques_sub/add",
+        data: JSON.stringify({"quesId": quesId, "subId": subid}),
         dataType: "json",
         success: function (msg) {
           var json = msg["data"];
           if (json["success"]) {
-            showUserSubjectList(uid);
+            showQuestSubjectList(quesId);
             layer.msg(json["msg"], {icon: 6, shade: 0.4,time:2000}, function () {
             });
           } else {
@@ -228,26 +288,26 @@
     }
   })
   //点击删除科目时的操作
-  $("#removeSubjectBtn").click(function () {
+  $("#removeQuestionSubjectBtn").click(function () {
     //获取被选中的option
-    var selectUserSub = $("#userSubjectSelect option:selected");
-    var subid = selectUserSub.val();
-    var uid = $.session.get('UID');
+    var selectQuesSub = $("#QuestionSubjectSelect option:selected");
+    var subid = selectQuesSub.val();
+    var quesId = $.session.get('quesId');
     // console.log(subid+" "+uid);
-    if(subid!=null&&uid!=null){
+    if(subid!=null&&quesId!=null){
       layer.msg("操作正在进行，请稍后...");
       //进行ajax传值
       $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: basePath + "/user_sub/remove",
-        data: JSON.stringify({"uId": uid, "subId": subid}),
+        url: basePath + "/ques_sub/remove",
+        data: JSON.stringify({"quesId": quesId, "subId": subid}),
         dataType: "json",
         success: function (msg) {
           var json = msg["data"];
           if (json["success"]) {
             //在分配成功后使用jQuery将被选中的option标签移动到右边一栏中
-            showUserSubjectList(uid);
+            showQuestSubjectList(quesId);
             layer.msg(json["msg"], {icon: 6, shade: 0.4,time:2000}, function () {
             });
           } else {
