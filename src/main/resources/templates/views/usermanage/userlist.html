@@ -160,8 +160,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">查看分配给用户的科目</h4>
                 </div>
-                <div class="modal-body" id="subjectModalBody">
+                <div id="subjectModalBodyFather">
+                    <div class="modal-body" id="subjectModalBody">
 
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <span>想要为用户分配科目？点击左侧菜单栏中的“用户科目分配”试试吧！</span>
@@ -236,6 +238,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     });
     //Questable的查看
     $("#SubjectModal").on('show.bs.modal', function (e) {
+
+        $("#subjectModalBodyFather").empty();
+        $("#subjectModalBodyFather").append('<div class="modal-body" id="subjectModalBody"></div>');
         var uId = $(e.relatedTarget).attr('data-id');
         $("#subjectModalBody").append('<table id="subject'+uId+'"></table>');
         $.session.remove('UID');
