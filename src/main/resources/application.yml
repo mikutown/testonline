@@ -12,11 +12,9 @@ spring:
       max-request-size: 31457280
   resources:
     static-locations: classpath:/static/ , file:${sysUploadFileDir}
-
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
 logging:
   level:
     top.leafii.testonline.mapper: Debug
 sysUploadFileDir: d://proj/testonline/uploadFile/
-sysUploadFileRelativeDir: /images/**

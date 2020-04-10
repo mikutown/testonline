@@ -35,35 +35,32 @@ public class UploadFileController {
     @RequestMapping("/add")
     @ResponseBody
     public Object submitUpload(@RequestParam("file") MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-
-        if(fileName.indexOf("\\") != -1){
-            fileName = fileName.substring(fileName.lastIndexOf("\\"));
-        }
+        String contentType = file.getContentType();
+        String originalFilename = file.getOriginalFilename();
         //获取文件存放地址
-        String filePath = sysUploadFileDir;
-        File f = new File(filePath);
-        if(!f.exists()){
+        File dir = new File(sysUploadFileDir);
+        if(!dir.exists()){
             //不存在路径则进行创建
-            f.mkdirs();
+            dir.mkdirs();
         }
-        FileOutputStream out = null;
+        String houzhui = "";
+        if(originalFilename.lastIndexOf(".")!=-1){
+            houzhui = originalFilename.substring(originalFilename.lastIndexOf(".")).trim();
+        }
+        String name4Save = null;
         try {
             //重新自定义文件的名称
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String d = sdf.format(date);
-            filePath = filePath+d+fileName;
-            out = new FileOutputStream(filePath);
-            out.write(file.getBytes());
-            out.flush();
-            out.close();
+            name4Save = d+houzhui;
+            file.transferTo(new File(dir,name4Save));
         } catch (Exception e) {
             e.printStackTrace();
             return new JSONMap(false,200, ItemBankManageMessage.PICTURE_ADD_ERROR);
         }
         //返回有文件地址的json
-        return new JSONMap(true,200, ItemBankManageMessage.PICTURE_ADD_SUCCESS,filePath);
+        return new JSONMap(true,200, ItemBankManageMessage.PICTURE_ADD_SUCCESS,"/"+name4Save);
     }
 
     @RequestMapping("/addtoquestion")

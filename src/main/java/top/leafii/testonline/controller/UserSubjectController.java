@@ -1,6 +1,6 @@
 package top.leafii.testonline.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +11,7 @@ import top.leafii.testonline.common.domain.Subject;
 import top.leafii.testonline.common.domain.User_sub;
 import top.leafii.testonline.common.utils.JSONMap;
 import top.leafii.testonline.common.utils.UserManageMessage;
-import top.leafii.testonline.service.UserService;
+
 import top.leafii.testonline.service.UserSubjectService;
 
 import java.util.List;
