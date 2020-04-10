@@ -111,11 +111,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label for="choseTitle">题目</label>
                             <textarea id="choseTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="choseQuesImg">图片</label>
-                            <input type="file" id="choseQuesImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
+
                         <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="choseScore">
@@ -180,11 +176,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label for="multiTitle">题目</label>
                             <textarea id="multiTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="multiQuesImg">图片</label>
-                            <input type="file" id="multiQuesImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
+
                         <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="multiScore">
@@ -266,11 +258,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label for="judgeTitle">题目</label>
                             <textarea id="judgeTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="judgeQuesImg">图片</label>
-                            <input type="file" id="judgeQuesImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
+
                         <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="judgeScore">
@@ -318,11 +306,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <textarea id="otherTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="otherQuesImg">图片</label>
-                            <input type="file" id="otherQuesImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
-                        <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="otherScore">
                                 <option value="1">1</option>
@@ -348,6 +331,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <!-- 图片add Modal -->
+    <div class="modal fade" id="PictureAddModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">为题目添加图片</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="picAddForm" th:action="@{/picture/add}">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label for="fileAddRemark">图片描述</label>
+                                <input type="text" class="form-control" id="fileAddRemark" placeholder="图片描述" name="remark">
+                            </div>
+                            <div class="form-group">
+                                <label for="addInputFile">图片</label>
+                                <input type="file" id="addInputFile" name="file">
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span>请在选择好要上传的图片后，点击添加按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
 
     <!-- 单选题修改 Modal -->
     <div class="modal fade" id="ChoseModifyModal" tabindex="-1" role="dialog"
@@ -365,11 +386,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label for="choseModifyTitle">题目</label>
                             <textarea id="choseModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="choseModifyImg">图片</label>
-                            <input type="file" id="choseModifyImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
+
                         <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="choseModifyScore">
@@ -434,11 +451,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label for="multiModifyTitle">题目</label>
                             <textarea id="multiModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="multiModifyQuesImg">图片</label>
-                            <input type="file" id="multiModifyQuesImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
+
                         <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="multiModifyScore">
@@ -520,11 +533,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label for="judgeModifyTitle">题目</label>
                             <textarea id="judgeModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="judgeQuesImg">图片</label>
-                            <input type="file" id="judgeModifyQuesImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
+
                         <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="judgeModifyScore">
@@ -571,11 +580,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <label for="otherModifyTitle">题目</label>
                             <textarea id="otherModifyTitle" class="form-control" rows="3" placeholder="请输入题目"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="otherQuesImg">图片</label>
-                            <input type="file" id="otherModifyQuesImg">
-                            <p class="help-block">错误信息</p>
-                        </div>
+
                         <div class="form-group">
                             <label>分值</label>
                             <select class="form-control" id="otherModifyScore">
@@ -595,6 +600,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
                 <div class="modal-footer">
                     <span>请输入表单内所需数据，然后点击修改按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 图片修改 Modal -->
+    <div class="modal fade" id="PictureModifyModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">修改图片</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <span>请在选择完文件之后点击修改按钮</span>
                 </div>
 
             </div>
@@ -724,15 +751,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 }, {
                     title: '操作',
                     formatter: function (value, row) {
-                        return [
-                            '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-                            'onClick=modifyQuestion(' + row.typeId +','+ row.quesId+ ')>',
-                            '<i class="fa fa-edit" >修改</i></button>',
+                        if(row.quespic!=null){
+                            return [
+                                '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
+                                'onClick=ModifyPic('+ row.quesId + ')>',
+                                '<i class="fa fa-edit" >查看/修改图片</i></button>',
+                                '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
+                                'onClick=modifyQuestion(' + row.typeId +','+ row.quesId+ ')>',
+                                '<i class="fa fa-edit" >修改</i></button>',
+                                '<button type="button" class="btn btn-danger btn-xs" ',
+                                'onClick=removeQuestion(' + row.quesId + ')>',
+                                '<i class="fa fa-remove" >删除</i></button>']
+                                .join('');
+                        }else{
+                            return [
+                                '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
+                                'onClick=AddPic('+ row.quesId + ')>',
+                                '<i class="fa fa-edit" >添加图片</i></button>',
+                                '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
+                                'onClick=modifyQuestion(' + row.typeId +','+ row.quesId+ ')>',
+                                '<i class="fa fa-edit" >修改</i></button>',
 
-                            '<button type="button" class="btn btn-danger btn-xs" ',
-                            'onClick=removeQuestion(' + row.quesId + ')>',
-                            '<i class="fa fa-remove" >删除</i></button>']
-                            .join('');
+                                '<button type="button" class="btn btn-danger btn-xs" ',
+                                'onClick=removeQuestion(' + row.quesId + ')>',
+                                '<i class="fa fa-remove" >删除</i></button>']
+                                .join('');
+                        }
+
                     }
                 }]
 
@@ -751,6 +796,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $("#QuestionTypeModal").on('show.bs.modal', function (e) {
         showTypeForm();
     });
+    //添加图片
+    function AddPic(quesId) {
+        $("#PictureAddModal").modal('show');
+    }
+    //修改图片
+    function ModifyPic(quesId) {
+        $("#PictureModifyModal").modal('show');
+    }
     function showTypeForm() {
         $("#quesAddModalForm").empty();
         $("#quesAddModalForm").append('<div class="form-group" id="quesTypeFmGrop">\n' +

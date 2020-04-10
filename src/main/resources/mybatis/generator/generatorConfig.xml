@@ -48,7 +48,8 @@
 <!--        <table tableName="user" domainObjectName="User"/>-->
 <!--        <table tableName="user_sub" domainObjectName="User_sub"/>-->
 <!--        <table tableName="ques_sub" domainObjectName="Ques_sub"/>-->
-        <table tableName="exam_ques" domainObjectName="Exam_ques"/>
+<!--        <table tableName="exam_ques" domainObjectName="Exam_ques"/>-->
+<!--        <table tableName="uploadfile" domainObjectName="UploadFile"/>-->
 
 
     </context>

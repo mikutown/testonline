@@ -6,8 +6,16 @@ spring:
     url: jdbc:mysql://localhost:3306/testonline?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull
   mvc:
     date-format: yyyy-MM-dd
+  servlet:
+    multipart:
+      max-file-size: 31457280
+      max-request-size: 31457280
+  resources:
+    static-locations: classpath:/static/ , file:${sysUploadFileDir}
+
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
 logging:
   level:
     top.leafii.testonline.mapper: Debug
+sysUploadFileDir: d://proj/testonline/uploadFile/
