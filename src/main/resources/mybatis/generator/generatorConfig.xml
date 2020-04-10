@@ -41,13 +41,14 @@
 <!--            <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />-->
 <!--        </table>-->
 <!--        <table tableName="exam" domainObjectName="Exam"/>-->
-        <table tableName="question" domainObjectName="Question"/>
+<!--        <table tableName="question" domainObjectName="Question"/>-->
 <!--        <table tableName="result" domainObjectName="Result"/>-->
 <!--        <table tableName="subject" domainObjectName="Subject"/>-->
 <!--        <table tableName="type" domainObjectName="Type"/>-->
 <!--        <table tableName="user" domainObjectName="User"/>-->
 <!--        <table tableName="user_sub" domainObjectName="User_sub"/>-->
 <!--        <table tableName="ques_sub" domainObjectName="Ques_sub"/>-->
+        <table tableName="exam_ques" domainObjectName="Exam_ques"/>
 
 
     </context>
