@@ -24,4 +24,8 @@ public class ItemBankManageMessage {
     public static final String QUESTION_SUB_ADD_ERROR = "为该题目添加科目失败！";
     public static final String QUESTION_SUB_REMOVE_SUCCESS = "为该题目移除科目成功！";
     public static final String QUESTION_SUB_REMOVE_ERROR = "为该题目移除科目失败！";
+    public static final String PICTURE_ADD_SUCCESS = "添加图片成功！点击确定将图片与该题目相关联！";
+    public static final String PICTURE_ADD_ERROR = "添加图片失败！";
+    public static final String PICTURE_QUEST_SUCCESS = "图片与题目关联成功！";
+    public static final String PICTURE_QUEST_ERROR = "图片与题目关联失败！";
 }

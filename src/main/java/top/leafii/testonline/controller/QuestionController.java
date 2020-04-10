@@ -3,6 +3,7 @@ package top.leafii.testonline.controller;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,19 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
+    @RequestMapping("getpicbyquesid")
+    @ResponseBody
+    public Question getpicbyquesid(@RequestParam("id")int quesId, ModelMap modelMap){
+        Question question = questionService.getQuestionByQuesid(quesId);
+        modelMap.addAttribute("question",question);
+        return question;
+    }
+    /**
+     * 按照科目列表得到题目
+     * @param request
+     * @param subId
+     * @return
+     */
     @RequestMapping("/listbysubid")
     @ResponseBody
     public PagableResponse<List<Question>> questionListBySubId(PageRequest request,@RequestParam("subId") int subId){

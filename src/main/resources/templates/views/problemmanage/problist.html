@@ -3,7 +3,7 @@
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{/views/layout/head :: content}"></head>
 <body class="hold-transition skin-green-light sidebar-mini">
 <div class="wrapper">
@@ -342,22 +342,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <h4 class="modal-title">为题目添加图片</h4>
                 </div>
                 <div class="modal-body">
-                    <form id="picAddForm" th:action="@{/picture/add}">
-                        <div class="box-body">
-                            <div class="form-group">
-                                <label for="fileAddRemark">图片描述</label>
-                                <input type="text" class="form-control" id="fileAddRemark" placeholder="图片描述" name="remark">
-                            </div>
-                            <div class="form-group">
-                                <label for="addInputFile">图片</label>
-                                <input type="file" id="addInputFile" name="file">
-                            </div>
-                        </div>
-                        <!-- /.box-body -->
-                        <div class="box-footer">
-                            <button type="submit" class="btn btn-primary">提交</button>
-                        </div>
+<!--                    picAddForm-->
+                    <form id="pictureUploadForm" enctype="multipart/form-data">
+                        文件:<input id="file" type="file" name="file"/>
                     </form>
+                    <button class="btn btn-primary" id="uploadBtn">上传</button>
+
                 </div>
                 <div class="modal-footer">
                     <span>请在选择好要上传的图片后，点击添加按钮</span>
@@ -618,6 +608,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <h4 class="modal-title">修改图片</h4>
                 </div>
                 <div class="modal-body">
+                    <div id="PicModifyBody">
+
+                    </div>
+                    <div>
+                        <form id="pictureReUploadForm" enctype="multipart/form-data">
+                            文件:<input id="Refile" type="file" name="file"/>
+                        </form>
+                        <button class="btn btn-primary" id="reUploadBtn">上传</button>
+                    </div>
 
                 </div>
                 <div class="modal-footer">
@@ -754,7 +753,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         if(row.quespic!=null){
                             return [
                                 '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
-                                'onClick=ModifyPic('+ row.quesId + ')>',
+                                'onClick=ModifyPic('+ row.quesId+',"'+ row.quespic + '")>',
                                 '<i class="fa fa-edit" >查看/修改图片</i></button>',
                                 '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
                                 'onClick=modifyQuestion(' + row.typeId +','+ row.quesId+ ')>',
@@ -796,14 +795,159 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $("#QuestionTypeModal").on('show.bs.modal', function (e) {
         showTypeForm();
     });
+
     //添加图片
     function AddPic(quesId) {
+        $.session.remove('quespic');
+        $.session.remove('quesId');
+        $.session.set('quesId',quesId);
         $("#PictureAddModal").modal('show');
     }
+    //打开模态框时清空表单
+    $("#PictureAddModal").on('show.bs.modal', function (e) {
+        $("#pictureUploadForm")[0].reset();
+    });
+    //添加图片的操作 开始
+    $(function () {
+        $("#uploadBtn").click(function () {
+            var formData = new FormData($('#pictureUploadForm')[0]);
+            $.ajax({
+                type: "post",
+                url: basePath+"/picture/add",
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $.session.set('quespic',json["data"]);
+                        $("#pictureUploadForm")[0].reset();
+                        layer.msg(json["msg"], {
+                            time: 0,
+                            btn: ['确定', '不了'],
+                            yes: function (index) {
+                                layer.close(index);
+                                $("#PictureAddModal").modal('hide');
+                                var quesId = $.session.get('quesId');
+                                var quespic = $.session.get('quespic');
+                                //console.log("quesId:"+quesId+"  quespic:"+quespic);
+                                $.ajax({
+                                    type: "POST",
+                                    contentType: "application/json",
+                                    url: basePath + '/picture/addtoquestion',
+                                    data: JSON.stringify({"quesId":quesId,"quespic":quespic}),
+                                    dataType: "json",
+                                    success: function (msg) {
+                                        var json = msg["data"];
+                                        if (json["success"]) {
+                                            layer.msg(json["msg"], {icon: 6,time:2000});
+                                            $("#questionTable").bootstrapTable("refresh");
+                                        } else {
+                                            layer.msg(json["msg"], {icon: 5,time:2000});
+                                        }
+                                    },
+                                    error: function (data) {
+                                        layer.msg("未知错误！", {icon: 5,time:2000});
+                                    }
+                                })
+                            },
+
+                        })
+
+
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            })
+        })
+    })
+
     //修改图片
-    function ModifyPic(quesId) {
+    function ModifyPic(quesId,quespic) {
+        $.session.remove('quespic');
+        $.session.remove('quesId');
+        $.session.set('quesId',quesId);
+        $.session.set('quespic',quespic);
         $("#PictureModifyModal").modal('show');
     }
+    //打开模态框时清空表单
+    $("#PictureModifyModal").on('show.bs.modal', function (e) {
+        quespic = $.session.get('quespic');
+        quesId = $.session.get('quesId');
+        $("#PicModifyBody").empty();
+        $("#pictureReUploadForm")[0].reset();
+        $.ajax({
+            url: '/question/getpicbyquesid?id=' + quesId,
+            method: 'get',
+            success: function (data) {
+                // console.log(data);//测试能否得到question
+                $("#PicModifyBody").append('图片路径：<div>'+quespic+'</div>\n' +
+                    '<img src="file:///'+quespic+'" alt=""/>');
+
+            }
+
+        })
+    });
+    //修改图片的操作 开始
+    $(function () {
+        $("#reUploadBtn").click(function () {
+            var formData = new FormData($('#pictureReUploadForm')[0]);
+            $.ajax({
+                type: "post",
+                url: basePath+"/picture/add",
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        $.session.set('quespic',json["data"]);
+                        $("#pictureReUploadForm")[0].reset();
+                        layer.msg(json["msg"], {
+                            time: 0,
+                            btn: ['确定', '不了'],
+                            yes: function (index) {
+                                layer.close(index);
+                                $("#PictureModifyModal").modal('hide');
+                                var quesId = $.session.get('quesId');
+                                var quespic = $.session.get('quespic');
+                                //console.log("quesId:"+quesId+"  quespic:"+quespic);
+                                $.ajax({
+                                    type: "POST",
+                                    contentType: "application/json",
+                                    url: basePath + '/picture/addtoquestion',
+                                    data: JSON.stringify({"quesId":quesId,"quespic":quespic}),
+                                    dataType: "json",
+                                    success: function (msg) {
+                                        var json = msg["data"];
+                                        if (json["success"]) {
+                                            layer.msg(json["msg"], {icon: 6,time:2000});
+                                            $("#questionTable").bootstrapTable("refresh");
+                                        } else {
+                                            layer.msg(json["msg"], {icon: 5,time:2000});
+                                        }
+                                    },
+                                    error: function (data) {
+                                        layer.msg("未知错误！", {icon: 5,time:2000});
+                                    }
+                                })
+                            },
+
+                        })
+
+
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                }
+            })
+        })
+    })
+
+
     function showTypeForm() {
         $("#quesAddModalForm").empty();
         $("#quesAddModalForm").append('<div class="form-group" id="quesTypeFmGrop">\n' +
