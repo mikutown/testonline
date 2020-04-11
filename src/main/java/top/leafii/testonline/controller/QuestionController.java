@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import top.leafii.testonline.common.api.PagableResponse;
 import top.leafii.testonline.common.api.PageRequest;
+import top.leafii.testonline.common.domain.Exam_ques;
 import top.leafii.testonline.common.domain.Question;
 import top.leafii.testonline.common.domain.User;
 import top.leafii.testonline.common.utils.ItemBankManageMessage;
@@ -48,6 +49,13 @@ public class QuestionController {
     public PagableResponse<List<Question>> questionListBySubId(PageRequest request,@RequestParam("subId") int subId){
         return questionService.listBySubId(request,subId);
     }
+    @RequestMapping("/listbyexamid")
+    @ResponseBody
+    public PagableResponse<List<Question>> questionListBySubIdExamId(PageRequest request, @RequestParam("examId") int examId ){
+        return questionService.listByExamId(request,examId);
+    }
+
+
 
     /**
      * 修改

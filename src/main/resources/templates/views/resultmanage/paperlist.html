@@ -38,6 +38,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div class="box-header">
               <h3 class="box-title">试卷列表</h3>
             </div>
+            <div id="toolbar">
+              <div class="pull-right">
+                <input type="text" id="keyword" placeholder="按照名称查询">
+                <button type="button" class="btn btn-info" id="searchBtn">
+                  <i class="fa fa-search">搜索</i>
+                </button>
+              </div>
+            </div>
             <!-- /.box-header -->
             <div class="box-body">
               <table id="examTable"></table>
@@ -57,6 +65,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Main Footer -->
   <div th:replace="~{/views/layout/foot :: footer}"></div>
 
+  <!-- Ques Modal -->
+  <div class="modal fade" id="ExamQuesModal" tabindex="-1" role="dialog"
+       aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">查看已分配试卷的题目</h4>
+        </div>
+        <div id="quesModalBodyFather">
+          <div class="modal-body" id="quesModalBody"></div>
+        </div>
+        <div class="modal-footer">
+          <span>已分配试卷不支持修改</span>
+        </div>
+
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
 
 
 </div>
@@ -69,6 +99,198 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $("li.active").removeClass("active");
     $("#testtree").addClass("active");
     $("#papermanage").addClass("active");
+  });
+
+  //表格渲染
+  $(function () {
+    $("#examTable").bootstrapTable({//在id为dataTable的
+      url: '/exam/list',
+      pagination: true,//是否分页
+      toolbar: "#toolbar",
+      toolbarAlign: "right",
+      //search: true,//是否允许搜索
+      queryParamsType: 'limit',
+      queryParams: queryParams,
+      sidePagination: 'server',
+      dataField: "data",
+      columns: [{//表头 {"total":1,"data":[{"examId":1,"subId":2}]}
+        field: 'examId',
+        title: '考试ID'
+      }, {
+        field: 'subId',
+        title: '科目ID'
+      }, {
+        field: 'subId',
+        title: '科目名称',
+        formatter: function (value) {
+          var subName;
+          $.ajax({
+            url: '/subject/getsubjectbyid?id=' + value,
+            method: 'get',
+            async: false,//异步回显
+            success: function (data) {
+              subName = data.subname;
+            }
+          });
+          return subName;
+        }
+
+      }, {
+        title: '操作',
+        formatter: function (value, row) {
+          if(row.uId==1) {
+            return '无法对管理员进行操作';
+          }else{
+            return [
+              '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
+              'data-toggle="modal" data-target="#ExamQuesModal"', 'data-idOne=' + row.subId +' data-idTwo='+row.examId +'>',
+              '<i class="fa fa-edit" >查看考试の题目</i></button>',]
+                    .join('');
+          }
+
+        }
+      }]
+
+    })
+  });
+  function queryParams(params) {
+    return {
+      //把我们的pageNum，pageSize传到命令中去
+      pageSize: params.limit,
+      pageNum: params.offset / params.limit + 1,
+      keyword: $("#keyword").val()
+    }
+  }
+
+  //Questable的查看
+  $("#ExamQuesModal").on('show.bs.modal', function (e) {
+    $("#quesModalBodyFather").empty();
+    $("#quesModalBodyFather").append('<div class="modal-body" id="quesModalBody"></div>');
+    var subId = $(e.relatedTarget).attr('data-idOne');
+    var examId = $(e.relatedTarget).attr('data-idTwo');
+    $("#quesModalBody").append('<table id="ques'+subId+'"></table>');
+    $.session.remove('SUBID');
+    $.session.remove('EXAMID');
+    $.session.set('SUBID',subId);
+    $.session.set('EXAMID',examId);
+    if(subId){
+      var qustTable = '#ques'+subId;
+      $(qustTable).bootstrapTable({
+        url: '/question/listbyexamid?examId='+examId,
+        pagination: true,//是否分页
+        //toolbar: "#toolbar",
+        //toolbarAlign: "right",
+        //search: true,//是否允许搜索
+        queryParamsType: 'limit',
+        queryParams: queryParams,
+        sidePagination: 'server',
+        dataField: "data",
+        columns: [{//表头
+          field: 'quesId',
+          title: 'ID'
+        }, {
+          field: 'typeId',
+          title: '题型',
+          formatter: function (value) {
+            var typeNameEnd;
+            $.ajax({
+              url: '/type/gettypebyid?id=' + value,
+              method: 'get',
+              async: false,//异步回显
+              success: function (data) {
+                typeNameEnd = data.typename;
+              }
+            });
+            return typeNameEnd;
+          }
+        }, {
+          field: 'title',
+          title: '题干'
+        }, {
+          field: 'score',
+          title: '题目分值',
+
+        }, {
+          field: 'ansa',
+          title: '选项A',
+        }, {
+          field: 'ansb',
+          title: '选项B',
+        }, {
+          field: 'ansc',
+          title: '选项C',
+        }, {
+          field: 'ansd',
+          title: '选项D',
+        }, {
+          field: 'anse',
+          title: '选项E',
+        }, {
+          field: 'answer',
+          title: '非选择题答案',
+          formatter: function (value, row) {
+            if (row.typeId == 3) {//如果是判断题
+              if (value == 1) {
+                return "正确";
+              } else {
+                return "错误"
+              }
+            } else {
+              return value;
+            }
+          }
+        },
+          {
+            field: 'choanswer',
+            title: '选择题答案',
+            formatter: function (value, row) {
+              if (row.typeId == 1) {
+                //单选题
+                if (value == 1000) {
+                  return "A";
+                } else if (value == 100) {
+                  return "B";
+                } else if (value == 10) {
+                  return "C"
+                } else if (value == 1) {
+                  return "D"
+                }
+              } else if (row.typeId == 2) {
+                //多选题
+                let answer = "";
+                if (value >= 10000) {
+                  answer += "A";
+                  value -= 10000;
+                }
+                if (value >= 1000) {
+                  answer += "B";
+                  value -= 1000;
+                }
+                if (value >= 100) {
+                  answer += "C";
+                  value -= 100;
+                }
+                if (value >= 10) {
+                  answer += "D";
+                  value -= 10;
+                }
+                if (value == 1) {
+                  answer += "E";
+                }
+                return answer;
+
+              }
+            }
+          }]
+      });
+    }
+
+  });
+  $('#ExamQuesModal').on('hide.bs.modal', function () {
+    var subId = $.session.get('SUBID');
+    var examId = $.session.get('EXAMID');
+    var qustTable = '#ques'+subId;
+    $(qustTable).remove();
   });
 </script>
 

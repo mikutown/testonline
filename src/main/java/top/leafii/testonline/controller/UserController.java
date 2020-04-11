@@ -110,6 +110,7 @@ public class UserController {
             //判断密码不为空且数据库的密码与传入的密码相同
             if (userDB.getPassword() != null && user.getPassword() != null && userDB.getPassword().equals(md5Pwd)) {
                 session.setAttribute("user",userDB);
+                session.setAttribute("UID",userDB.getuId());
                 return new JSONMap(true, 200, UserManageMessage.SUCCESS,userDB);
             } else {
                 //密码错误

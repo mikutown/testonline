@@ -8,66 +8,60 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <body class="hold-transition skin-green-light sidebar-mini">
 <div class="wrapper">
 
-  <!-- Main Header -->
-  <div th:replace="~{/views/layout/header :: headerAA}"></div>
-  <!-- Left side column. contains the logo and sidebar -->
-  <div th:replace="~{/views/layout/menuroot :: menuroot}"></div>
+    <!-- Main Header -->
+    <div th:replace="~{/views/layout/header :: headerAA}"></div>
+    <!-- Left side column. contains the logo and sidebar -->
+    <div th:replace="~{/views/layout/menuroot :: menuroot}"></div>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        成绩列表
-        <small>查看所有的考试成绩</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li><a href="#">考试管理</a></li>
-        <li class="active">成绩查看</li>
-      </ol>
-    </section>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                成绩列表
+                <small>查看所有的考试成绩</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+                <li><a href="#">考试管理</a></li>
+                <li class="active">成绩查看</li>
+            </ol>
+        </section>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">成绩列表</h3>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">成绩列表</h3>
+                        </div>
+                        <div id="toolbar">
+                            <div class="pull-right">
+                                <input type="text" id="keyword" placeholder="按照名称查询">
+                                <button type="button" class="btn btn-info" id="searchBtn">
+                                    <i class="fa fa-search">搜索</i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="resultTable"></table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /.col -->
             </div>
-            <div id="toolbar">
-              <div class="pull-left">
-                <button type="button" class="btn btn-danger" id="removeBtn">
-                  <i class="fa fa-file">批量删除</i>
-                </button>
-              </div>
-              <div class="pull-right">
-                <input type="text" id="keyword" placeholder="按照名称查询">
-                <button type="button" class="btn btn-info" id="searchBtn">
-                  <i class="fa fa-search">搜索</i>
-                </button>
-              </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table id="resultTable"></table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
-      </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+            <!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
 
-  <!-- Main Footer -->
-  <div th:replace="~{/views/layout/foot :: footer}"></div>
-
+    <!-- Main Footer -->
+    <div th:replace="~{/views/layout/foot :: footer}"></div>
 
 
 </div>
@@ -75,67 +69,90 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 <script>
-  //菜单指示页面
-  $(function () {
-    //把所有的active都收起来
-    $("li.active").removeClass("active");
-    $("#testtree").addClass("active");
-    $("#scoremanage").addClass("active");
-  });
-  //表格渲染
-  $(function () {
-    $("#resultTable").bootstrapTable({//在id为resultTable的
-      url: '/result/list',
-      pagination: true,//是否分页
-      toolbar: "#toolbar",
-      toolbarAlign: "right",
-      //search: true,//是否允许搜索
-      queryParamsType: 'limit',
-      queryParams: queryParams,
-      sidePagination: 'server',
-      dataField: "data",
-      columns: [{//表头
-        field: 'uId',
-        title: 'ID'
-      }, {
-        field: 'uname',
-        title: '登录名'
-      }, {
-        field: 'roleId',
-        title: '权限',
-        formatter: function (value) {
-          if (value == 1) {
-            return '管理员';
-          } else {
-            return '普通用户';
-          }
-        }
+    //菜单指示页面
+    $(function () {
+        //把所有的active都收起来
+        $("li.active").removeClass("active");
+        $("#testtree").addClass("active");
+        $("#scoremanage").addClass("active");
+    });
+    //表格渲染
+    $(function () {
+        $("#resultTable").bootstrapTable({//在id为resultTable的
+            url: '/result/list',
+            pagination: true,//是否分页
+            toolbar: "#toolbar",
+            toolbarAlign: "right",
+            //search: true,//是否允许搜索
+            queryParamsType: 'limit',
+            queryParams: queryParams,
+            sidePagination: 'server',
+            dataField: "data",
+            columns: [
+                {//表头
+                    field: 'resId',
+                    title: '成绩编号'
+                },{
+                field: 'uId',
+                title: '用户ID'
+            }, {
+                field: 'uId',
+                title: '用户名称',
+                formatter: function (value) {
+                    var userName;
+                    $.ajax({
+                        url: '/user/getuserbyid?id=' + value,
+                        method: 'get',
+                        async: false,//异步回显
+                        success: function (data) {
+                            userName = data.uname;
+                        }
+                    });
+                    return userName;
+                }
+            }, {
+                field: 'examId',
+                title: '考试编号'
+            }, {
+                field: 'score',
+                title: '分数'
+            }, {
+                field: 'restime',
+                title: '考试时间',
+                formatter: function (value, row, index) {
+                    return formatDateTime(value)
+                }
+            }]
 
-      }, {
-        title: '操作',
-        formatter: function (value, row) {
-          if(row.uId==1) {
-            return '无法对管理员进行操作';
-          }else{
-            return [
-              '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
-              'data-toggle="modal" data-target="#SubjectModal"', 'data-id=' + row.uId + ' ' +')>',
-              '<i class="fa fa-edit" >查看待考科目</i></button>',
-              '<button  type="button" class="btn btn-warning btn-edit btn-xs" ',
-              'data-toggle="modal" data-target="#UserEditModal"', 'data-id=' + row.uId + ' ' +')>',
-              '<i class="fa fa-edit" >修改</i></button>',
-
-              '<button type="button" class="btn btn-danger btn-xs" ',
-              'onClick=removeUser(' + row.uId + ')>',
-              '<i class="fa fa-remove" >删除</i></button>']
-                    .join('');
-          }
-
-        }
-      }]
-
+        })
     })
-  })
+
+    function queryParams(params) {
+        return {
+            //把我们的pageNum，pageSize传到命令中去
+            pageSize: params.limit,
+            pageNum: params.offset / params.limit + 1,
+            keyword: $("#keyword").val()
+        }
+    }
+    //转换日期格式(时间戳转换为datetime格式)
+    // 数字补0操作
+    function  addZero(num) {
+        return num < 10 ? '0' + num : num;
+    }
+    function formatDateTime (date) {
+        var time = new Date(Date.parse(date));
+        time.setTime(time.setHours(time.getHours() + 8));
+        var Y = time.getFullYear() + '-';
+        var  M = this.addZero(time.getMonth() + 1) + '-';
+        var D = this.addZero(time.getDate()) + ' ';
+        var h = this.addZero(time.getHours()) + ':';
+        var m = this.addZero(time.getMinutes()) + ':';
+        var  s = this.addZero(time.getSeconds());
+        return Y + M + D + h + m + s;
+        // }
+    }
+
 </script>
 
 </body>

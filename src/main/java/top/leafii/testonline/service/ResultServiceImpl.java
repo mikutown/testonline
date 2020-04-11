@@ -24,4 +24,14 @@ public class ResultServiceImpl implements ResultService {
         return new PagableResponse(new PageInfo<>(results).getTotal(),results);
     }
 
+    @Override
+    public PagableResponse<List<Result>> listbyuid(PageRequest request, int uid) {
+        PageHelper.startPage(request.getPageNum(),request.getPageSize());
+        ResultExample example = new ResultExample();
+        example.or().andUIdEqualTo(uid);
+        List<Result> results = resultMapper.selectByExample(example);
+        return new PagableResponse(new PageInfo<>(results).getTotal(),results);
+
+    }
+
 }

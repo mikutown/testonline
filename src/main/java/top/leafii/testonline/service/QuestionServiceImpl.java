@@ -38,6 +38,13 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    public PagableResponse<List<Question>> listByExamId(PageRequest request,int examId) {
+        PageHelper.startPage(request.getPageNum(),request.getPageSize());
+        List<Question> questions = questionMapper.selectByExamId(examId);
+        return new PagableResponse(new PageInfo<>(questions).getTotal(),questions);
+    }
+
+    @Override
     public Boolean save(Question question) {
         int i = questionMapper.insertSelective(question);
         return i>0?true:false;

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ResultService {
     PagableResponse<List<Result>> list(PageRequest request);
+
+    PagableResponse<List<Result>> listbyuid(PageRequest request, int uid);
 }

@@ -31,4 +31,6 @@ public interface QuestionMapper {
     int updateByPrimaryKey(Question record);
 
     List<Question> selectBySubId(int subId);
+
+    List<Question> selectByExamId(Integer examId);
 }
