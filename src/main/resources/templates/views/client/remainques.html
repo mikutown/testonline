@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head th:replace="~{/views/layout/headclient :: content}"></head>
 <body class="hold-transition skin-green-light sidebar-mini">
 <div class="wrapper">
-
+  <input type="text" th:value="${session.UID}" class="hide" id="UID"/>
   <!-- Main Header -->
   <div th:replace="~{/views/layout/header :: headerAA}"></div>
   <!-- Left side column. contains the logo and sidebar -->
@@ -64,6 +64,100 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $("li.active").removeClass("active");
     $("#waitsub").addClass("active");
   })
+  //表格渲染
+  $(function () {
+    var uIdvalue = $("#UID").val();
+    var STATUS;
+    $("#remainsTable").bootstrapTable({//在id为dataTable的
+      url: '/subject/listbyuid?uId='+uIdvalue,
+      pagination: true,//是否分页
+      toolbar: "#toolbar",
+      toolbarAlign: "right",
+      //search: true,//是否允许搜索
+      queryParamsType: 'limit',
+      queryParams: queryParams,
+      sidePagination: 'server',
+      dataField: "data",
+      columns: [{//表头
+        field: 'subId',
+        title: 'ID'
+      }, {
+        field: 'subname',
+        title: '科目名称'
+      }, {
+        field: 'subId',
+        title: '考试状态',
+        formatter: function (value) {
+          var status;
+          $.ajax({
+            url: '/user_sub/getstatus?uid='+uIdvalue+'&subid='+value,
+            method: 'get',
+            async: false,
+            datatype: "json",
+            success: function (data) {
+              //data = JSON.decode(data);
+              console.log(data);
+              status = data['status'];
+            }
+          });
+          //alert(status);
+          STATUS = status;
+          if(status==0){
+            return "未完成";
+          }else{
+            return "已完成";
+          }
+        }
+      },{
+        field: 'subtime',
+        title: '最近编辑时间',
+        formatter: function (value, row, index) {
+          return formatDateTime(value)
+        }
+      }, {
+        title: '操作',
+        formatter: function (value, row) {
+          if(STATUS==0){
+            return [
+              '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
+              'data-toggle="modal" data-target="#QuesModal"', 'data-id=' + row.subId + ' ' +')>',
+              '<i class="fa fa-edit" >进入考试</i></button>'
+            ].join('');
+          }else{
+            return "已完成科目无需考试"
+          }
+
+        }
+      }]
+
+    })
+
+  });
+  function queryParams(params) {
+    return {
+      //把我们的pageNum，pageSize传到命令中去
+      pageSize: params.limit,
+      pageNum: params.offset / params.limit + 1,
+      keyword: $("#keyword").val()
+    }
+  }
+  //转换日期格式(时间戳转换为datetime格式)
+  // 数字补0操作
+  function  addZero(num) {
+    return num < 10 ? '0' + num : num;
+  }
+  function formatDateTime (date) {
+    var time = new Date(Date.parse(date));
+    time.setTime(time.setHours(time.getHours() + 8));
+    var Y = time.getFullYear() + '-';
+    var  M = this.addZero(time.getMonth() + 1) + '-';
+    var D = this.addZero(time.getDate()) + ' ';
+    var h = this.addZero(time.getHours()) + ':';
+    var m = this.addZero(time.getMinutes()) + ':';
+    var  s = this.addZero(time.getSeconds());
+    return Y + M + D;
+    // }
+  }
 </script>
 
 </body>

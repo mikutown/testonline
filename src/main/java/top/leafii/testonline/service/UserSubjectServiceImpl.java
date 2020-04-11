@@ -42,4 +42,12 @@ public class UserSubjectServiceImpl implements UserSubjectService {
         int i = user_subMapper.deleteByExample(userSubExample);
         return i>0?true:false;
     }
+
+    @Override
+    public User_sub getstatus(int uid, int subid) {
+        User_subExample example = new User_subExample();
+        example.or().andUIdEqualTo(uid).andSubIdEqualTo(subid);
+        List<User_sub> user_subs = user_subMapper.selectByExample(example);
+        return user_subs.get(0);
+    }
 }

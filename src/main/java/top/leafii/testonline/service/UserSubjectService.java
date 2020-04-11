@@ -13,4 +13,6 @@ public interface UserSubjectService {
     Boolean addUserSubject(User_sub userSub);
 
     Boolean removeUserSubject(User_sub userSub);
+
+    User_sub getstatus(int uid, int subid);
 }

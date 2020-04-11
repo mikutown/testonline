@@ -25,4 +25,5 @@ public interface User_subMapper {
     List<Subject> selectNoUserSubject(int uid);
 
     List<Subject> selectUserSubject(int uid);
+
 }

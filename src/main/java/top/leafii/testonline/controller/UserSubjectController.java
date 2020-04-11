@@ -21,6 +21,17 @@ import java.util.List;
 public class UserSubjectController {
     @Autowired
     UserSubjectService userSubjectService;
+    @RequestMapping("/getstatus")
+    @ResponseBody
+    public Object getstatus(@RequestParam("uid")int uid,@RequestParam("subid")int subid){
+        User_sub uss = userSubjectService.getstatus(uid,subid);
+        return uss;
+    }
+    /**
+     * 移除已分配
+     * @param userSub
+     * @return
+     */
     @RequestMapping("/remove")
     @ResponseBody
     public Object removeUserSubject(@RequestBody User_sub userSub){

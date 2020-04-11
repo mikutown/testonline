@@ -264,6 +264,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     field: 'subname',
                     title: '科目名称'
                 }, {
+                    field: 'subId',
+                    title: '考试状态',
+                    formatter: function (value) {
+                        var status;
+                        $.ajax({
+                            url: '/user_sub/getstatus?uid='+uId+'&subid='+value,
+                            method: 'get',
+                            async: false,
+                            datatype: "json",
+                            success: function (data) {
+                                //data = JSON.decode(data);
+                                console.log(data);
+                                status = data['status'];
+                            }
+                        });
+                        //alert(status);
+                        if(status==0){
+                            return "未完成";
+                        }else{
+                            return "已完成";
+                        }
+                    }
+                },{
                     field: 'subtime',
                     title: '最近编辑时间',
                     formatter: function (value, row, index) {
