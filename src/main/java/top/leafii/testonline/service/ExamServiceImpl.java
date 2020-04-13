@@ -72,4 +72,22 @@ public class ExamServiceImpl implements ExamService{
         }
         return j>0?true:false;
     }
+
+    @Override
+    public Boolean removeAll(int subId, int uId) {
+        List<Exam> exams = examMapper.selectBySubidUid(subId,uId);
+        for (Exam exam : exams) {
+            int i = examMapper.deleteByPrimaryKey(exam.getExamId());
+            Exam_quesExample exam_quesExample = new Exam_quesExample();
+            exam_quesExample.or().andExamIdEqualTo(exam.getExamId());
+            int j = exam_quesMapper.deleteByExample(exam_quesExample);
+            ResultExample resultExample = new ResultExample();
+            resultExample.or().andExamIdEqualTo(exam.getExamId());
+            int k = resultMapper.deleteByExample(resultExample);
+            if(!(i>0||j>0||k>0)){
+               return false;
+            }
+        }
+        return true;
+    }
 }

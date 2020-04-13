@@ -86,6 +86,12 @@
     from exam
     where exam_id = #{examId,jdbcType=INTEGER}
   </select>
+  <select id="selectBySubidUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from exam
+    where exam_id in (select exam_id from result where u_id = #{uId,jdbcType=INTEGER}) and sub_id = #{subId,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from exam
     where exam_id = #{examId,jdbcType=INTEGER}

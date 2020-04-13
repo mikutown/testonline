@@ -20,5 +20,9 @@ public class ClientLayoutController {
     public String toScoreScan(){
         return "/views/client/scorescan";
     }
+    @GetMapping("/page/starttest")
+    public String toTestPage(){
+        return "/views/client/testpage";
+    }
 
 }

@@ -13,6 +13,7 @@ public interface ExamMapper {
 
     int deleteByPrimaryKey(Integer examId);
 
+
     int insert(Exam record);
 
     int insertSelective(Exam record);
@@ -28,4 +29,7 @@ public interface ExamMapper {
     int updateByPrimaryKeySelective(Exam record);
 
     int updateByPrimaryKey(Exam record);
+
+
+    List<Exam> selectBySubidUid(int subId, int uId);
 }
