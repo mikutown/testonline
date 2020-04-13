@@ -20,7 +20,17 @@ import java.util.List;
 public class SubjectController {
     @Autowired
     private SubjectService subjectService;
-
+    @RequestMapping("/getsubjectbyexamid")
+    @ResponseBody
+    public Subject getSubjectByExamid(@RequestParam("examid")int examid){
+        return subjectService.getSubjectByExamid(examid);
+    }
+    /**
+     * 通过uid获取subject列表
+     * @param request
+     * @param uId
+     * @return
+     */
     @RequestMapping("/listbyuid")
     @ResponseBody
     public PagableResponse<List<Subject>> subjectListByUid(PageRequest request,@RequestParam("uId")int uId){

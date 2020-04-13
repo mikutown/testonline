@@ -2,9 +2,10 @@ package top.leafii.testonline.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import top.leafii.testonline.common.domain.Exam_ques;
 import top.leafii.testonline.common.domain.Exam_quesExample;
-
+@Repository
 public interface Exam_quesMapper {
     long countByExample(Exam_quesExample example);
 

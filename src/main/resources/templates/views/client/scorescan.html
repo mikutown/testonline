@@ -81,31 +81,32 @@ scratch. This page gets rid of all links and provides the needed markup only.
         {//表头
           field: 'resId',
           title: '成绩编号'
-        },{
-          field: 'uId',
-          title: '用户ID'
-        }, {
-          field: 'uId',
-          title: '用户名称',
-          formatter: function (value) {
-            var userName;
-            $.ajax({
-              url: '/user/getuserbyid?id=' + value,
-              method: 'get',
-              async: false,//异步回显
-              success: function (data) {
-                userName = data.uname;
-              }
-            });
-            return userName;
-          }
         }, {
           field: 'examId',
           title: '考试编号'
+        },{
+          field: 'examId',
+          title: '考试科目',
+          formatter: function (value) {
+            var subjectName;
+            $.ajax({
+              url: '/subject/getsubjectbyexamid?examid='+value,
+              method: 'get',
+              async: false,
+              datatype: "json",
+              success: function (data) {
+                //data = JSON.decode(data);
+                //console.log(data);
+                subjectName = data['subname'];
+              }
+            });
+            //alert(status);
+            return subjectName;
+          }
         }, {
           field: 'score',
           title: '分数'
-        }, {
+        },{
           field: 'restime',
           title: '考试时间',
           formatter: function (value, row, index) {

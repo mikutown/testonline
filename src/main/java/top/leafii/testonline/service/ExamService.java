@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface ExamService {
     PagableResponse<List<Exam>> list(PageRequest request);
+
+    Boolean insertExam(Exam exam,int uId);
 }

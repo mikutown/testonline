@@ -20,4 +20,12 @@ public class Ques_sub {
     public void setSubId(Integer subId) {
         this.subId = subId;
     }
+
+    @Override
+    public String toString() {
+        return "Ques_sub{" +
+                "quesId=" + quesId +
+                ", subId=" + subId +
+                '}';
+    }
 }

@@ -452,6 +452,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 equalTo: "两次密码输入不一致"
             },
         },
+        messages: {
+            //定义消息
+            uname: {
+                required: "请输入用户名!",
+                remote: "用户名已存在，请修改用户名！"
+            },
+            password: {
+                required: "请输入密码!"
+            },
+            repassword: {
+                required: "请确认密码！",
+                equalTo: "两次密码输入不一致"
+            },
+        },
         submitHandler: function (form) {
             var uname = $("#uname").val();
             var password = $(":password:eq(0)").val();

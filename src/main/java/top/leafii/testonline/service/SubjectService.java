@@ -20,4 +20,6 @@ public interface SubjectService {
     Boolean removeSubject(Subject sbInDB);
 
     PagableResponse<List<Subject>> listByUid(PageRequest request, int uId);
+
+    Subject getSubjectByExamid(int examid);
 }

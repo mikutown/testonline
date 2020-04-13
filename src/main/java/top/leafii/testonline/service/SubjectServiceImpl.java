@@ -38,6 +38,13 @@ public class SubjectServiceImpl implements SubjectService {
         List<Subject> subjects = subjectMapper.selectByUId(uId);
         return new PagableResponse(new PageInfo<>(subjects).getTotal(),subjects);
     }
+
+    @Override
+    public Subject getSubjectByExamid(int examid) {
+        return subjectMapper.selectByExamid(examid);
+
+    }
+
     @Override
     public Boolean checkSubName(String subname) {
         SubjectExample subjectExample = new SubjectExample();

@@ -5,6 +5,21 @@ public class Exam {
 
     private Integer subId;
 
+    public Exam() {
+    }
+
+    public Exam(Integer subId) {
+        this.subId = subId;
+    }
+
+    @Override
+    public String toString() {
+        return "Exam{" +
+                "examId=" + examId +
+                ", subId=" + subId +
+                '}';
+    }
+
     public Integer getExamId() {
         return examId;
     }

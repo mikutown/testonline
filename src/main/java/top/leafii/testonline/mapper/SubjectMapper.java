@@ -30,4 +30,6 @@ public interface SubjectMapper {
     int updateByPrimaryKey(Subject record);
 
     List<Subject> selectByUId(int uId);
+
+    Subject selectByExamid(int examid);
 }

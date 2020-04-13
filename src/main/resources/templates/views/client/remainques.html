@@ -80,7 +80,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       dataField: "data",
       columns: [{//表头
         field: 'subId',
-        title: 'ID'
+        title: '科目ID'
       }, {
         field: 'subname',
         title: '科目名称'
@@ -96,7 +96,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             datatype: "json",
             success: function (data) {
               //data = JSON.decode(data);
-              console.log(data);
+              //console.log(data);
               status = data['status'];
             }
           });
@@ -119,9 +119,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         formatter: function (value, row) {
           if(STATUS==0){
             return [
-              '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
-              'data-toggle="modal" data-target="#QuesModal"', 'data-id=' + row.subId + ' ' +')>',
-              '<i class="fa fa-edit" >进入考试</i></button>'
+              '<button type="button" class="btn btn-primary" onClick=startExam('+row.subId+','+$("#UID").val()+')>开始考试</button>'
             ].join('');
           }else{
             return "已完成科目无需考试"
@@ -155,8 +153,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
     var h = this.addZero(time.getHours()) + ':';
     var m = this.addZero(time.getMinutes()) + ':';
     var  s = this.addZero(time.getSeconds());
-    return Y + M + D;
+    return Y + M + D + h + m + s;
     // }
+  }
+  //开始考试页面
+  function startExam(subId,uId) {
+    layer.msg('确定进行分配题目操作并进入考试页面？考试机会只有一次哦！', {
+      time: 0,
+      btn: ['确定', '再等等'],
+      yes: function (index) {
+        console.log(uId);
+        layer.close(index);
+        $.ajax({
+          async : false,//设置同步不然没法添加更多的表
+          url: '/exam/save?subId='+subId+"&uId="+uId,
+          dataType: 'json',
+          success: function (msg) {
+            var json = msg["data"];
+            if (json["success"]) {
+              layer.msg(json["msg"], {icon: 6,time:2000});
+
+            } else {
+              layer.msg(json["msg"], {icon: 5,time:2000});
+            }
+          },
+          error: function (data) {
+            layer.msg("未知错误！", {icon: 5,time:2000});
+          }
+
+        })
+      }
+    })
   }
 </script>
 
