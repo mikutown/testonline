@@ -77,22 +77,17 @@ public class ExamServiceImpl implements ExamService{
     @Override
     public Boolean removeAll(int subId, int uId) {
         List<Result> results = resultMapper.selectBySubidUid(subId, uId);
-        List<Exam> exams = new ArrayList<>();
+        int i=0;
+        int j=0;
+        int k=0;
         for (Result result : results) {
             Exam exam = examMapper.selectByPrimaryKey(result.getExamId());
-            exams.add(exam);
+            i += examMapper.deleteByPrimaryKey(exam.getExamId());
+            j += exam_quesMapper.deleteByExamId(exam.getExamId());
+            k += resultMapper.deleteByPrimaryKey(result.getResId());
         }
-        for (Exam exam : exams) {
-            int i = examMapper.deleteByPrimaryKey(exam.getExamId());
-            Exam_quesExample exam_quesExample = new Exam_quesExample();
-            exam_quesExample.or().andExamIdEqualTo(exam.getExamId());
-            int j = exam_quesMapper.deleteByExample(exam_quesExample);
-            ResultExample resultExample = new ResultExample();
-            resultExample.or().andExamIdEqualTo(exam.getExamId()).andUIdEqualTo(uId);
-            int k = resultMapper.deleteByExample(resultExample);
-            if(!(i>0||j>0||k>0)){
-               return false;
-            }
+        if(i<0||j<0||k<0){
+            return false;
         }
         return true;
     }

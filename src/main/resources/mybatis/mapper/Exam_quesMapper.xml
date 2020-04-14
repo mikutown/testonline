@@ -86,6 +86,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+  <delete id="deleteByExamId" parameterType="java.lang.Integer">
+    delete from exam_ques
+    where exam_id = #{examId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="top.leafii.testonline.common.domain.Exam_ques">
     insert into exam_ques (exam_id, ques_id)
     values (#{examId,jdbcType=INTEGER}, #{quesId,jdbcType=INTEGER})

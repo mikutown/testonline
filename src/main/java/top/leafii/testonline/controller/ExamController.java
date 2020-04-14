@@ -1,6 +1,7 @@
 package top.leafii.testonline.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ public class ExamController {
     @ResponseBody
     public Object listQuestion(@RequestParam("subId")int subId,@RequestParam("uId")int uId){
         List<Question> questions = examService.listQuestion(subId,uId);
+        System.out.println("开始啦");
         return questions;
     }
 

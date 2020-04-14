@@ -162,7 +162,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       time: 0,
       btn: ['确定', '再等等'],
       yes: function (index) {
-        console.log(uId);
+        //console.log(uId);
         layer.close(index);
         $.ajax({
           async : false,//设置同步不然没法添加更多的表
@@ -174,12 +174,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               layer.confirm(json["msg"], {
                 btn: ['好的','不了'] //按钮
               }, function(){
-                layer.msg('正在进入考试界面...', {icon: 6});
-                $.session.remove('SUBID');
-                $.session.remove('UID');
-                $.session.set('SUBID',subId);
-                $.session.set('UID',uId);
-                window.location.href = '/page/starttest';
+                showTest(subId,uId);
               }, function(){
                 $.ajax({
                   url: '/exam/removeAll?subId=' + subId+"&uId="+uId,
@@ -208,6 +203,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         })
       }
     })
+  }
+  function showTest(subId,uId) {
+    layer.msg('正在进入考试界面...', {icon: 6});
+    window.location.href = '/page/starttest?subId='+subId+'&uId='+uId;
   }
 </script>
 

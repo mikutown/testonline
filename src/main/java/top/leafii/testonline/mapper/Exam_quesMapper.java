@@ -20,4 +20,6 @@ public interface Exam_quesMapper {
     int updateByExampleSelective(@Param("record") Exam_ques record, @Param("example") Exam_quesExample example);
 
     int updateByExample(@Param("record") Exam_ques record, @Param("example") Exam_quesExample example);
+
+    int deleteByExamId(Integer examId);
 }

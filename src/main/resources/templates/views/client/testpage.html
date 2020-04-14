@@ -28,23 +28,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 
 <script>
+    function getQueryString(name){
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r!=null) return r[2]; return '';
+    }
     $(function () {
         $("li.active").removeClass("active");
     })
     $(function () {
-        var subId = $.session.get('SUBID');
-        var uId = $.session.get('UID');
-        $.ajax({
-            url: basePath+'aexam/listQues?subId='+subId+'&uId='+uId,
-            success: function (data) {
-                console.table(data);
-            }
-        })
+        var subId = getQueryString("subId");
+        var uId = getQueryString("uId");
+        if(subId!=null&&uId!=null){
+            console.log("subId："+subId+" uId:" + uId);
+            showQuestion(subId,uId);
+        }
     })
-</script>
-<!-- page script -->
-<script>
-
+    function showQuestion(subId,uId) {
+        var questions  = '';
+        $.ajax({
+            async : false,//设置同步不然没法添加更多的表
+            url: basePath+'exam/listQues?subId='+subId+'&uId='+uId,
+            success: function (data) {
+                alert("?");
+                questions = data;
+            },
+        })
+        console.table(questions);
+    }
 </script>
 
 </body>
