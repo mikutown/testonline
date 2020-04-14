@@ -28,4 +28,6 @@ public interface ResultMapper {
     int updateByPrimaryKeySelective(Result record);
 
     int updateByPrimaryKey(Result record);
+
+    List<Result> selectBySubidUid(Integer subId, Integer uId);
 }

@@ -10,8 +10,9 @@ import top.leafii.testonline.common.domain.*;
 import top.leafii.testonline.common.utils.RandomDistribution;
 import top.leafii.testonline.mapper.*;
 
+import java.util.ArrayList;
 import java.util.List;
-
+//select exam_id from result where u_id = 2 and exam_id in (select exam_id from exam where sub_id = 1006)
 @Service
 public class ExamServiceImpl implements ExamService{
     @Autowired
@@ -75,19 +76,46 @@ public class ExamServiceImpl implements ExamService{
 
     @Override
     public Boolean removeAll(int subId, int uId) {
-        List<Exam> exams = examMapper.selectBySubidUid(subId,uId);
+        List<Result> results = resultMapper.selectBySubidUid(subId, uId);
+        List<Exam> exams = new ArrayList<>();
+        for (Result result : results) {
+            Exam exam = examMapper.selectByPrimaryKey(result.getExamId());
+            exams.add(exam);
+        }
         for (Exam exam : exams) {
             int i = examMapper.deleteByPrimaryKey(exam.getExamId());
             Exam_quesExample exam_quesExample = new Exam_quesExample();
             exam_quesExample.or().andExamIdEqualTo(exam.getExamId());
             int j = exam_quesMapper.deleteByExample(exam_quesExample);
             ResultExample resultExample = new ResultExample();
-            resultExample.or().andExamIdEqualTo(exam.getExamId());
+            resultExample.or().andExamIdEqualTo(exam.getExamId()).andUIdEqualTo(uId);
             int k = resultMapper.deleteByExample(resultExample);
             if(!(i>0||j>0||k>0)){
                return false;
             }
         }
         return true;
+    }
+//haimeixie
+    @Override
+    public List<Question> listQuestion(int subId, int uId) {
+        List<Result> results = resultMapper.selectBySubidUid(subId, uId);
+        Integer examId = results.get(0).getExamId();
+        Integer resId = results.get(0).getResId();
+        Exam_quesExample exam_quesExample = new Exam_quesExample();
+        exam_quesExample.or().andExamIdEqualTo(examId);
+        List<Exam_ques> exam_ques = exam_quesMapper.selectByExample(exam_quesExample);
+        int quesIds[] = new int[exam_ques.size()];
+        int count = 0;
+        for (Exam_ques exam_que : exam_ques) {
+            quesIds[count] = exam_que.getQuesId();
+            count++;
+        }
+        List<Question> questions = new ArrayList<>();
+        for (int quesId : quesIds) {
+            Question question = questionMapper.selectByPrimaryKey(quesId);
+            questions.add(question);
+        }
+        return questions;
     }
 }

@@ -35,9 +35,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         var subId = $.session.get('SUBID');
         var uId = $.session.get('UID');
         $.ajax({
-            url: 'exam/listQues?subId='+subId+'&uId='+uId,
-            success: function (msg) {
-                console.table(msg);
+            url: basePath+'aexam/listQues?subId='+subId+'&uId='+uId,
+            success: function (data) {
+                console.table(data);
             }
         })
     })

@@ -48,6 +48,7 @@ public class ExamController {
     @ResponseBody
     public Object listQuestion(@RequestParam("subId")int subId,@RequestParam("uId")int uId){
         List<Question> questions = examService.listQuestion(subId,uId);
+        return questions;
     }
 
     /**
