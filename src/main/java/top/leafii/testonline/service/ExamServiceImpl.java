@@ -60,8 +60,6 @@ public class ExamServiceImpl implements ExamService{
                 quesIds[count] = ques_sub.getQuesId();
                 count++;
             }
-            //新建ExamQuesExample对象
-            Exam_quesExample exam_quesExample = new Exam_quesExample();
             //随机分配从0到quesId的size的题目数组
             int[] ints = RandomDistribution.randomDistribution(quesIds, 20);
             for (int anInt : ints) {
@@ -108,7 +106,7 @@ public class ExamServiceImpl implements ExamService{
         }
         List<Question> questions = new ArrayList<>();
         for (int quesId : quesIds) {
-            Question question = questionMapper.selectByPrimaryKey(quesId);
+            Question question = questionMapper.selectByPersonPrimaryKey(quesId);
             questions.add(question);
         }
         return questions;

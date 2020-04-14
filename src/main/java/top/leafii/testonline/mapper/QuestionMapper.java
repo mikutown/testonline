@@ -22,6 +22,8 @@ public interface QuestionMapper {
 
     Question selectByPrimaryKey(Integer quesId);
 
+    Question selectByPersonPrimaryKey(Integer quesId);
+
     int updateByExampleSelective(@Param("record") Question record, @Param("example") QuestionExample example);
 
     int updateByExample(@Param("record") Question record, @Param("example") QuestionExample example);

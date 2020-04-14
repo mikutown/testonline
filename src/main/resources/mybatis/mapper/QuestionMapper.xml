@@ -76,6 +76,9 @@
   <sql id="Base_Column_List">
     ques_id, type_id, title, quespic, score, ansA, ansB, ansC, ansD, ansE, answer, choanswer
   </sql>
+  <sql id="Personal_Column_List">
+    ques_id, type_id, title, quespic, score, ansA, ansB, ansC, ansD, ansE
+  </sql>
   <select id="selectByExample" parameterType="top.leafii.testonline.common.domain.QuestionExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -93,6 +96,12 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
+    from question
+    where ques_id = #{quesId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPersonPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Personal_Column_List" />
     from question
     where ques_id = #{quesId,jdbcType=INTEGER}
   </select>

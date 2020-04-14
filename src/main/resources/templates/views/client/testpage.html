@@ -11,51 +11,242 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Main Header -->
     <div th:replace="~{/views/layout/headertest :: headerAA}"></div>
     <!-- Left side column. contains the logo and sidebar -->
-    <div th:replace="~{/views/layout/menutest :: menutest}"></div>
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
+        <div>
+            <div>请在完成所有题目后点击交卷，如果不想考试或者重新组卷，请点击安全退出，否则将无法正常进行下次考试！</div>
+            <div id="toolbar">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-warning">
+                        <i class="fa fa-file">交卷</i>
+                    </button>
+                </div>
+                <div class="pull-right" id="exitDiv">
 
+                </div>
+            </div>
+        </div>
+        <table id="questionTable"></table>
     </div>
     <!-- /.content-wrapper -->
 
     <!-- Main Footer -->
     <div th:replace="~{/views/layout/foot :: footer}"></div>
 
+    <!-- 单选题 Modal -->
+    <div class="modal fade" id="ChoseModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">单选题</h4>
+                </div>
+                <div class="modal-body" id="choseModalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <span>答题后点击提交按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 多选题 Modal -->
+    <div class="modal fade" id="MultiChoseModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">多选题</h4>
+                </div>
+                <div class="modal-body" id="multiChoseBody">
+
+                </div>
+                <div class="modal-footer">
+                    <span>答题后点击提交按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 判断题 Modal -->
+    <div class="modal fade" id="JudgeModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">判断题</h4>
+                </div>
+                <div class="modal-body" id="judgeModalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <span>答题后点击提交按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- 其他题 Modal -->
+    <div class="modal fade" id="OtherModal" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">其他类型题目</h4>
+                </div>
+                <div class="modal-body" otherModalBody>
+
+                </div>
+                <div class="modal-footer">
+                    <span>答题后点击提交按钮</span>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
 
 </div>
 <!-- ./wrapper -->
 
 
 <script>
-    function getQueryString(name){
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    //退出考试按钮
+    $(function () {
+        var subId = getQueryString("subId");
+        var uId = getQueryString("uId");
+        $("#exitDiv").append('<button type="button" class="btn btn-danger"\n' +
+            '                            onclick="safeExit(' + subId + ',' + uId + ')">\n' +
+            '                        <i class="fa fa-file">安全退出考试</a></i>\n' +
+            '                    </button>');
+    })
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
-        if (r!=null) return r[2]; return '';
+        if (r != null) return r[2];
+        return '';
     }
+
     $(function () {
         $("li.active").removeClass("active");
+        $("body").addClass("sidebar-collapse");
     })
     $(function () {
         var subId = getQueryString("subId");
         var uId = getQueryString("uId");
-        if(subId!=null&&uId!=null){
-            console.log("subId："+subId+" uId:" + uId);
-            showQuestion(subId,uId);
-        }
+        $("#questionTable").bootstrapTable({
+            url: '/exam/listQues?subId=' + subId + '&uId=' + uId,
+            //pagination: true,//是否分页
+            toolbar: "#toolbar",
+            toolbarAlign: "right",
+            //search: true,//是否允许搜索
+            //queryParamsType: 'limit',
+            //queryParams: queryParams,
+            sidePagination: 'server',
+            dataField: "data",
+            columns: [{//表头
+                field: 'quesId',
+                title: '题目ID',
+            }, {
+                field: 'typeId',
+                title: '题型',
+                formatter: function (value) {
+                    var typeNameEnd;
+                    $.ajax({
+                        url: '/type/gettypebyid?id=' + value,
+                        method: 'get',
+                        async: false,//异步回显
+                        success: function (data) {
+                            typeNameEnd = data.typename;
+                        }
+                    });
+                    return typeNameEnd;
+                }
+            }, {
+                field: 'title',
+                title: '题干'
+            }, {
+                field: 'score',
+                title: '题目分值',
+
+            }, {
+                title: '操作',
+                formatter: function (value, row) {
+                    return [
+                        '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
+                        'onClick=questionShow(' + row.quesId +','+row.typeId+ ')>',
+                        '<i class="fa fa-edit" >答题</i></button>']
+                        .join('');
+                }
+            }]
+
+        });
+
     })
-    function showQuestion(subId,uId) {
-        var questions  = '';
-        $.ajax({
-            async : false,//设置同步不然没法添加更多的表
-            url: basePath+'exam/listQues?subId='+subId+'&uId='+uId,
-            success: function (data) {
-                alert("?");
-                questions = data;
-            },
-        })
-        console.table(questions);
+
+    function safeExit(subId, uId) {
+        layer.confirm("确定要退出考试重新分配题目吗？", {
+            btn: ['好的', '不了'] //按钮
+        }, function () {
+            $.ajax({
+                url: '/exam/removeAll?subId=' + subId + "&uId=" + uId,
+                method: 'get',
+                success: function (msg) {
+                    var json = msg["data"];
+                    if (json["success"]) {
+                        layer.msg(json["msg"], {icon: 6, time: 2000});
+                        window.location.href = basePath + '/page/client';
+                    } else {
+                        layer.msg(json["msg"], {icon: 5, time: 2000});
+                    }
+                },
+                error: function (data) {
+                    layer.msg("未知错误！", {icon: 5, time: 2000});
+                }
+            })
+        }, function () {
+            layer.close();
+        });
     }
+    function questionShow(subId,typeId) {
+        $.session.set("SUBID",subId);
+
+        if(typeId==1){
+            //选择题
+            $("#ChoseModal").modal('show');
+        }else if(typeId==2){
+            //多选题
+            $("#MultiChoseModal").modal('show');
+        }else if(typeId==3){
+            //判断题
+            $("#JudgeModal").modal('show');
+        }else{
+            //其他题
+            $("#OtherModal").modal('show');
+        }
+    }
+    $("#ChoseModal").on('show.bs.modal',function (e) {
+
+    })
+
 </script>
 
 </body>

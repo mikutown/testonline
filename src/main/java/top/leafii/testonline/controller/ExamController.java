@@ -45,11 +45,17 @@ public class ExamController {
         }
     }
 
+    /**
+     * 用户展示题目
+     * @param subId
+     * @param uId
+     * @return
+     */
     @RequestMapping("/listQues")
     @ResponseBody
     public Object listQuestion(@RequestParam("subId")int subId,@RequestParam("uId")int uId){
         List<Question> questions = examService.listQuestion(subId,uId);
-        System.out.println("开始啦");
+       // System.out.println("开始啦");
         return questions;
     }
 

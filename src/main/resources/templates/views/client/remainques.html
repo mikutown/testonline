@@ -19,7 +19,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <section class="content-header">
       <h1>
         已做/待做科目
-        <small style="color: red">所有科目仅能考试一次 请慎重作答！</small>
+        <small style="color: red">天道酬勤，祝你成功！</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="/page/client"><i class="fa fa-dashboard"></i> 首页</a></li>
@@ -206,6 +206,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
   }
   function showTest(subId,uId) {
     layer.msg('正在进入考试界面...', {icon: 6});
+    // $.session.remove('SUBID');
+    // $.session.remove('UID');
+    // $.session.set('SUBID',subId);
+    // $.session.set('UID',uId);
     window.location.href = '/page/starttest?subId='+subId+'&uId='+uId;
   }
 </script>
