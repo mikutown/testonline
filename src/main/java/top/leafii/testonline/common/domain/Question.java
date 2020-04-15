@@ -121,6 +121,11 @@ public class Question {
         this.choanswer = choanswer;
     }
 
+    public Question(Integer quesId, Integer choanswer) {
+        this.quesId = quesId;
+        this.choanswer = choanswer;
+    }
+
     @Override
     public String toString() {
         return "Question{" +

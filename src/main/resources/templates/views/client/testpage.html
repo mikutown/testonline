@@ -45,10 +45,48 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <h4 class="modal-title">单选题</h4>
                 </div>
                 <div class="modal-body" id="choseModalBody">
+                    <form id="choseForm">
+                        <div class="form-group">
+                            <label for="choseTitle">题目</label>
+                            <h4 id="choseTitle"></h4>
+                        </div>
 
+                        <div class="form-group">
+                            <h4>分值</h4>
+                            <h5 id="choseScore"></h5>
+
+                        </div>
+                        <div class="form-group">
+                            <h5>选项A</h5>
+                            <h4 id="choseAnsA"></h4>
+                        </div>
+                        <div class="form-group">
+                            <h5>选项B</h5>
+                            <h4 id="choseAnsB"></h4>
+                        </div>
+                        <div class="form-group">
+                            <h5>选项C</h5>
+                            <h4 id="choseAnsC"></h4>
+                        </div>
+                        <div class="form-group">
+                            <h5>选项D</h5>
+                            <h4 id="choseAnsD"></h4>
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select class="form-control" id="choseAnswer">
+                                <option>请选择...</option>
+                                <option value="1000">A</option>
+                                <option value="100">B</option>
+                                <option value="10">C</option>
+                                <option value="1">D</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="choseQuesBtn">提交答案</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <span>答题后点击提交按钮</span>
+                    <span>答题后点击提交按钮，请注意，答案不可修改！</span>
                 </div>
 
             </div>
@@ -148,10 +186,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
     $(function () {
         $("li.active").removeClass("active");
         $("body").addClass("sidebar-collapse");
+        $.session.set('score',0)
     })
     $(function () {
-        var subId = getQueryString("subId");
-        var uId = getQueryString("uId");
+        var subId = $.session.get('SSUBID');
+        var uId = $.session.get('UUID');
+
         $("#questionTable").bootstrapTable({
             url: '/exam/listQues?subId=' + subId + '&uId=' + uId,
             //pagination: true,//是否分页
@@ -192,7 +232,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 formatter: function (value, row) {
                     return [
                         '<button  type="button" class="btn btn-primary btn-edit btn-xs" ',
-                        'onClick=questionShow(' + row.quesId +','+row.typeId+ ')>',
+                        'onClick=questionShow(this,'+ row.quesId +','+row.typeId+ ')>',
                         '<i class="fa fa-edit" >答题</i></button>']
                         .join('');
                 }
@@ -212,6 +252,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 success: function (msg) {
                     var json = msg["data"];
                     if (json["success"]) {
+                        $.session.remove('SSUBID');
+                        $.session.remove('UUID');
                         layer.msg(json["msg"], {icon: 6, time: 2000});
                         window.location.href = basePath + '/page/client';
                     } else {
@@ -226,9 +268,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             layer.close();
         });
     }
-    function questionShow(subId,typeId) {
-        $.session.set("SUBID",subId);
-
+    function questionShow(btn,quesId,typeId) {
+        $.session.remove("QUESID");
+        $.session.remove("TYPEID");
+        $.session.set("QUESID",quesId);
+        $.session.set("TYPEID",typeId);
         if(typeId==1){
             //选择题
             $("#ChoseModal").modal('show');
@@ -243,9 +287,58 @@ scratch. This page gets rid of all links and provides the needed markup only.
             $("#OtherModal").modal('show');
         }
     }
+    //选择题填充信息
     $("#ChoseModal").on('show.bs.modal',function (e) {
+        var quesId = $.session.get("QUESID");
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyidnoanswer?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
 
+                    $('#choseTitle').text(data.title);
+                    //$('#choseModifyImg').val(data['quespic']);
+                    $('#choseScore').text(data.score);
+                    $('#choseAnsA').text(data.ansa);
+                    $('#choseAnsB').text(data.ansb);
+                    $('#choseAnsC').text(data.ansc);
+                    $('#choseAnsD').text(data.ansd);
+                    $.session.remove('ans');
+                    $.session.set("ans",data.choanswer);
+                    //$('#choseModifyAnswer').val(data.choanswer);
+                }
+            })
+        }
     })
+    //选择题作答
+    $("#choseQuesBtn").click(function () {
+        var quesId = $.session.get('QUESID');
+        var choanswer = $("#choseAnswer").val();
+        var score = $.session.get('SCORE');
+        //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+        //验证完成后提交表单
+        //进行ajax传值
+        $.ajax({
+            method: 'get',
+            url: "/question/comparechosanswer?quesId="+quesId+"&choanswer="+choanswer,
+            success: function (msg) {
+                var json = msg["data"];
+                alert(json["success"]);
+
+                if(json["success"]==true){
+                    alert("val:"+$("#choseScore").val())
+                    alert("text:"+$("#choseScore").text())
+                    score  = score+ $("#choseScore").text();
+                    alert("true"+score);
+                }else{
+                    alert("false"+score);
+                }
+
+            }
+        });
+    })
+
 
 </script>
 

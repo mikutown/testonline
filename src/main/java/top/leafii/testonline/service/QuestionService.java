@@ -25,4 +25,8 @@ public interface QuestionService {
     PagableResponse<List<Question>> listBySubId(PageRequest request, int subId);
 
     PagableResponse<List<Question>> listByExamId(PageRequest request,int examId);
+
+    Question getQuestionByQuesidNoAnswer(int quesId);
+
+    Boolean compareChosAnswer(Question question);
 }

@@ -84,6 +84,16 @@ public class QuestionController {
         return questionService.getQuestionByQuesid(quesId);
     }
     /**
+     * 获取指定id的question 无答案
+     * @param quesId
+     * @return
+     */
+    @RequestMapping("/getquestionbyidnoanswer")
+    @ResponseBody
+    public Question getQuestionByQuesidNoAnswer(@RequestParam("id")int quesId){
+        return questionService.getQuestionByQuesidNoAnswer(quesId);
+    }
+    /**
      * 删除特定question
      * @param quesId
      * @return
@@ -106,13 +116,26 @@ public class QuestionController {
     @RequestMapping("/save")
     @ResponseBody
     public Object saveQuestion(@RequestBody Question question){
-        System.out.println(question);
+       // System.out.println(question);
         Boolean bool = questionService.save(question);
         if(bool){
             return new JSONMap(true,200, ItemBankManageMessage.QUESTION_ADD_SUCCESS);
         }
         else{
             return new JSONMap(false,200, ItemBankManageMessage.QUESTION_ADD_ERROR);
+        }
+    }
+    @RequestMapping("/comparechosanswer")
+    @ResponseBody
+    public Object compareChosAnswer(@RequestParam("quesId")int quesId,@RequestParam("choanswer")int choanswer){
+        Question question = new Question(quesId,choanswer);
+        System.out.println(question);
+        Boolean bool = questionService.compareChosAnswer(question);
+        if(bool){
+            return new JSONMap(true,200, ItemBankManageMessage.ANSWER_QUES_SUCCESS);
+        }
+        else{
+            return new JSONMap(false,200, ItemBankManageMessage.ANSWER_QUES_ERROR);
         }
     }
     /**

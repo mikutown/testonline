@@ -44,6 +44,8 @@ public class QuestionServiceImpl implements QuestionService{
         return new PagableResponse(new PageInfo<>(questions).getTotal(),questions);
     }
 
+
+
     @Override
     public Boolean save(Question question) {
         int i = questionMapper.insertSelective(question);
@@ -63,6 +65,23 @@ public class QuestionServiceImpl implements QuestionService{
     public Question getQuestionByQuesid(int quesId) {
         Question question = questionMapper.selectByPrimaryKey(quesId);
         return question;
+    }
+    @Override
+    public Question getQuestionByQuesidNoAnswer(int quesId) {
+        Question question = questionMapper.selectByPrimaryKeyNoAnswer(quesId);
+        return question;
+    }
+
+    @Override
+    public Boolean compareChosAnswer(Question question) {
+        Question question1 = questionMapper.selectByPrimaryKey(question.getQuesId());
+        Integer choanswer = question.getChoanswer();
+        Integer rightchoanswer = question1.getChoanswer();
+        if(choanswer.equals(rightchoanswer)){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     @Override

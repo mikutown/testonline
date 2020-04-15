@@ -35,4 +35,6 @@ public interface QuestionMapper {
     List<Question> selectBySubId(int subId);
 
     List<Question> selectByExamId(Integer examId);
+
+    Question selectByPrimaryKeyNoAnswer(int quesId);
 }

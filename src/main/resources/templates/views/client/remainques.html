@@ -206,10 +206,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
   }
   function showTest(subId,uId) {
     layer.msg('正在进入考试界面...', {icon: 6});
-    // $.session.remove('SUBID');
-    // $.session.remove('UID');
-    // $.session.set('SUBID',subId);
-    // $.session.set('UID',uId);
+    $.session.remove('SSUBID');
+    $.session.remove('UUID');
+    $.session.remove('SCORE');
+    $.session.set('SSUBID',subId);
+    $.session.set('UUID',uId);
+    $.session.set('SCORE',0);
     window.location.href = '/page/starttest?subId='+subId+'&uId='+uId;
   }
 </script>

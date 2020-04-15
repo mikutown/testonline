@@ -28,4 +28,6 @@ public class ItemBankManageMessage {
     public static final String PICTURE_ADD_ERROR = "添加图片失败！";
     public static final String PICTURE_QUEST_SUCCESS = "图片与题目关联成功！";
     public static final String PICTURE_QUEST_ERROR = "图片与题目关联失败！";
+    public static final String ANSWER_QUES_SUCCESS = "答案提交成功！";
+    public static final String ANSWER_QUES_ERROR = "答案提交失败！";
 }

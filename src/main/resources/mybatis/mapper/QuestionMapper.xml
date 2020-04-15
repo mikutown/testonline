@@ -99,6 +99,12 @@
     from question
     where ques_id = #{quesId,jdbcType=INTEGER}
   </select>
+  <select id="selectByPrimaryKeyNoAnswer" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Personal_Column_List" />
+    from question
+    where ques_id = #{quesId,jdbcType=INTEGER}
+  </select>
   <select id="selectByPersonPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Personal_Column_List" />
