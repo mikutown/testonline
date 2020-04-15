@@ -39,7 +39,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="choseModalHeader">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">单选题</h4>
@@ -52,24 +52,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
 
                         <div class="form-group">
-                            <h4>分值</h4>
+                            <label for="choseTitle">分值</label>
                             <h5 id="choseScore"></h5>
 
                         </div>
                         <div class="form-group">
-                            <h5>选项A</h5>
+                            <label for="choseTitle">选项A</label>
                             <h4 id="choseAnsA"></h4>
                         </div>
                         <div class="form-group">
-                            <h5>选项B</h5>
+                            <label for="choseTitle">选项B</label>
                             <h4 id="choseAnsB"></h4>
                         </div>
                         <div class="form-group">
-                            <h5>选项C</h5>
+                            <label for="choseTitle">选项D</label>
                             <h4 id="choseAnsC"></h4>
                         </div>
                         <div class="form-group">
-                            <h5>选项D</h5>
+                            <label for="choseTitle">选项C</label>
                             <h4 id="choseAnsD"></h4>
                         </div>
                         <div class="form-group">
@@ -296,9 +296,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 method: 'get',
                 success: function (data) {
                     //console.log(data);//测试能否得到question
-
+                    if(data.quespic!=null){
+                        $("#choseModalHeader").append('<div class="form-group"> \n' +
+                            '<img src="'+data.quespic+'" alt="" width="350" /><br></div>');
+                    }
                     $('#choseTitle').text(data.title);
-                    //$('#choseModifyImg').val(data['quespic']);
+                    //$('#choseImg').val(data['quespic']);
                     $('#choseScore').text(data.score);
                     $('#choseAnsA').text(data.ansa);
                     $('#choseAnsB').text(data.ansb);
