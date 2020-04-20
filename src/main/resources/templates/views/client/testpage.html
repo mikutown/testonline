@@ -99,13 +99,68 @@ scratch. This page gets rid of all links and provides the needed markup only.
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="multiChoseHeader">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">多选题</h4>
                 </div>
                 <div class="modal-body" id="multiChoseBody">
+                    <form id="multiChoseForm">
+                        <div class="form-group">
+                            <label for="multiChoseTitle">题目</label>
+                            <h4 id="multiChoseTitle"></h4>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="multiChoseScore">分值</label>
+                            <h5 id="multiChoseScore"></h5>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="multiChoseAnsA">选项A</label>
+                            <h4 id="multiChoseAnsA"></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiChoseAnsB">选项B</label>
+                            <h4 id="multiChoseAnsB"></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiChoseAnsC">选项C</label>
+                            <h4 id="multiChoseAnsC"></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiChoseAnsD">选项D</label>
+                            <h4 id="multiChoseAnsD"></h4>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiChoseAnsE">选项E</label>
+                            <h4 id="multiChoseAnsE"></h4>
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select  id="multiChoseAnswerA">
+                                <option>请选择...</option>
+                                <option value="10000">A</option>
+                            </select>
+                            <select  id="multiChoseAnswerB">
+                                <option>请选择...</option>
+                                <option value="1000">B</option>
+                            </select>
+                            <select  id="multiChoseAnswerC">
+                                <option>请选择...</option>
+                                <option value="100">C</option>
+                            </select>
+                            <select  id="multiChoseAnswerD">
+                                <option>请选择...</option>
+                                <option value="10">D</option>
+                            </select>
+                            <select  id="multiChoseAnswerE">
+                                <option>请选择...</option>
+                                <option value="1">E</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="multiChoseQuesBtn">提交答案</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <span>答题后点击提交按钮</span>
@@ -168,8 +223,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script>
     //退出考试按钮
     $(function () {
-        var subId = getQueryString("subId");
-        var uId = getQueryString("uId");
+        var subId = $.session.get('SSUBID');
+        var uId = $.session.get('UUID');
         $("#exitDiv").append('<button type="button" class="btn btn-danger"\n' +
             '                            onclick="safeExit(' + subId + ',' + uId + ')">\n' +
             '                        <i class="fa fa-file">安全退出考试</a></i>\n' +
@@ -297,6 +352,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 success: function (data) {
                     //console.log(data);//测试能否得到question
                     if(data.quespic!=null){
+                        $("#choseModalHeader").empty();
                         $("#choseModalHeader").append('<div class="form-group"> \n' +
                             '<img src="'+data.quespic+'" alt="" width="350" /><br></div>');
                     }
@@ -309,15 +365,81 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     $('#choseAnsD').text(data.ansd);
                     $.session.remove('ans');
                     $.session.set("ans",data.choanswer);
-                    //$('#choseModifyAnswer').val(data.choanswer);
                 }
             })
         }
     })
     //选择题作答
     $("#choseQuesBtn").click(function () {
+        $("#ChoseModal").on('hide.bs.modal',function (e) {
+            $.session.remove("QUESID");
+        })
         var quesId = $.session.get('QUESID');
         var choanswer = $("#choseAnswer").val();
+        var score = $.session.get('SCORE');
+        alert("score:"+score);
+        //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+        //验证完成后提交表单
+        //进行ajax传值
+        $.ajax({
+            method: 'get',
+            async: false,
+            url: "/question/comparechosanswer?quesId="+quesId+"&choanswer="+choanswer,
+            success: function (msg) {
+                var json = msg["data"];
+                //alert(json["success"]);
+
+                if(json["success"]==true){
+                    //alert("val:"+$("#choseScore").val())
+                    //alert("text:"+$("#choseScore").text())
+                    score  = parseInt(score)+ parseInt($("#choseScore").text());
+                    $.session.set('SCORE',score);
+                    alert("true"+score);
+                }else{
+                    alert("false"+score);
+                }
+
+            }
+        });
+    })
+    //多选题填充信息
+    $("#MultiChoseModal").on('show.bs.modal',function (e) {
+        var quesId = $.session.get("QUESID");
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyidnoanswer?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
+                    if(data.quespic!=null){
+                        $("#multiChoseHeader").empty();
+                        $("#multiChoseHeader").append('<div class="form-group"> \n' +
+                            '<img src="'+data.quespic+'" alt="" width="350" /><br></div>');
+                    }
+                    $('#multiChoseTitle').text(data.title);
+                    //$('#choseImg').val(data['quespic']);
+                    $('#multiChoseScore').text(data.score);
+                    $('#multiChoseAnsA').text(data.ansa);
+                    $('#multiChoseAnsB').text(data.ansb);
+                    $('#multiChoseAnsC').text(data.ansc);
+                    $('#multiChoseAnsD').text(data.ansd);
+                    $('#multiChoseAnsE').text(data.ansd);
+                    $.session.remove('ans');
+                    $.session.set("ans",data.choanswer);
+                }
+            })
+        }
+    })
+    //多选题作答
+    $("#multiChoseQuesBtn").click(function () {
+        var quesId = $.session.get('QUESID');
+        var choansA = $("#multiChoseAnswerA").val();
+        var choansB = $("#multiChoseAnswerB").val();
+        var choansC = $("#multiChoseAnswerC").val();
+        var choansD = $("#multiChoseAnswerD").val();
+        var choansE = $("#multiChoseAnswerE").val();
+        var choanswer = parseInt(choansA)+parseInt(choansB)+parseInt(choansC)+parseInt(choansD)+parseInt(choansE);
+        alert(choanswer);
         var score = $.session.get('SCORE');
         //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
         //验证完成后提交表单
@@ -328,11 +450,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             success: function (msg) {
                 var json = msg["data"];
                 alert(json["success"]);
-
                 if(json["success"]==true){
-                    alert("val:"+$("#choseScore").val())
-                    alert("text:"+$("#choseScore").text())
-                    score  = score+ $("#choseScore").text();
+                   // alert("val:"+$("#choseScore").val())
+                    //alert("text:"+$("#choseScore").text())
+                    score  = parseInt(score)+ parseInt($("#choseScore").text());
+                    $.session.set('SCORE',score);
                     alert("true"+score);
                 }else{
                     alert("false"+score);
@@ -341,8 +463,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
         });
     })
-
-
 </script>
 
 </body>
