@@ -1145,13 +1145,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 required: "请输入A选项内容！"
             },
             choseAnsB: {
-                required: "请输入A选项内容！"
+                required: "请输入B选项内容！"
             },
             choseAnsC: {
-                required: "请输入A选项内容！"
+                required: "请输入选项内容！"
             },
             choseAnsD: {
-                required: "请输入A选项内容！"
+                required: "请输入D选项内容！"
             },
             choseAnswer: {
                 required: "请选择答案!",
@@ -1191,90 +1191,90 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         }
     });
-    $("#choseAddModalForm").validate({
-        rules: {
-            choseTitle: {
-                required: true,//
-                minlength: 4,//4位
-                maxlength: 500,//最多输入500
-            },
-            choseScore: {
-                required: true,
-            },
-            choseAnsA: {
-                required:true,
-            },
-            choseAnsB: {
-                required:true,
-            },
-            choseAnsC: {
-                required:true,
-            },
-            choseAnsD: {
-                required:true,
-            },
-            choseAnswer: {
-                required: true,
-            },
-        },
-        messages: {
-            //定义消息
-            choseTitle: {
-                required: "请输入题目!",
-            },
-            choseScore: {
-                required: "请选择分值!"
-            },
-            choseAnsA: {
-                required: "请输入A选项内容！"
-            },
-            choseAnsB: {
-                required: "请输入A选项内容！"
-            },
-            choseAnsC: {
-                required: "请输入A选项内容！"
-            },
-            choseAnsD: {
-                required: "请输入A选项内容！"
-            },
-            choseAnswer: {
-                required: "请选择答案!",
-            },
-        },
-        submitHandler: function (form) {
-            var typeId = $.session.get('typeId');
-            var title = $("#choseTitle").val();
-            var score = $("#choseScore option:selected").val();
-            var ansa = $("#choseAnsA").val();
-            var ansb = $("#choseAnsB").val();
-            var ansc = $("#choseAnsC").val();
-            var ansd = $("#choseAnsD").val();
-            var choanswer = $("#choseAnswer").val();
-            //console.log("typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
-            //验证完成后提交表单
-            //进行ajax传值
-            $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                url: basePath + "/question/save",
-                data: JSON.stringify({"typeId": typeId, "title": title, "score": score, "ansa": ansa,"ansb": ansb,"ansc":ansc,"ansd":ansd,"choanswer": choanswer}),
-                dataType: "json",
-                success: function (msg) {
-                    var json = msg["data"];
-                    if (json["success"]) {
-                        $("#choseAddModalForm")[0].reset();
-                        layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
-                            $("#ChoseModal").modal('hide');
-                        });
-                        $("#questionTable").bootstrapTable("refresh");
-                    } else {
-                        layer.msg(json["msg"], {icon: 5, time: 2000});
-                    }
-                }
-            });
-
-        }
-    });
+    // $("#choseAddModalForm").validate({
+    //     rules: {
+    //         choseTitle: {
+    //             required: true,//
+    //             minlength: 4,//4位
+    //             maxlength: 500,//最多输入500
+    //         },
+    //         choseScore: {
+    //             required: true,
+    //         },
+    //         choseAnsA: {
+    //             required:true,
+    //         },
+    //         choseAnsB: {
+    //             required:true,
+    //         },
+    //         choseAnsC: {
+    //             required:true,
+    //         },
+    //         choseAnsD: {
+    //             required:true,
+    //         },
+    //         choseAnswer: {
+    //             required: true,
+    //         },
+    //     },
+    //     messages: {
+    //         //定义消息
+    //         choseTitle: {
+    //             required: "请输入题目!",
+    //         },
+    //         choseScore: {
+    //             required: "请选择分值!"
+    //         },
+    //         choseAnsA: {
+    //             required: "请输入A选项内容！"
+    //         },
+    //         choseAnsB: {
+    //             required: "请输入A选项内容！"
+    //         },
+    //         choseAnsC: {
+    //             required: "请输入A选项内容！"
+    //         },
+    //         choseAnsD: {
+    //             required: "请输入A选项内容！"
+    //         },
+    //         choseAnswer: {
+    //             required: "请选择答案!",
+    //         },
+    //     },
+    //     submitHandler: function (form) {
+    //         var typeId = $.session.get('typeId');
+    //         var title = $("#choseTitle").val();
+    //         var score = $("#choseScore option:selected").val();
+    //         var ansa = $("#choseAnsA").val();
+    //         var ansb = $("#choseAnsB").val();
+    //         var ansc = $("#choseAnsC").val();
+    //         var ansd = $("#choseAnsD").val();
+    //         var choanswer = $("#choseAnswer").val();
+    //         //console.log("typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+    //         //验证完成后提交表单
+    //         //进行ajax传值
+    //         $.ajax({
+    //             type: "POST",
+    //             contentType: "application/json",
+    //             url: basePath + "/question/save",
+    //             data: JSON.stringify({"typeId": typeId, "title": title, "score": score, "ansa": ansa,"ansb": ansb,"ansc":ansc,"ansd":ansd,"choanswer": choanswer}),
+    //             dataType: "json",
+    //             success: function (msg) {
+    //                 var json = msg["data"];
+    //                 if (json["success"]) {
+    //                     $("#choseAddModalForm")[0].reset();
+    //                     layer.msg(json["msg"], {icon: 6, shade: 0.4, time: 2000}, function () {
+    //                         $("#ChoseModal").modal('hide');
+    //                     });
+    //                     $("#questionTable").bootstrapTable("refresh");
+    //                 } else {
+    //                     layer.msg(json["msg"], {icon: 5, time: 2000});
+    //                 }
+    //             }
+    //         });
+    //
+    //     }
+    // });
     $("#multiChoseAddModalForm").validate({
         rules: {
             multiTitle: {

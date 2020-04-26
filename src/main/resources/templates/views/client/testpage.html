@@ -27,6 +27,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
             </div>
         </div>
+        <h3>剩余待考题目</h3>
         <table id="questionTable"></table>
     </div>
     <!-- /.content-wrapper -->
@@ -75,14 +76,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="form-group">
                             <label>答案</label>
                             <select class="form-control" id="choseAnswer">
-                                <option>请选择...</option>
+                                <option value="0">请选择...</option>
                                 <option value="1000">A</option>
                                 <option value="100">B</option>
                                 <option value="10">C</option>
                                 <option value="1">D</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary" id="choseQuesBtn">提交答案</button>
+                        <button type="submit" class="btn btn-primary" id="choseQuesBtn">提交答案</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -139,23 +140,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <div class="form-group">
                             <label>答案</label>
                             <select  id="multiChoseAnswerA">
-                                <option>请选择...</option>
+                                <option value="0">请选择...</option>
                                 <option value="10000">A</option>
                             </select>
                             <select  id="multiChoseAnswerB">
-                                <option>请选择...</option>
+                                <option value="0">请选择...</option>
                                 <option value="1000">B</option>
                             </select>
                             <select  id="multiChoseAnswerC">
-                                <option>请选择...</option>
+                                <option value="0">请选择...</option>
                                 <option value="100">C</option>
                             </select>
                             <select  id="multiChoseAnswerD">
-                                <option>请选择...</option>
+                                <option value="0">请选择...</option>
                                 <option value="10">D</option>
                             </select>
                             <select  id="multiChoseAnswerE">
-                                <option>请选择...</option>
+                                <option value="0">请选择...</option>
                                 <option value="1">E</option>
                             </select>
                         </div>
@@ -328,6 +329,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         $.session.remove("TYPEID");
         $.session.set("QUESID",quesId);
         $.session.set("TYPEID",typeId);
+        $("#questionTable").bootstrapTable("remove",{field: 'quesId',values: [quesId]});
         if(typeId==1){
             //选择题
             $("#ChoseModal").modal('show');
@@ -363,45 +365,62 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     $('#choseAnsB').text(data.ansb);
                     $('#choseAnsC').text(data.ansc);
                     $('#choseAnsD').text(data.ansd);
-                    $.session.remove('ans');
-                    $.session.set("ans",data.choanswer);
+                    //$.session.remove('ans');
+                    //$.session.set("ans",data.choanswer);
                 }
             })
         }
     })
-    //选择题作答
-    $("#choseQuesBtn").click(function () {
-        $("#ChoseModal").on('hide.bs.modal',function (e) {
-            $.session.remove("QUESID");
-        })
-        var quesId = $.session.get('QUESID');
-        var choanswer = $("#choseAnswer").val();
-        var score = $.session.get('SCORE');
-        alert("score:"+score);
-        //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
-        //验证完成后提交表单
-        //进行ajax传值
-        $.ajax({
-            method: 'get',
-            async: false,
-            url: "/question/comparechosanswer?quesId="+quesId+"&choanswer="+choanswer,
-            success: function (msg) {
-                var json = msg["data"];
-                //alert(json["success"]);
-
-                if(json["success"]==true){
-                    //alert("val:"+$("#choseScore").val())
-                    //alert("text:"+$("#choseScore").text())
-                    score  = parseInt(score)+ parseInt($("#choseScore").text());
-                    $.session.set('SCORE',score);
-                    alert("true"+score);
-                }else{
-                    alert("false"+score);
-                }
-
-            }
-        });
+    //选择题modal关闭时将quesId从session中清除
+    $("#ChoseModal").on('hide.bs.modal',function (e) {
+        $.session.remove("QUESID");
     })
+    //选择题作答
+    $("#choseForm").validate({
+        rules:{
+            choseAnswer:{
+                required: true,//
+            },
+        },
+        messages: {
+            choseAnswer: {
+                required: "请选择一个答案！",
+            },
+        },
+        submitHandler: function (form) {
+            var quesId = $.session.get('QUESID');
+            var choanswer = $("#choseAnswer").val();
+            var score = $.session.get('SCORE');
+            //alert("score:" + score);
+            //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer);
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                method: 'get',
+                url: "/question/comparechosanswer?quesId="+quesId+"&choanswer="+choanswer,
+                success: function (msg) {
+                    var json = msg["data"];
+                    //alert(json["success"]);
+                    if(json["success"]==true){
+                        //alert("val:"+$("#choseScore").val())
+                        //alert("text:"+$("#choseScore").text())
+                        score = parseInt(score)+ parseInt($("#choseScore").text());
+                        $.session.set('SCORE',score);
+                        // layer.msg("提交答案成功！");
+                    }else{
+                        // layer.msg("提交答案成功！");
+                    }
+                    layer.msg("提交答案成功！");
+                    $("#choseAnswer option[value='0']").attr("selected",true);
+                    $("#ChoseModal").modal('hide');
+                },
+                error: function () {
+                    layer.msg("提交答案失败！");
+                }
+            });
+        }
+    })
+
     //多选题填充信息
     $("#MultiChoseModal").on('show.bs.modal',function (e) {
         var quesId = $.session.get("QUESID");
@@ -430,38 +449,85 @@ scratch. This page gets rid of all links and provides the needed markup only.
             })
         }
     })
+    //多选题modal关闭时将quesId从session中清除
+    $("#MultiChoseModal").on('hide.bs.modal',function (e) {
+        $.session.remove("QUESID");
+    })
     //多选题作答
-    $("#multiChoseQuesBtn").click(function () {
-        var quesId = $.session.get('QUESID');
-        var choansA = $("#multiChoseAnswerA").val();
-        var choansB = $("#multiChoseAnswerB").val();
-        var choansC = $("#multiChoseAnswerC").val();
-        var choansD = $("#multiChoseAnswerD").val();
-        var choansE = $("#multiChoseAnswerE").val();
-        var choanswer = parseInt(choansA)+parseInt(choansB)+parseInt(choansC)+parseInt(choansD)+parseInt(choansE);
-        alert(choanswer);
-        var score = $.session.get('SCORE');
-        //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
-        //验证完成后提交表单
-        //进行ajax传值
-        $.ajax({
-            method: 'get',
-            url: "/question/comparechosanswer?quesId="+quesId+"&choanswer="+choanswer,
-            success: function (msg) {
-                var json = msg["data"];
-                alert(json["success"]);
-                if(json["success"]==true){
-                   // alert("val:"+$("#choseScore").val())
-                    //alert("text:"+$("#choseScore").text())
-                    score  = parseInt(score)+ parseInt($("#choseScore").text());
-                    $.session.set('SCORE',score);
-                    alert("true"+score);
-                }else{
-                    alert("false"+score);
-                }
+    $("#multiChoseForm").validate({
+        rules:{
+            multiChoseAnswerA:{
 
-            }
-        });
+            },
+            multiChoseAnswerB:{
+
+            },
+            multiChoseAnswerC:{
+
+            },
+            multiChoseAnswerD:{
+
+            },
+            multiChoseAnswerE:{
+
+            },
+        },
+        messages: {
+            multiChoseAnswerA:{
+
+            },
+            multiChoseAnswerB:{
+
+            },
+            multiChoseAnswerC:{
+
+            },
+            multiChoseAnswerD:{
+
+            },
+            multiChoseAnswerE:{
+
+            },
+        },
+        submitHandler: function (form) {
+            var quesId = $.session.get('QUESID');
+            var choansA = $("#multiChoseAnswerA").val();
+            var choansB = $("#multiChoseAnswerB").val();
+            var choansC = $("#multiChoseAnswerC").val();
+            var choansD = $("#multiChoseAnswerD").val();
+            var choansE = $("#multiChoseAnswerE").val();
+            var choanswer = parseInt(choansA)+parseInt(choansB)+parseInt(choansC)+parseInt(choansD)+parseInt(choansE);
+            //alert(choanswer);
+            var score = $.session.get('SCORE');
+            layer.msg("before score:"+score);
+            //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                method: 'get',
+                url: "/question/comparechosanswer?quesId="+quesId+"&choanswer="+choanswer,
+                success: function (msg) {
+                    var json = msg["data"];
+                    //alert(json["success"]);
+                    if(json["success"]==true){
+                        // alert("val:"+$("#choseScore").val())
+                        //alert("text:"+$("#choseScore").text())
+                        score  = parseInt(score)+ parseInt($("#multiChoseScore").text());
+                        $.session.set('SCORE',score);
+                       // layer.msg("true score = "+score);
+                    }else{
+                       // layer.msg("false score = "+score);
+                    }
+                    layer.msg("提交答案成功！");
+                    $("#multiChoseAnsA option[value='0']").attr("selected",true);
+                    $("#multiChoseAnsB option[value='0']").attr("selected",true);
+                    $("#multiChoseAnsC option[value='0']").attr("selected",true);
+                    $("#multiChoseAnsD option[value='0']").attr("selected",true);
+                    $("#multiChoseAnsE option[value='0']").attr("selected",true);
+                    $("#MultiChoseModal").modal('hide');
+                }
+            });
+        }
     })
 </script>
 
