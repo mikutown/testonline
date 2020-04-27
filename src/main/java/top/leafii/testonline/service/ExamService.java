@@ -16,4 +16,5 @@ public interface ExamService {
     Boolean removeAll(int subId, int uId);
 
     List<Question> listQuestion(int subId, int uId);
+
 }

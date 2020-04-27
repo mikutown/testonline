@@ -126,6 +126,48 @@ public class Question {
         this.choanswer = choanswer;
     }
 
+    public Question(Integer quesId, Integer typeId, String title, String quespic, Double score, String ansa, String ansb, String ansc, String ansd, String anse, String answer, Integer choanswer) {
+        this.quesId = quesId;
+        this.typeId = typeId;
+        this.title = title;
+        this.quespic = quespic;
+        this.score = score;
+        this.ansa = ansa;
+        this.ansb = ansb;
+        this.ansc = ansc;
+        this.ansd = ansd;
+        this.anse = anse;
+        this.answer = answer;
+        this.choanswer = choanswer;
+    }
+
+    public Question(Integer quesId, String answer) {
+        this.quesId = quesId;
+        this.answer = answer;
+    }
+
+    public Question(Integer quesId, Integer typeId, String title, String quespic, Double score, String ansa, String ansb, String ansc, String ansd, String anse) {
+        this.quesId = quesId;
+        this.typeId = typeId;
+        this.title = title;
+        this.quespic = quespic;
+        this.score = score;
+        this.ansa = ansa;
+        this.ansb = ansb;
+        this.ansc = ansc;
+        this.ansd = ansd;
+        this.anse = anse;
+    }
+
+    public Question(Integer quesId, Integer typeId, String title, String quespic, Double score, String answer) {
+        this.quesId = quesId;
+        this.typeId = typeId;
+        this.title = title;
+        this.quespic = quespic;
+        this.score = score;
+        this.answer = answer;
+    }
+
     @Override
     public String toString() {
         return "Question{" +

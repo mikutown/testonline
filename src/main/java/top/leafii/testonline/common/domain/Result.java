@@ -52,4 +52,15 @@ public class Result {
     public void setuId(Integer uId) {
         this.uId = uId;
     }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "resId=" + resId +
+                ", examId=" + examId +
+                ", score=" + score +
+                ", restime=" + restime +
+                ", uId=" + uId +
+                '}';
+    }
 }

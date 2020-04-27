@@ -29,4 +29,6 @@ public interface QuestionService {
     Question getQuestionByQuesidNoAnswer(int quesId);
 
     Boolean compareChosAnswer(Question question);
+
+    Boolean compareAnswer(Question question);
 }

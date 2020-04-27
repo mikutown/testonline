@@ -31,6 +31,31 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
+    /**
+     * 验证非选择题的答案
+     * @param quesId
+     * @param answer
+     * @return
+     */
+    @RequestMapping("/compareanswer")
+    @ResponseBody
+    public Object compareAnswer(@RequestParam("quesId")int quesId,@RequestParam("answer")String answer){
+        Question question = new Question(quesId,answer);
+        System.out.println(question);
+        Boolean bool = questionService.compareAnswer(question);
+        if(bool){
+            return new JSONMap(true,200, ItemBankManageMessage.ANSWER_QUES_SUCCESS);
+        }
+        else{
+            return new JSONMap(false,200, ItemBankManageMessage.ANSWER_QUES_ERROR);
+        }
+    }
+    /**
+     * 获取图片
+     * @param quesId
+     * @param modelMap
+     * @return
+     */
     @RequestMapping("getpicbyquesid")
     @ResponseBody
     public Question getpicbyquesid(@RequestParam("id")int quesId, ModelMap modelMap){
@@ -129,7 +154,7 @@ public class QuestionController {
     @ResponseBody
     public Object compareChosAnswer(@RequestParam("quesId")int quesId,@RequestParam("choanswer")int choanswer){
         Question question = new Question(quesId,choanswer);
-        System.out.println(question);
+        //System.out.println(question);
         Boolean bool = questionService.compareChosAnswer(question);
         if(bool){
             return new JSONMap(true,200, ItemBankManageMessage.ANSWER_QUES_SUCCESS);

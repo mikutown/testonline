@@ -85,6 +85,18 @@ public class QuestionServiceImpl implements QuestionService{
     }
 
     @Override
+    public Boolean compareAnswer(Question question) {
+        Question question1 = questionMapper.selectByPrimaryKey(question.getQuesId());
+        String answer = question.getAnswer();
+        String rightAnswer = question1.getAnswer();
+        if(answer.equals(rightAnswer)){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    @Override
     public Boolean modifyQuestion(Question question) {
         int i = questionMapper.updateByPrimaryKeySelective(question);
         return i>0?true:false;

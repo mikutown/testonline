@@ -122,7 +122,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
               '<button type="button" class="btn btn-primary" onClick=startExam('+row.subId+','+$("#UID").val()+')>开始考试</button>'
             ].join('');
           }else{
-            return "已作答科目无需考试"
+            return [
+              '<button type="button" class="btn btn-primary" onClick=reStartExam('+row.subId+','+$("#UID").val()+')>重新考试</button>'
+            ].join('');
           }
 
         }
@@ -201,6 +203,69 @@ scratch. This page gets rid of all links and provides the needed markup only.
           }
 
         })
+      }
+    })
+  }
+  function reStartExam(subId,uId) {
+    layer.msg('是否进行随机分配试题操作', {
+      time: 0,
+      btn: ['确定', '再等等'],
+      yes: function (index) {
+        $.ajax({
+          url: '/exam/removeAll?subId=' + subId+"&uId="+uId,
+          method: 'get',
+          success: function (msg) {
+            var json = msg["data"];
+            if (json["success"]) {
+              layer.msg(json["msg"], {icon: 6,time:2000});
+              $.ajax({
+                async : false,//设置同步不然没法添加更多的表
+                url: '/exam/save?subId='+subId+"&uId="+uId,
+                dataType: 'json',
+                success: function (msg) {
+                  var json = msg["data"];
+                  if (json["success"]) {
+                    layer.confirm(json["msg"], {
+                      btn: ['好的','不了'] //按钮
+                    }, function(){
+                      showTest(subId,uId);
+                    }, function(){
+                      $.ajax({
+                        url: '/exam/removeAll?subId=' + subId+"&uId="+uId,
+                        method: 'get',
+                        success: function (msg) {
+                          var json = msg["data"];
+                          if (json["success"]) {
+                            layer.msg(json["msg"], {icon: 6,time:2000});
+                          } else {
+                            layer.msg(json["msg"], {icon: 5,time:2000});
+                          }
+                        },
+                        error: function (data) {
+                          layer.msg("未知错误！", {icon: 5,time:2000});
+                        }
+                      })
+                    });
+                  } else {
+                    layer.msg(json["msg"], {icon: 5,time:2000});
+                  }
+                },
+                error: function (data) {
+                  layer.msg("未知错误！", {icon: 5,time:2000});
+                }
+
+              })
+            } else {
+              layer.msg(json["msg"], {icon: 5,time:2000});
+            }
+          },
+          error: function (data) {
+            layer.msg("未知错误！", {icon: 5,time:2000});
+          }
+        });
+        //console.log(uId);
+        layer.close(index);
+
       }
     })
   }

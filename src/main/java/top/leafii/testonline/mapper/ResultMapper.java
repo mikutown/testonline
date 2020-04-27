@@ -30,4 +30,5 @@ public interface ResultMapper {
     int updateByPrimaryKey(Result record);
 
     List<Result> selectBySubidUid(Integer subId, Integer uId);
+
 }

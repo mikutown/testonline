@@ -18,7 +18,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <div>请在完成所有题目后点击交卷，如果不想考试或者重新组卷，请点击安全退出，否则将无法正常进行下次考试！</div>
             <div id="toolbar">
                 <div class="pull-left">
-                    <button type="button" class="btn btn-warning">
+                    <button type="button" class="btn btn-warning" id="submitBtn">
                         <i class="fa fa-file">交卷</i>
                     </button>
                 </div>
@@ -66,11 +66,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <h4 id="choseAnsB"></h4>
                         </div>
                         <div class="form-group">
-                            <label for="choseTitle">选项D</label>
+                            <label for="choseTitle">选项C</label>
                             <h4 id="choseAnsC"></h4>
                         </div>
                         <div class="form-group">
-                            <label for="choseTitle">选项C</label>
+                            <label for="choseTitle">选项D</label>
                             <h4 id="choseAnsD"></h4>
                         </div>
                         <div class="form-group">
@@ -177,13 +177,34 @@ scratch. This page gets rid of all links and provides the needed markup only.
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="judgeModalHeader">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">判断题</h4>
                 </div>
                 <div class="modal-body" id="judgeModalBody">
+                    <form id="judgeForm">
+                        <div class="form-group">
+                            <label for="judgeTitle">题目</label>
+                            <h4 id="judgeTitle"></h4>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="judgeScore">分值</label>
+                            <h5 id="judgeScore"></h5>
+
+                        </div>
+<!--                        //定位-->
+                        <div class="form-group">
+                            <label>答案</label>
+                            <select class="form-control" id="judgeAnswer">
+                                <option value="100">请选择...</option>
+                                <option value="1">正确✔</option>
+                                <option value="0">错误❌</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="judgeQuesBtn">提交答案</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <span>答题后点击提交按钮</span>
@@ -199,13 +220,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="otherModalHeader">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">其他类型题目</h4>
                 </div>
                 <div class="modal-body" otherModalBody>
+                    <form id="otherForm">
+                        <div class="form-group">
+                            <label for="otherTitle">题目</label>
+                            <h4 id="otherTitle"></h4>
+                        </div>
 
+                        <div class="form-group">
+                            <label for="otherScore">分值</label>
+                            <h5 id="otherScore"></h5>
+
+                        </div>
+                        <div class="form-group">
+                            <label>答案</label>
+                            <small>请将答案填在这里</small>
+                            <textarea id="otherAnswer" class="form-control" rows="3" placeholder="请输入答案..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="otherQuesBtn">提交答案</button>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <span>答题后点击提交按钮</span>
@@ -223,6 +262,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script>
     //退出考试按钮
+
     $(function () {
         var subId = $.session.get('SSUBID');
         var uId = $.session.get('UUID');
@@ -347,6 +387,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     //选择题填充信息
     $("#ChoseModal").on('show.bs.modal',function (e) {
         var quesId = $.session.get("QUESID");
+        $("#choseAnswer").find("option:selected")[0].selected=false;
+        $("#choseAnswer").find("option[value='0']").prop("selected",true);
         if(quesId){
             $.ajax({
                 url: '/question/getquestionbyidnoanswer?id=' + quesId,
@@ -411,7 +453,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         // layer.msg("提交答案成功！");
                     }
                     layer.msg("提交答案成功！");
-                    $("#choseAnswer option[value='0']").attr("selected",true);
                     $("#ChoseModal").modal('hide');
                 },
                 error: function () {
@@ -424,6 +465,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
     //多选题填充信息
     $("#MultiChoseModal").on('show.bs.modal',function (e) {
         var quesId = $.session.get("QUESID");
+        $("#multiChoseAnswerA").find("option:selected")[0].selected=false;
+        $("#multiChoseAnswerA").find("option[value='0']").prop("selected",true);
+        $("#multiChoseAnswerB").find("option:selected")[0].selected=false;
+        $("#multiChoseAnswerB").find("option[value='0']").prop("selected",true);
+        $("#multiChoseAnswerC").find("option:selected")[0].selected=false;
+        $("#multiChoseAnswerC").find("option[value='0']").prop("selected",true);
+        $("#multiChoseAnswerD").find("option:selected")[0].selected=false;
+        $("#multiChoseAnswerD").find("option[value='0']").prop("selected",true);
+        $("#multiChoseAnswerE").find("option:selected")[0].selected=false;
+        $("#multiChoseAnswerE").find("option[value='0']").prop("selected",true);
         if(quesId){
             $.ajax({
                 url: '/question/getquestionbyidnoanswer?id=' + quesId,
@@ -442,7 +493,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     $('#multiChoseAnsB').text(data.ansb);
                     $('#multiChoseAnsC').text(data.ansc);
                     $('#multiChoseAnsD').text(data.ansd);
-                    $('#multiChoseAnsE').text(data.ansd);
+                    $('#multiChoseAnsE').text(data.anse);
                     $.session.remove('ans');
                     $.session.set("ans",data.choanswer);
                 }
@@ -519,15 +570,193 @@ scratch. This page gets rid of all links and provides the needed markup only.
                        // layer.msg("false score = "+score);
                     }
                     layer.msg("提交答案成功！");
-                    $("#multiChoseAnsA option[value='0']").attr("selected",true);
-                    $("#multiChoseAnsB option[value='0']").attr("selected",true);
-                    $("#multiChoseAnsC option[value='0']").attr("selected",true);
-                    $("#multiChoseAnsD option[value='0']").attr("selected",true);
-                    $("#multiChoseAnsE option[value='0']").attr("selected",true);
                     $("#MultiChoseModal").modal('hide');
                 }
             });
+        },
+        error: function () {
+            layer.msg("提交答案失败！");
         }
+    })
+
+    //判断题填充信息
+    $("#JudgeModal").on('show.bs.modal',function (e) {
+        var quesId = $.session.get("QUESID");
+        $("#judgeAnswer").find("option:selected")[0].selected=false;
+        $("#judgeAnswer").find("option[value='100']").prop("selected",true);
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyidnoanswer?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
+                    if(data.quespic!=null){
+                        $("#judgeModalHeader").empty();
+                        $("#judgeModalHeader").append('<div class="form-group"> \n' +
+                            '<img src="'+data.quespic+'" alt="" width="350" /><br></div>');
+                    }
+                    $('#judgeTitle').text(data.title);
+                    //$('#choseImg').val(data['quespic']);
+                    $('#judgeScore').text(data.score);
+
+                    $.session.remove('ans');
+                    $.session.set("ans",data.choanswer);
+                }
+            })
+        }
+    })
+    //判断题modal关闭时清除quesId
+    $("#JudgeModal").on('hide.bs.modal',function (e) {
+        $.session.remove("QUESID");
+    })
+    //判断题作答
+    $("#judgeForm").validate({
+        rules:{
+            judgeAnswer:{
+                required: true,
+            },
+        },
+        messages: {
+            judgeAnswer: "请选择答案!",
+        },
+        submitHandler: function (form) {
+            var quesId = $.session.get('QUESID');
+            var answer = $("#judgeAnswer").val();
+            //alert("answer:"+answer);
+            var score = $.session.get('SCORE');
+            //layer.msg("before score:"+score);
+            //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                method: 'get',
+                url: "/question/compareanswer?quesId="+quesId+"&answer="+answer,
+                success: function (msg) {
+                    var json = msg["data"];
+                    //alert(json["success"]);
+                    if(json["success"]==true){
+                        // alert("val:"+$("#choseScore").val())
+                        //alert("text:"+$("#choseScore").text())
+                        score  = parseInt(score)+ parseInt($("#judgeScore").text());
+                        $.session.set('SCORE',score);
+                        // layer.msg("true score = "+score);
+                    }else{
+                        // layer.msg("false score = "+score);
+                    }
+                    layer.msg("提交答案成功！");
+                    alert("score:"+score);
+                    $("#JudgeModal").modal('hide');
+                }
+            });
+        },
+        error: function () {
+            layer.msg("提交答案失败！");
+        }
+    })
+
+    //其他题填充信息
+    $("#OtherModal").on('show.bs.modal',function (e) {
+        var quesId = $.session.get("QUESID");
+        $("#otherAnswer").val( "" );
+        if(quesId){
+            $.ajax({
+                url: '/question/getquestionbyidnoanswer?id=' + quesId,
+                method: 'get',
+                success: function (data) {
+                    //console.log(data);//测试能否得到question
+                    if(data.quespic!=null){
+                        $("#otherModalHeader").empty();
+                        $("#otherModalHeader").append('<div class="form-group"> \n' +
+                            '<img src="'+data.quespic+'" alt="" width="350" /><br></div>');
+                    }
+                    $('#otherTitle').text(data.title);
+                    //$('#choseImg').val(data['quespic']);
+                    $('#otherScore').text(data.score);
+
+                    $.session.remove('ans');
+                    $.session.set("ans",data.answer);
+                }
+            })
+        }
+    })
+    //其他题modal关闭时清除quesId
+    $("#OtherModal").on('hide.bs.modal',function (e) {
+        $.session.remove("QUESID");
+    })
+    //其他题作答
+    $("#otherForm").validate({
+        rules:{
+            otherAnswer:{
+                required: true,
+            },
+        },
+        messages: {
+            otherAnswer: "请输入答案!",
+        },
+        submitHandler: function (form) {
+            var quesId = $.session.get('QUESID');
+            var answer = $("#otherAnswer").val();
+            alert("answer:"+answer);
+            var score = $.session.get('SCORE');
+            layer.msg("before score:"+score);
+            //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
+            //验证完成后提交表单
+            //进行ajax传值
+            $.ajax({
+                method: 'get',
+                url: "/question/compareanswer?quesId="+quesId+"&answer="+answer,
+                success: function (msg) {
+                    var json = msg["data"];
+                    //alert(json["success"]);
+                    if(json["success"]==true){
+                        // alert("val:"+$("#choseScore").val())
+                        //alert("text:"+$("#choseScore").text())
+                        score  = parseInt(score)+ parseInt($("#otherScore").text());
+                        $.session.set('SCORE',score);
+                        layer.msg("true score = "+score);
+                    }else{
+                        layer.msg("false score = "+score);
+                    }
+                    layer.msg("提交答案成功！");
+                    alert("score:"+score);
+                    $("#OtherModal").modal('hide');
+                }
+            });
+        },
+        error: function () {
+            layer.msg("提交答案失败！");
+        }
+    })
+    //交卷
+    $("#submitBtn").click(function () {
+        layer.msg("请确定是否已经做完了左右题目！是否交卷？", {
+            time: 0,
+            btn: ['确定', '不了'],
+            yes: function (index) {
+                layer.close(index);
+                var UID = $.session.get('UUID');
+                var SUBID = $.session.get('SSUBID');
+                var SCORE = $.session.get('SCORE');
+                //alert("uid:"+UID+" subid:"+SUBID+" score:"+SCORE);
+                $.ajax({
+                    url: '/result/addresult?uId='+UID+'&subId='+SUBID+'&score='+SCORE,
+                    method: 'get',
+                    success: function (msg) {
+                        var json = msg["data"];
+                        if (json["success"]) {
+                            layer.msg(json["msg"], {icon: 6,time:2000});
+                            window.location.href = "/page/client";
+                        } else {
+                            layer.msg(json["msg"], {icon: 5,time:2000});
+                        }
+                    },
+                    error: function (data) {
+                        layer.msg("未知错误！", {icon: 5,time:2000});
+                    }
+
+                })
+            },
+        })
     })
 </script>
 
