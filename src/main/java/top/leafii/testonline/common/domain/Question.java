@@ -121,6 +121,9 @@ public class Question {
         this.choanswer = choanswer;
     }
 
+    public Question() {
+    }
+
     public Question(Integer quesId, Integer choanswer) {
         this.quesId = quesId;
         this.choanswer = choanswer;

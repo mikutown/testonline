@@ -644,7 +644,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         // layer.msg("false score = "+score);
                     }
                     layer.msg("提交答案成功！");
-                    alert("score:"+score);
+                    //alert("score:"+score);
                     $("#JudgeModal").modal('hide');
                 }
             });
@@ -696,7 +696,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         submitHandler: function (form) {
             var quesId = $.session.get('QUESID');
             var answer = $("#otherAnswer").val();
-            alert("answer:"+answer);
+            //alert("answer:"+answer);
             var score = $.session.get('SCORE');
             layer.msg("before score:"+score);
             //console.log("quesId"+quesId+ "typeId"+ typeId+ "title"+ title+ "score"+ score+ "ansa"+ ansa+"ansb"+ ansb+"ansc"+ansc+"ansd"+ansd+"choanswer"+ choanswer)
@@ -718,7 +718,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         layer.msg("false score = "+score);
                     }
                     layer.msg("提交答案成功！");
-                    alert("score:"+score);
+                    //alert("score:"+score);
                     $("#OtherModal").modal('hide');
                 }
             });
@@ -753,7 +753,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     error: function (data) {
                         layer.msg("未知错误！", {icon: 5,time:2000});
                     }
-
                 })
             },
         })

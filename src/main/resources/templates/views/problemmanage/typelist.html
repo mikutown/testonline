@@ -298,7 +298,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             var json = msg["data"];
             if (json["success"]) {
               layer.msg(json["msg"], {icon: 6,time:2000});
-              $("#subjectTable").bootstrapTable("remove", {field: 'typeId', values: [id]});//注意参数的name
+              $("#typeTable").bootstrapTable("remove", {field: 'typeId', values: [id]});//注意参数的name
             } else {
               layer.msg(json["msg"], {icon: 5,time:2000});
             }
