@@ -1,0 +1,5 @@
+1. 在navicat或者其他数据库管理软件中连接本地mysq，在其中运行testonline文件夹下的testonline.sql文件。
+2. 本系统使用JetBrains IDEA编译器开发，建议使用IDEA进行项目的打开。
+3. 在IDEA中点击OPEN按钮，打开testonline文件夹下的pom.xml，并选择open as  a project。
+4. 等待maven进行所需的本地资源以及jar包的加载。
+5. 加载完成后，点击项目启动按钮，在启动之后在浏览器输入http://localhost:8888/即可进入系统。默认的管理员账号：root密码：root。
